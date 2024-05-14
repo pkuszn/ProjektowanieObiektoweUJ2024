@@ -14,8 +14,7 @@ public class ConnectionObserver implements CircuitObserver {
     }
 
     @Override
-    public void update() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public void update(boolean value) {
+        System.out.println("The state of the object is equals to -> " + value);
     }
 }

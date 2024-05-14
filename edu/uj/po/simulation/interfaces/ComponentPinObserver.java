@@ -1,5 +1,5 @@
 package edu.uj.po.simulation.interfaces;
 
-public interface GateObserver  {
+public interface ComponentPinObserver {
     void update(boolean newState);
 }
