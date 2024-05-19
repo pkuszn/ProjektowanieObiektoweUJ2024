@@ -5,9 +5,11 @@ import java.util.List;
 
 import edu.uj.po.simulation.interfaces.ComponentPinObserver;
 import edu.uj.po.simulation.interfaces.Pin;
+import edu.uj.po.simulation.interfaces.PinType;
 
 public class ComponentPin implements Pin {
     private boolean value;
+    private PinType pinType;
     private List<ComponentPinObserver> observers;
 
     public ComponentPin() {
@@ -24,6 +26,15 @@ public class ComponentPin implements Pin {
         this.value = value;
         notifyObservers();
     }
+
+    public PinType getPinType() {
+        return pinType;
+    }
+
+    public void setPinType(PinType pinType) {
+        this.pinType = pinType;
+    }
+
     @Override
     public void addObserver(ComponentPinObserver observer) {
         observers.add(observer);

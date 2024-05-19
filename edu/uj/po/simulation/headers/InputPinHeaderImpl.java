@@ -7,10 +7,10 @@ import java.util.Map;
 
 import edu.uj.po.simulation.ComponentPin;
 import edu.uj.po.simulation.interfaces.CircuitObserver;
-import edu.uj.po.simulation.interfaces.GateObserver;
 import edu.uj.po.simulation.interfaces.InputPinHeader;
 import edu.uj.po.simulation.interfaces.InputPinHeaderObserver;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
+import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.utils.PinGenerator;
 
 public class InputPinHeaderImpl implements InputPinHeader {
@@ -44,7 +44,7 @@ public class InputPinHeaderImpl implements InputPinHeader {
         notifyObservers(pinNumber);
     }
 
-    public void connectIntegratedCircuitToPinHeader(int pinNumber, IntegratedCircuit integratedCircuit) {
+    public void connectIntegratedCircuitToPinHeader(int pinNumber, IntegratedCircuit integratedCircuit) throws UnknownPin {
         ComponentPin outputComponentPin = getInput(pinNumber);
         integratedCircuit.addObserver(pinNumber, new CircuitObserver() {
             @Override

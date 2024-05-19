@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.uj.po.simulation.interfaces.ComponentPinObserver;
 import edu.uj.po.simulation.interfaces.Pin;
+import edu.uj.po.simulation.interfaces.PinType;
 
 public class GatePin implements Pin {
     private boolean value = false;
@@ -37,5 +38,10 @@ public class GatePin implements Pin {
         for (ComponentPinObserver observer : observers) {
             observer.update(this.value);
         } 
+    }
+
+    @Override
+    public PinType getPinType() {
+        return this.getPinType();
     }
 }
