@@ -5,8 +5,10 @@ import java.util.Map;
 
 import edu.uj.po.simulation.builders.CircuitDirector;
 import edu.uj.po.simulation.builders.IC74HC08Builder;
+import edu.uj.po.simulation.headers.InputPinHeaderImpl;
+import edu.uj.po.simulation.headers.OutputPinHeaderImpl;
 import edu.uj.po.simulation.interfaces.CircuitDesign;
-import edu.uj.po.simulation.interfaces.CircuitObserver;
+import edu.uj.po.simulation.interfaces.Component;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
 import edu.uj.po.simulation.interfaces.IntegratedCircuitBuilder;
 import edu.uj.po.simulation.interfaces.PinType;
@@ -17,13 +19,13 @@ import edu.uj.po.simulation.interfaces.UnknownPin;
 
 public class CircuitDesignImpl implements CircuitDesign {
 
-    private Map<Integer, IntegratedCircuit> circuits; // integer as global identifier
+    private Map<Integer, Component> components; // integer as global identifier
     private Map<Integer, IntegratedCircuitBuilder> builders; // integer as type of circuit
     private CircuitDirector director;
 
     public CircuitDesignImpl() {
         super();
-        this.circuits = new HashMap<>();
+        this.components = new HashMap<>();
         this.builders = new HashMap<>();
         director = new CircuitDirector();
 
@@ -39,21 +41,25 @@ public class CircuitDesignImpl implements CircuitDesign {
 
         IntegratedCircuit circuit = director.make(builder);
         int globalId = circuit.getGlobalId();
-        circuits.put(globalId, circuit);
+        components.put(globalId, circuit);
 
         return globalId;
     }
 
     @Override
     public int createInputPinHeader(int size) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createInputPinHeader'");
+        InputPinHeaderImpl inputHeader = new InputPinHeaderImpl(size);
+        int globalId = inputHeader.getGlobalId();
+        components.put(globalId, inputHeader);
+        return globalId;
     }
 
     @Override
     public int createOutputPinHeader(int size) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createOutputPinHeader'");
+        OutputPinHeaderImpl outputHeader= new OutputPinHeaderImpl(size);
+        int globalId = outputHeader.getGlobalId();
+        components.put(globalId, outputHeader);
+        return globalId;
     }
 
     @Override
@@ -79,7 +85,7 @@ public class CircuitDesignImpl implements CircuitDesign {
     }
     
     private IntegratedCircuit getCircuit(int component) throws UnknownComponent {
-        IntegratedCircuit circuit = circuits.get(component);
+        IntegratedCircuit circuit = (IntegratedCircuit) components.get(component);
         if (circuit == null) {
             throw new UnknownComponent(component);
         }

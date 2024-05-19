@@ -1,14 +1,10 @@
 package edu.uj.po.simulation.interfaces;
 
-import java.util.List;
+import edu.uj.po.simulation.ComponentPin;
 
-public interface IntegratedCircuit {
-    public boolean[] state = null;
-    public List<CircuitObserver> observers = null;
+public interface IntegratedCircuit extends Component {
+    public boolean getPinState(int pinNumber) throws UnknownPin;
     public void setPinState(int pinNumber, boolean value) throws UnknownPin;
-    public void addObserver(int pinNumber, CircuitObserver observer) throws UnknownPin;
-    public void removeObserver(int pinNumber, CircuitObserver observer) throws UnknownPin;
-    public void notifyObserver(int pinNumber) throws UnknownPin;
-    public int getGlobalId();
-    public PinType getPinType(int pinNumber) throws UnknownPin;
+    public ComponentPin getOutputPin(int pinNumber) throws UnknownPin;
+    public ComponentPin getInputPin(int pinNumber) throws UnknownPin;
 }

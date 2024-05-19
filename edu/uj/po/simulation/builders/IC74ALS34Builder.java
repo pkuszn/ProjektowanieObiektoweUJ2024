@@ -16,27 +16,21 @@ public class IC74ALS34Builder implements IntegratedCircuitBuilder {
     }
 
     @Override
-    public void connectGates() {
+    public void connectPins() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'connectGates'");
-    }
-
-    @Override
-    public void setInputs() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setInputs'");
-    }
-
-    @Override
-    public void setOutputs() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setOutputs'");
     }
 
     @Override
     public IntegratedCircuit getResult() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getResult'");
+    }
+
+    @Override
+    public void initCircuit() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'initCircuit'");
     }
     
 }

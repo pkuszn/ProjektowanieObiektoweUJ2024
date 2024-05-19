@@ -42,6 +42,6 @@ public class GatePin implements Pin {
 
     @Override
     public PinType getPinType() {
-        return this.getPinType();
+        return PinType.NONE;
     }
 }

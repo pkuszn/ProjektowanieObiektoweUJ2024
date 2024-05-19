@@ -8,10 +8,9 @@ public class CircuitDirector implements Director {
 
     @Override
     public IntegratedCircuit make(IntegratedCircuitBuilder builder) {
+        builder.initCircuit();
         builder.setLogicGates();
-        builder.connectGates();
-        builder.setInputs();
-        builder.setOutputs();
+        builder.connectPins();
         return builder.getResult();
     }
 }

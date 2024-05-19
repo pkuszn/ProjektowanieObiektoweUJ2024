@@ -8,6 +8,7 @@ import edu.uj.po.simulation.interfaces.GateObserver;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
 import edu.uj.po.simulation.interfaces.IntegratedCircuitBuilder;
 import edu.uj.po.simulation.interfaces.LogicGate;
+import edu.uj.po.simulation.interfaces.UnknownPin;
 
 public class IC74HC08Builder implements IntegratedCircuitBuilder {
     private IC74HC08 integratedCircuit;
@@ -19,7 +20,11 @@ public class IC74HC08Builder implements IntegratedCircuitBuilder {
 
     public IC74HC08Builder() {
         super();
-        integratedCircuit = new IC74HC08();
+    }
+
+    @Override
+    public void initCircuit() {
+        integratedCircuit = new IC74HC08(new Integer[]{1,2,4,5,9,10,12,13},new Integer[] {3,6,8,11});
     }
 
     @Override
@@ -32,33 +37,28 @@ public class IC74HC08Builder implements IntegratedCircuitBuilder {
     }
 
     @Override
-    public void connectGates() {
-        connectGateToOutput(andGateOne, 1);
-        connectGateToOutput(andGateTwo, 2);
-        connectGateToOutput(andGateThree, 3);
-        connectGateToOutput(andGateFour, 4);
+    public void connectPins() {
+        try {
+            connectGateToOutput(andGateOne, 3);
+            connectGateToOutput(andGateTwo, 6);
+            connectGateToOutput(andGateThree, 8);
+            connectGateToOutput(andGateFour, 11);
 
-        connectInputToGate(1, andGateOne, 1);
-        connectInputToGate(2, andGateOne, 2);
+            connectInputToGate(1, andGateOne, 1);
+            connectInputToGate(2, andGateOne, 2);
+    
+            connectInputToGate(4, andGateTwo, 1);
+            connectInputToGate(5, andGateTwo, 2);
+            
+            connectInputToGate(9, andGateThree, 1);
+            connectInputToGate(10, andGateThree, 2);
 
-        connectInputToGate(3, andGateTwo, 1);
-        connectInputToGate(4, andGateTwo, 2);
-
-        connectInputToGate(5, andGateThree, 1);
-        connectInputToGate(6, andGateThree, 2);
-
-        connectInputToGate(7, andGateFour, 1);
-        connectInputToGate(8, andGateFour, 2);
-    }
-
-    @Override
-    public void setInputs() {
-        return;
-    }
-
-    @Override
-    public void setOutputs() {
-        return;
+            connectInputToGate(12, andGateFour, 1);
+            connectInputToGate(13, andGateFour, 2);
+    
+        } catch (UnknownPin e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -66,8 +66,8 @@ public class IC74HC08Builder implements IntegratedCircuitBuilder {
         return integratedCircuit;
     }
 
-    private void connectGateToOutput(LogicGate gate, int outputPinNumber) {
-        ComponentPin outputComponentPin = integratedCircuit.getOutput(outputPinNumber);
+    private void connectGateToOutput(LogicGate gate, int outputPinNumber) throws UnknownPin {
+        ComponentPin outputComponentPin = integratedCircuit.getOutputPin(outputPinNumber);
         gate.addObserver(new GateObserver() {
             @Override
             public void update(boolean newState) {
@@ -76,8 +76,8 @@ public class IC74HC08Builder implements IntegratedCircuitBuilder {
         });
     }
 
-    private void connectInputToGate(int inputPinNumber, LogicGate gate, int gatePinNumber) {
-        ComponentPin pin = integratedCircuit.getInput(inputPinNumber);
+    private void connectInputToGate(int inputPinNumber, LogicGate gate, int gatePinNumber) throws UnknownPin {
+        ComponentPin pin = integratedCircuit.getInputPin(inputPinNumber);
         pin.addObserver(new ComponentPinObserver() {
             @Override
             public void update(boolean newState) {

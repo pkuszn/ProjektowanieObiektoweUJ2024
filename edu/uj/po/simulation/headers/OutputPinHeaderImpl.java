@@ -6,16 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import edu.uj.po.simulation.ComponentPin;
+import edu.uj.po.simulation.interfaces.Observer;
 import edu.uj.po.simulation.interfaces.OutputPinHeader;
 import edu.uj.po.simulation.interfaces.OutputPinHeaderObserver;
+import edu.uj.po.simulation.interfaces.PinType;
+import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.utils.PinGenerator;
 
-public class OutputPinHeaderImp implements OutputPinHeader {
+public class OutputPinHeaderImpl implements OutputPinHeader {
     private int id;
     private Map<Integer, ComponentPin> outputs;
-    private Map<Integer, List<OutputPinHeaderObserver>> observers;
+    private Map<Integer, List<Observer>> observers;
 
-    public OutputPinHeaderImp(int size) {
+    public OutputPinHeaderImpl(int size) {
         super();
         outputs = new HashMap<>();
         observers = new HashMap<>();
@@ -29,20 +32,10 @@ public class OutputPinHeaderImp implements OutputPinHeader {
     public boolean getPinState(int pinNumber) {
         return outputs.get(pinNumber).getPin();
     }
-
-    @Override
-    public void setPinState(int pinNumber, boolean value) {
-        ComponentPin pin = outputs.get(pinNumber);
-        if (pin == null) {
-            System.out.println("Pin not updated");
-        }
-        pin.setPin(value);
-        notifyObservers(pinNumber);
-    }
     
     @Override
-    public void addObserver(int pinNumber, OutputPinHeaderObserver observer) {
-        List<OutputPinHeaderObserver> circuitObservers = observers.get(pinNumber);
+    public void addObserver(int pinNumber, Observer observer) {
+        List<Observer> circuitObservers = observers.get(pinNumber);
         if (circuitObservers == null) {
             circuitObservers = new ArrayList<>();
             circuitObservers.add(observer);
@@ -53,8 +46,8 @@ public class OutputPinHeaderImp implements OutputPinHeader {
     }
 
     @Override
-    public void removeObserver(int pinNumber, OutputPinHeaderObserver observer) {
-        List<OutputPinHeaderObserver> circuitObservers = observers.get(pinNumber);
+    public void removeObserver(int pinNumber, Observer observer) {
+        List<Observer> circuitObservers = observers.get(pinNumber);
         if (observers == null) {
             return;
         }
@@ -62,20 +55,26 @@ public class OutputPinHeaderImp implements OutputPinHeader {
     }
     
     @Override
-    public int getId() {
+    public int getGlobalId() {
         return id;
     }
 
     @Override
-    public void notifyObservers(int pinNumber) {
-        List<OutputPinHeaderObserver> circuitObservers = observers.get(pinNumber);
+    public void notifyObserver(int pinNumber) {
+        List<Observer> circuitObservers = observers.get(pinNumber);
         if (circuitObservers == null) {
             System.out.println("No observer connected!");
             return;
         }
         boolean state = getPinState(pinNumber);
-        for (OutputPinHeaderObserver observer : circuitObservers) {
+        for (Observer observer : circuitObservers) {
             observer.update(state);
         }
+    }
+
+    @Override
+    public PinType getPinType(int pinNumber) throws UnknownPin {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getPinType'");
     }
 }
