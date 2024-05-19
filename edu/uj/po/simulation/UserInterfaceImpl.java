@@ -2,13 +2,14 @@ package edu.uj.po.simulation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import edu.uj.po.simulation.builders.CircuitDirector;
 import edu.uj.po.simulation.builders.IC74HC08Builder;
 import edu.uj.po.simulation.headers.InputPinHeaderImpl;
 import edu.uj.po.simulation.headers.OutputPinHeaderImpl;
-import edu.uj.po.simulation.interfaces.CircuitDesign;
 import edu.uj.po.simulation.interfaces.Component;
+import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
 import edu.uj.po.simulation.interfaces.IntegratedCircuitBuilder;
 import edu.uj.po.simulation.interfaces.PinType;
@@ -16,14 +17,17 @@ import edu.uj.po.simulation.interfaces.ShortCircuitException;
 import edu.uj.po.simulation.interfaces.UnknownChip;
 import edu.uj.po.simulation.interfaces.UnknownComponent;
 import edu.uj.po.simulation.interfaces.UnknownPin;
+import edu.uj.po.simulation.interfaces.UnknownStateException;
+import edu.uj.po.simulation.interfaces.UserInterface;
+import edu.uj.po.simulation.utils.PinStateMapper;
 
-public class CircuitDesignImpl implements CircuitDesign {
+public class UserInterfaceImpl implements UserInterface {
 
     private Map<Integer, Component> components; // integer as global identifier
     private Map<Integer, IntegratedCircuitBuilder> builders; // integer as type of circuit
     private CircuitDirector director;
 
-    public CircuitDesignImpl() {
+    public UserInterfaceImpl() {
         super();
         this.components = new HashMap<>();
         this.builders = new HashMap<>();
@@ -64,8 +68,8 @@ public class CircuitDesignImpl implements CircuitDesign {
 
     @Override
     public void connect(int component1, int pin1, int component2, int pin2) throws UnknownComponent, UnknownPin, ShortCircuitException {
-        IntegratedCircuit integratedCircuit1 = getCircuit(component1);
-        IntegratedCircuit integratedCircuit2 = getCircuit(component2);
+        Component integratedCircuit1 = getComponent(component1);
+        Component integratedCircuit2 = getComponent(component2);
     
         PinType pinType1 = integratedCircuit1.getPinType(pin1);
         PinType pinType2 = integratedCircuit2.getPinType(pin2);
@@ -84,25 +88,54 @@ public class CircuitDesignImpl implements CircuitDesign {
         }
     }
     
-    private IntegratedCircuit getCircuit(int component) throws UnknownComponent {
-        IntegratedCircuit circuit = (IntegratedCircuit) components.get(component);
+    private Component getComponent(int component) throws UnknownComponent {
+        Component circuit = components.get(component);
         if (circuit == null) {
             throw new UnknownComponent(component);
         }
         return circuit;
     }
     
-    private void addObserver(IntegratedCircuit source, int sourcePin, IntegratedCircuit target, int targetPin) {
+    private void addObserver(Component source, int sourcePin, Component target, int targetPin) throws UnknownPin {
         try {
             source.addObserver(sourcePin, value -> {
-                try {
-                    target.setPinState(targetPin, value);
-                } catch (UnknownPin e) {
-                    e.printStackTrace();
-                }
+                ComponentPinState state = new ComponentPinState(target.getGlobalId(), targetPin, PinStateMapper.toPinState(value));
+                target.setState(state);
             });
         } catch (UnknownPin e) {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void stationaryState(Set<ComponentPinState> states) throws UnknownStateException {
+        return;
+    }
+
+    @Override
+    public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks) throws UnknownStateException {
+        for (ComponentPinState componentPinState : states0) {
+            Component component = components.get(componentPinState.componentId());
+            component.setState(componentPinState);
+        }
+
+        //simulation
+        for(int i = 0; i <= ticks; i++) {
+            System.out.println("tick: " + i + "\n");
+        }
+
+        Map<Integer, Set<ComponentPinState>> result = new HashMap<>();
+
+        for (Map.Entry<Integer, Component> component : components.entrySet()) {
+            result.put(component.getKey(), component.getValue().getStates());
+        }
+
+        return result;
+    }
+
+    @Override
+    public Set<Integer> optimize(Set<ComponentPinState> states0, int ticks) throws UnknownStateException {
+        return null;
+    }
+    
 }

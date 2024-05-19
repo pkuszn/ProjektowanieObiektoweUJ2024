@@ -2,27 +2,30 @@ package edu.uj.po.simulation.headers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import edu.uj.po.simulation.ComponentPin;
-import edu.uj.po.simulation.interfaces.Observer;
+import edu.uj.po.simulation.interfaces.ComponentObserver;
+import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.OutputPinHeader;
-import edu.uj.po.simulation.interfaces.OutputPinHeaderObserver;
 import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
+import edu.uj.po.simulation.pins.ComponentPin;
 import edu.uj.po.simulation.utils.PinGenerator;
+import edu.uj.po.simulation.utils.PinStateMapper;
 
 public class OutputPinHeaderImpl implements OutputPinHeader {
-    private int id;
+    private int globalId;
     private Map<Integer, ComponentPin> outputs;
-    private Map<Integer, List<Observer>> observers;
+    private Map<Integer, List<ComponentObserver>> observers;
 
     public OutputPinHeaderImpl(int size) {
         super();
         outputs = new HashMap<>();
         observers = new HashMap<>();
-        id = PinGenerator.generatePinNumber(0, 10000);
+        globalId = PinGenerator.generatePinNumber(0, 10000);
         for (int i = 1; i < size; i++) {
             outputs.put(i, new ComponentPin());
         }
@@ -34,8 +37,8 @@ public class OutputPinHeaderImpl implements OutputPinHeader {
     }
     
     @Override
-    public void addObserver(int pinNumber, Observer observer) {
-        List<Observer> circuitObservers = observers.get(pinNumber);
+    public void addObserver(int pinNumber, ComponentObserver observer) {
+        List<ComponentObserver> circuitObservers = observers.get(pinNumber);
         if (circuitObservers == null) {
             circuitObservers = new ArrayList<>();
             circuitObservers.add(observer);
@@ -46,8 +49,8 @@ public class OutputPinHeaderImpl implements OutputPinHeader {
     }
 
     @Override
-    public void removeObserver(int pinNumber, Observer observer) {
-        List<Observer> circuitObservers = observers.get(pinNumber);
+    public void removeObserver(int pinNumber, ComponentObserver observer) {
+        List<ComponentObserver> circuitObservers = observers.get(pinNumber);
         if (observers == null) {
             return;
         }
@@ -56,25 +59,51 @@ public class OutputPinHeaderImpl implements OutputPinHeader {
     
     @Override
     public int getGlobalId() {
-        return id;
+        return globalId;
     }
 
     @Override
     public void notifyObserver(int pinNumber) {
-        List<Observer> circuitObservers = observers.get(pinNumber);
+        List<ComponentObserver> circuitObservers = observers.get(pinNumber);
         if (circuitObservers == null) {
             System.out.println("No observer connected!");
             return;
         }
         boolean state = getPinState(pinNumber);
-        for (Observer observer : circuitObservers) {
+        for (ComponentObserver observer : circuitObservers) {
             observer.update(state);
         }
     }
 
     @Override
     public PinType getPinType(int pinNumber) throws UnknownPin {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPinType'");
+        return PinType.OUT;
+    }
+
+    @Override
+    public Set<ComponentPinState> getStates() {
+        Set<ComponentPinState> states = new HashSet<>();
+
+        for(Map.Entry<Integer, ComponentPin> entry : outputs.entrySet()) {
+            states.add(new ComponentPinState(globalId, entry.getKey(), PinStateMapper.toPinState(entry.getValue().getPin()))); 
+        }
+
+        return states;
+    }
+
+    @Override
+    public void setState(ComponentPinState state) {
+        return; //TODO
+    }
+
+    @Override
+    public String printStates(int tick) {
+        StringBuilder sb = new StringBuilder("ComponentId: " + this.globalId + " " + "Tick no. " + tick);
+        Set<ComponentPinState> states = this.getStates();
+        for(ComponentPinState state : states) {
+            sb.append("pinNumber: " + state.pinId() + " " + "state: " + state.state() + "\n");
+        }
+
+        return sb.toString();
     }
 }

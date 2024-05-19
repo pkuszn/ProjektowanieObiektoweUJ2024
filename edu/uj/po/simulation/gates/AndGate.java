@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import edu.uj.po.simulation.GatePin;
+
 import edu.uj.po.simulation.interfaces.GateObserver;
 import edu.uj.po.simulation.interfaces.LogicGate;
+import edu.uj.po.simulation.pins.GatePin;
 
 public class AndGate implements LogicGate {
     private Map<Integer, GatePin> pins = new HashMap<>();

@@ -1,6 +1,6 @@
 package edu.uj.po.simulation.interfaces;
 
-import edu.uj.po.simulation.ComponentPin;
+import edu.uj.po.simulation.pins.ComponentPin;
 
 public interface IntegratedCircuit extends Component {
     public boolean getPinState(int pinNumber) throws UnknownPin;

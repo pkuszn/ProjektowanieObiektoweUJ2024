@@ -1,4 +1,4 @@
-package edu.uj.po.simulation;
+package edu.uj.po.simulation.pins;
 
 import java.util.ArrayList;
 import java.util.List;

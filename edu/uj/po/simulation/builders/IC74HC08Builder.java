@@ -1,6 +1,5 @@
 package edu.uj.po.simulation.builders;
 
-import edu.uj.po.simulation.ComponentPin;
 import edu.uj.po.simulation.circuits.IC74HC08;
 import edu.uj.po.simulation.creators.AndGateCreator;
 import edu.uj.po.simulation.interfaces.ComponentPinObserver;
@@ -9,6 +8,7 @@ import edu.uj.po.simulation.interfaces.IntegratedCircuit;
 import edu.uj.po.simulation.interfaces.IntegratedCircuitBuilder;
 import edu.uj.po.simulation.interfaces.LogicGate;
 import edu.uj.po.simulation.interfaces.UnknownPin;
+import edu.uj.po.simulation.pins.ComponentPin;
 
 public class IC74HC08Builder implements IntegratedCircuitBuilder {
     private IC74HC08 integratedCircuit;
@@ -24,7 +24,7 @@ public class IC74HC08Builder implements IntegratedCircuitBuilder {
 
     @Override
     public void initCircuit() {
-        integratedCircuit = new IC74HC08(new Integer[]{1,2,4,5,9,10,12,13},new Integer[] {3,6,8,11});
+        integratedCircuit = new IC74HC08();
     }
 
     @Override
