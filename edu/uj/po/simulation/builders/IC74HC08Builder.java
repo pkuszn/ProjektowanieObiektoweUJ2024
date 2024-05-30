@@ -37,7 +37,7 @@ public class IC74HC08Builder implements IntegratedCircuitBuilder {
     }
 
     @Override
-    public void connectPins() {
+    public void connectPins() throws UnknownPin {
         try {
             connectGateToOutput(andGateOne, 3);
             connectGateToOutput(andGateTwo, 6);
@@ -57,7 +57,7 @@ public class IC74HC08Builder implements IntegratedCircuitBuilder {
             connectInputToGate(13, andGateFour, 2);
     
         } catch (UnknownPin e) {
-            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -67,22 +67,38 @@ public class IC74HC08Builder implements IntegratedCircuitBuilder {
     }
 
     private void connectGateToOutput(LogicGate gate, int outputPinNumber) throws UnknownPin {
-        ComponentPin outputComponentPin = integratedCircuit.getOutputPin(outputPinNumber);
-        gate.addObserver(new GateObserver() {
-            @Override
-            public void update(boolean newState) {
-                outputComponentPin.setPin(newState);
-            }
-        });
+        try {
+            ComponentPin outputComponentPin = integratedCircuit.getOutputPin(outputPinNumber);
+            gate.addObserver(new GateObserver() {
+                @Override
+                public void update(boolean newState) {
+                    outputComponentPin.setPin(newState);
+                }
+            });
+        } catch (UnknownPin p) {
+            System.out.println(p.getStackTrace());
+            throw p;
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+            throw e;
+        }
     }
 
     private void connectInputToGate(int inputPinNumber, LogicGate gate, int gatePinNumber) throws UnknownPin {
-        ComponentPin pin = integratedCircuit.getInputPin(inputPinNumber);
-        pin.addObserver(new ComponentPinObserver() {
-            @Override
-            public void update(boolean newState) {
-                gate.setPinState(gatePinNumber, newState);
-            }
-        });
+        try {
+            ComponentPin pin = integratedCircuit.getInputPin(inputPinNumber);
+            pin.addObserver(new ComponentPinObserver() {
+                @Override
+                public void update(boolean newState) {
+                    gate.setPinState(gatePinNumber, newState);
+                }
+            });
+        } catch (UnknownPin p) {
+            System.out.println(p.getMessage());
+            throw p;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 }

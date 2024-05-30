@@ -10,6 +10,7 @@ import java.util.Set;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
 import edu.uj.po.simulation.interfaces.ComponentObserver;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
+import edu.uj.po.simulation.interfaces.ComponentClass;
 import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.pins.ComponentPin;
@@ -24,6 +25,16 @@ public class IC74HC08 implements IntegratedCircuit {
     private Map<Integer, ComponentPin> outputs;
     private Map<Integer, List<ComponentObserver>> observers;
     private int globalId;
+    private ComponentClass componentClass;
+    private String humanName;
+
+    public String getHumanName() {
+        return humanName;
+    }
+
+    public void setHumanName(String humanName) {
+        this.humanName = humanName;
+    }
 
     public IC74HC08() {
         super();
@@ -31,10 +42,10 @@ public class IC74HC08 implements IntegratedCircuit {
         outputs = new HashMap<>();
         observers = new HashMap<>();
 
-        Integer[] inputPinNumbers = new Integer[]{1,2,4,5,9,10,12,13};
-        
-        Integer[] outputPinNumbers = new Integer[] {3,6,8,11};
-        
+        Integer[] inputPinNumbers = new Integer[] { 1, 2, 4, 5, 9, 10, 12, 13 };
+
+        Integer[] outputPinNumbers = new Integer[] { 3, 6, 8, 11 };
+
         globalId = PinGenerator.generatePinNumber(1, 10000);
 
         for (Integer input : inputPinNumbers) {
@@ -44,16 +55,40 @@ public class IC74HC08 implements IntegratedCircuit {
         for (Integer output : outputPinNumbers) {
             outputs.put(output, new ComponentPin());
         }
+
+        componentClass = ComponentClass.IC;
     }
 
-    public void setPinState(int pinNumber, boolean value) {
+    public ComponentClass getComponentClass() {
+        return componentClass;
+    }
+
+    public void setPinState(int pinNumber, boolean value) throws UnknownPin {
+
         ComponentPin componentPin = inputs.get(pinNumber);
+        if (componentPin == null) {
+            componentPin = outputs.get(pinNumber);
+        }
+
+        if (componentPin == null) {
+            throw new UnknownPin(this.getGlobalId(), pinNumber);
+        }
+
         componentPin.setPin(value);
         notifyObserver(pinNumber);
     }
 
-    public boolean getPinState(int pinNumber) {
-        return outputs.get(pinNumber).getPin();
+    public boolean getPinState(int pinNumber) throws UnknownPin {
+        ComponentPin componentPin = outputs.get(pinNumber);
+        if (componentPin == null) {
+            componentPin = inputs.get(pinNumber);
+        }
+
+        if (componentPin == null) {
+            throw new UnknownPin(this.getGlobalId(), pinNumber);
+        }
+
+        return componentPin.getPin();
     }
 
     @Override
@@ -91,7 +126,7 @@ public class IC74HC08 implements IntegratedCircuit {
     }
 
     @Override
-    public void notifyObserver(int pinNumber) {
+    public void notifyObserver(int pinNumber) throws UnknownPin {
         List<ComponentObserver> circuitObservers = observers.get(pinNumber);
         if (circuitObservers == null) {
             System.out.println("No observer connected!");
@@ -110,7 +145,7 @@ public class IC74HC08 implements IntegratedCircuit {
 
     @Override
     public ComponentPin getOutputPin(int pinNumber) throws UnknownPin {
-        ComponentPin pin = inputs.get(pinNumber);
+        ComponentPin pin = outputs.get(pinNumber);
         if (pin == null) {
             throw new UnknownPin(this.globalId, pinNumber);
         }
@@ -120,7 +155,7 @@ public class IC74HC08 implements IntegratedCircuit {
 
     @Override
     public ComponentPin getInputPin(int pinNumber) throws UnknownPin {
-        ComponentPin pin = outputs.get(pinNumber);
+        ComponentPin pin = inputs.get(pinNumber);
         if (pin == null) {
             throw new UnknownPin(this.globalId, pinNumber);
         }
@@ -132,28 +167,34 @@ public class IC74HC08 implements IntegratedCircuit {
     public Set<ComponentPinState> getStates() {
         Set<ComponentPinState> states = new HashSet<>();
 
-        for(Map.Entry<Integer, ComponentPin> entry : inputs.entrySet()) {
-            states.add(new ComponentPinState(globalId, entry.getKey(), PinStateMapper.toPinState(entry.getValue().getPin()))); 
+        for (Map.Entry<Integer, ComponentPin> entry : inputs.entrySet()) {
+            states.add(new ComponentPinState(globalId, entry.getKey(),
+                    PinStateMapper.toPinState(entry.getValue().getPin())));
         }
 
-        for(Map.Entry<Integer, ComponentPin> entry : outputs.entrySet()) {
-            states.add(new ComponentPinState(globalId, entry.getKey(), PinStateMapper.toPinState(entry.getValue().getPin())));
+        for (Map.Entry<Integer, ComponentPin> entry : outputs.entrySet()) {
+            states.add(new ComponentPinState(globalId, entry.getKey(),
+                    PinStateMapper.toPinState(entry.getValue().getPin())));
         }
 
         return states;
     }
 
     @Override
-    public void setState(ComponentPinState state) {
-        int pinNumber = state.pinId();
-        setPinState(pinNumber, PinStateMapper.toBoolean(state.state()));
+    public void setState(ComponentPinState state) throws UnknownPin {
+        try {
+            int pinNumber = state.pinId();
+            setPinState(pinNumber, PinStateMapper.toBoolean(state.state()));
+        } catch (UnknownPin e) {
+            throw e;
+        }
     }
 
     @Override
     public String printStates(int tick) {
-        StringBuilder sb = new StringBuilder("ComponentId: " + this.globalId + " " + "Tick no. " + tick);
+        StringBuilder sb = new StringBuilder("ComponentId: " + this.globalId + " " + "Tick no. " + tick + "\n");
         Set<ComponentPinState> states = this.getStates();
-        for(ComponentPinState state : states) {
+        for (ComponentPinState state : states) {
             sb.append("pinNumber: " + state.pinId() + " " + "state: " + state.state() + "\n");
         }
 

@@ -10,8 +10,9 @@ public interface CircuitDesign {
 	 * @param code typ układu scalonego
 	 * @return unikalny globalnie identyfikator elementu.
 	 * @throws UnknownChip code nie odpowiada żadnemu z zaimplementowanych układów
+	 * @throws UnknownPin 
 	 */
-	public int createChip(int code) throws UnknownChip;
+	public int createChip(int code) throws UnknownChip, UnknownPin;
 
 	/**
 	 * Tworzy wejściową listwę kołkową o podanym rozmiarze. Możliwe jest użycie w

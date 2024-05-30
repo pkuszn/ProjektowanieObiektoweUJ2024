@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.uj.po.simulation.interfaces.ComponentClass;
 import edu.uj.po.simulation.interfaces.ComponentObserver;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.OutputPinHeader;
@@ -20,12 +21,18 @@ public class OutputPinHeaderImpl implements OutputPinHeader {
     private int globalId;
     private Map<Integer, ComponentPin> outputs;
     private Map<Integer, List<ComponentObserver>> observers;
+    private ComponentClass componentClass;
+
+    public ComponentClass getComponentClass() {
+        return componentClass;
+    }
 
     public OutputPinHeaderImpl(int size) {
         super();
         outputs = new HashMap<>();
         observers = new HashMap<>();
         globalId = PinGenerator.generatePinNumber(0, 10000);
+        componentClass = ComponentClass.OUT;
         for (int i = 1; i < size; i++) {
             outputs.put(i, new ComponentPin());
         }

@@ -9,6 +9,7 @@ public interface Component {
     public PinType getPinType(int pinNumber) throws UnknownPin;
     public int getGlobalId();
     public Set<ComponentPinState> getStates();
-    public void setState(ComponentPinState state);
+    public void setState(ComponentPinState state) throws UnknownPin;
     public String printStates(int tick);
+    public ComponentClass getComponentClass();
 }

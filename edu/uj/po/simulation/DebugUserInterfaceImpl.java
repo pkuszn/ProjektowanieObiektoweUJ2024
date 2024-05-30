@@ -22,18 +22,26 @@ import edu.uj.po.simulation.interfaces.UnknownStateException;
 import edu.uj.po.simulation.interfaces.UserInterface;
 import edu.uj.po.simulation.utils.PinStateMapper;
 
-public class UserInterfaceImpl implements UserInterface {
+public class DebugUserInterfaceImpl implements UserInterface {
 
     private Map<Integer, Component> components; // integer as global identifier
     private Map<Integer, IntegratedCircuitBuilder> builders; // integer as type of circuit
     private CircuitDirector director;
 
-    public UserInterfaceImpl() {
+    public DebugUserInterfaceImpl() {
         super();
         this.components = new HashMap<>();
         this.builders = new HashMap<>();
         this.director = new CircuitDirector();
         this.builders.put(7408, new IC74HC08Builder());
+    }
+
+    public Component getChip(int globalId) throws UnknownChip {
+        Component component = components.get(globalId);
+        if (component == null) {
+            throw new UnknownChip();
+        }
+        return component;
     }
 
     @Override
@@ -105,7 +113,8 @@ public class UserInterfaceImpl implements UserInterface {
     private void addObserver(Component source, int sourcePin, Component target, int targetPin) throws UnknownPin {
         try {
             source.addObserver(sourcePin, value -> {
-                ComponentPinState state = new ComponentPinState(target.getGlobalId(), targetPin, PinStateMapper.toPinState(value));
+                ComponentPinState state = new ComponentPinState(target.getGlobalId(), targetPin,
+                        PinStateMapper.toPinState(value));
                 try {
                     target.setState(state);
                 } catch (UnknownPin e) {
@@ -124,7 +133,8 @@ public class UserInterfaceImpl implements UserInterface {
     }
 
     @Override
-    public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks) throws UnknownStateException {
+    public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks)
+            throws UnknownStateException {
         for (ComponentPinState componentPinState : states0) {
             try {
                 Component component = components.get(componentPinState.componentId());

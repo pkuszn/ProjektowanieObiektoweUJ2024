@@ -9,6 +9,7 @@ import java.util.Set;
 
 import edu.uj.po.simulation.interfaces.InputPinHeader;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
+import edu.uj.po.simulation.interfaces.ComponentClass;
 import edu.uj.po.simulation.interfaces.ComponentObserver;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.PinType;
@@ -21,15 +22,21 @@ public class InputPinHeaderImpl implements InputPinHeader {
     private int globalId;
     private Map<Integer, ComponentPin> inputs;
     private Map<Integer, List<ComponentObserver>> observers;
+    private ComponentClass componentClass;
 
     public InputPinHeaderImpl(int size) {
         super();
         inputs = new HashMap<>();
         observers = new HashMap<>();
         globalId = PinGenerator.generatePinNumber(0, 10000);
+        componentClass = ComponentClass.IN;
         for (int i = 1; i < size; i++) {
             inputs.put(i, new ComponentPin());
         }
+    }
+
+    public ComponentClass getComponentClass() {
+        return componentClass;
     }
 
     private ComponentPin getInput(int pinNumber) {
