@@ -1,15 +1,14 @@
 package edu.uj.po.simulation.pins;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.uj.po.simulation.interfaces.ComponentPinObserver;
 import edu.uj.po.simulation.interfaces.Pin;
 import edu.uj.po.simulation.interfaces.PinType;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GatePin implements Pin {
     private boolean value = false;
-    private List<ComponentPinObserver> observers;
+    private final List<ComponentPinObserver> observers;
 
     public GatePin() {
         super();

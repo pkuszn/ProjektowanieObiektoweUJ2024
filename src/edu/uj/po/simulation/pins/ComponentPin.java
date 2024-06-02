@@ -1,16 +1,15 @@
 package edu.uj.po.simulation.pins;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.uj.po.simulation.interfaces.ComponentPinObserver;
 import edu.uj.po.simulation.interfaces.Pin;
 import edu.uj.po.simulation.interfaces.PinType;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ComponentPin implements Pin {
     private boolean value;
     private PinType pinType;
-    private List<ComponentPinObserver> observers;
+    private final List<ComponentPinObserver> observers;
 
     public ComponentPin() {
         super();
@@ -27,6 +26,7 @@ public class ComponentPin implements Pin {
         notifyObservers();
     }
 
+    @Override
     public PinType getPinType() {
         return pinType;
     }

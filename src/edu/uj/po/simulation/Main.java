@@ -1,14 +1,16 @@
 package edu.uj.po.simulation;
 
+import edu.uj.po.simulation.debugger.FileHandler;
+import edu.uj.po.simulation.interfaces.*;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import edu.uj.po.simulation.interfaces.*;
-
 public class Main {
-    public static void main(String[] args) throws UnknownPin, UnknownChip, UnknownComponent, ShortCircuitException, UnknownStateException {
-
+    public static void main(String[] args) throws UnknownPin, UnknownChip, UnknownComponent, ShortCircuitException, UnknownStateException, SecurityException, IOException {
+        String logFilePath = "./src/edu/uj/po/simulation/logs/componentLog.log";
         DebugUserInterfaceImpl ui = new DebugUserInterfaceImpl();
         Set<ComponentPinState> states0 = new HashSet<>();
         try {
@@ -35,24 +37,21 @@ public class Main {
             states0.add(new ComponentPinState(globalId3, 1, PinState.HIGH));
             states0.add(new ComponentPinState(globalId3, 2, PinState.HIGH));
 
-
-            Component component = ui.getChip(globalId1);
-            component.setState(new ComponentPinState(globalId1, 1, PinState.HIGH));
-            component.setState(new ComponentPinState(globalId1, 2, PinState.HIGH));
-            System.out.println(component.printStates(20));
-
-        } catch (Exception e) {
+        } catch (UnknownChip | UnknownPin e) {
             System.out.println("Critical error has occured: " + e.getMessage());
             throw e;
         }
         Map<Integer, Set<ComponentPinState>> result = ui.simulation(states0, 60);
 
+        LocalDateTime date = LocalDateTime.now();
+        FileHandler fh = new FileHandler(logFilePath, date);
         for (Map.Entry<Integer, Set<ComponentPinState>> res : result.entrySet()) {
-            System.out.println("ComponentId: " + res.getKey() + "\n");
             for (ComponentPinState state : res.getValue()) {
-                System.out.println("ComponentId: " + state.componentId() + " " + "PinId: " + state.pinId() + " "
-                        + "State: " + state.state() + "\n");
+                String message = "ComponentId: " + state.componentId() + " " + "PinId: " + state.pinId() + " "
+                        + "State: " + state.state() + "\n";
+                fh.write(message, true);
             }
         }
+        fh.write("----------------------------------------------------------------------------------", true);
     }
 }

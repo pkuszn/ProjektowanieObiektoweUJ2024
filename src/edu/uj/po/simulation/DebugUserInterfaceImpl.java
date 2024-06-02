@@ -1,9 +1,5 @@
 package edu.uj.po.simulation;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import edu.uj.po.simulation.builders.CircuitDirector;
 import edu.uj.po.simulation.builders.IC74HC08Builder;
 import edu.uj.po.simulation.headers.InputPinHeaderImpl;
@@ -21,6 +17,9 @@ import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.interfaces.UnknownStateException;
 import edu.uj.po.simulation.interfaces.UserInterface;
 import edu.uj.po.simulation.utils.PinStateMapper;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class DebugUserInterfaceImpl implements UserInterface {
 
@@ -86,20 +85,12 @@ public class DebugUserInterfaceImpl implements UserInterface {
         PinType pinType1 = firstComponent.getPinType(pin1);
         PinType pinType2 = secondComponent.getPinType(pin2);
 
-        if (pinType1 == PinType.OUT && pinType2 == PinType.OUT
-                && (firstComponent.getComponentClass() != ComponentClass.OUT
-                        && secondComponent.getComponentClass() != ComponentClass.OUT)) {
+        if (pinType1 == PinType.OUT && pinType2 == PinType.OUT 
+            && (firstComponent.getComponentClass() != ComponentClass.OUT && secondComponent.getComponentClass() != ComponentClass.OUT)) {
             throw new ShortCircuitException();
         }
 
-        if (pinType1 == PinType.OUT && pinType2 == PinType.IN) {
-            addObserver(firstComponent, pin1, secondComponent, pin2);
-        } else if (pinType1 == PinType.IN && pinType2 == PinType.OUT) {
-            addObserver(secondComponent, pin2, firstComponent, pin1);
-        } else {
-            addObserver(firstComponent, pin1, secondComponent, pin2);
-            addObserver(secondComponent, pin2, firstComponent, pin1);
-        }
+        addObserver(firstComponent, pin1, secondComponent, pin2);
     }
 
     private Component getComponent(int component) throws UnknownComponent {
@@ -117,10 +108,9 @@ public class DebugUserInterfaceImpl implements UserInterface {
                         PinStateMapper.toPinState(value));
                 try {
                     target.setState(state);
+                    System.out.println(toMessage(source, sourcePin, target, targetPin));
                 } catch (UnknownPin e) {
-                    e.printStackTrace();
                 }
-                System.out.println(toMessage(source, sourcePin, target, targetPin));
             });
         } catch (UnknownPin e) {
             throw e;
@@ -139,18 +129,11 @@ public class DebugUserInterfaceImpl implements UserInterface {
             try {
                 Component component = components.get(componentPinState.componentId());
                 component.setState(componentPinState);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (UnknownPin e) {
+                System.out.println(e.getMessage());
             }
         }
-
-        // simulation
-        for (int i = 0; i <= ticks; i++) {
-            System.out.println("tick: " + i + "\n");
-        }
-
         Map<Integer, Set<ComponentPinState>> result = new HashMap<>();
-
         for (Map.Entry<Integer, Component> component : components.entrySet()) {
             result.put(component.getKey(), component.getValue().getStates());
         }
@@ -169,10 +152,9 @@ public class DebugUserInterfaceImpl implements UserInterface {
         }
 
         StringBuilder str = new StringBuilder("Connection: ");
-        str.append("Component with id: " + source.getGlobalId() + "\n");
-        str.append("connected with component id: " + target.getGlobalId() + "\n");
-        str.append("[" + source.getGlobalId() + "]" + " " + sourcePin + "   ---->   " + " [" + target.getGlobalId()
-                + "]" + " " + targetPin);
+        str.append("Component with id: ").append(source.getHumanName()).append("\n");
+        str.append("connected with component id: ").append(target.getHumanName()).append("\n");
+        str.append("[").append(source.getHumanName()).append("] ").append(sourcePin).append("   ---->    [").append(target.getHumanName()).append("] ").append(targetPin);
         return str.toString();
     }
 

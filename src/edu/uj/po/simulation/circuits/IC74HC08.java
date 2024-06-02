@@ -1,5 +1,14 @@
 package edu.uj.po.simulation.circuits;
 
+import edu.uj.po.simulation.interfaces.AbstractComponent;
+import edu.uj.po.simulation.interfaces.ComponentClass;
+import edu.uj.po.simulation.interfaces.ComponentObserver;
+import edu.uj.po.simulation.interfaces.ComponentPinState;
+import edu.uj.po.simulation.interfaces.IntegratedCircuit;
+import edu.uj.po.simulation.interfaces.PinType;
+import edu.uj.po.simulation.interfaces.UnknownPin;
+import edu.uj.po.simulation.pins.ComponentPin;
+import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,35 +16,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.uj.po.simulation.interfaces.IntegratedCircuit;
-import edu.uj.po.simulation.interfaces.ComponentObserver;
-import edu.uj.po.simulation.interfaces.ComponentPinState;
-import edu.uj.po.simulation.interfaces.ComponentClass;
-import edu.uj.po.simulation.interfaces.PinType;
-import edu.uj.po.simulation.interfaces.UnknownPin;
-import edu.uj.po.simulation.pins.ComponentPin;
-import edu.uj.po.simulation.utils.PinGenerator;
-import edu.uj.po.simulation.utils.PinStateMapper;
-
 /*
  * Description: https://eduinf.waw.pl/inf/prg/010_uc/7408.php
  */
-public class IC74HC08 implements IntegratedCircuit {
-    private Map<Integer, ComponentPin> inputs;
-    private Map<Integer, ComponentPin> outputs;
-    private Map<Integer, List<ComponentObserver>> observers;
-    private int globalId;
-    private ComponentClass componentClass;
-    private String humanName;
-
-    public String getHumanName() {
-        return humanName;
-    }
-
-    public void setHumanName(String humanName) {
-        this.humanName = humanName;
-    }
-
+public class IC74HC08 extends AbstractComponent implements IntegratedCircuit {
+    private final Map<Integer, ComponentPin> inputs;
+    private final Map<Integer, ComponentPin> outputs;
+    private final Map<Integer, List<ComponentObserver>> observers;
+    private final ComponentClass componentClass;
+    private final String humanName;
     public IC74HC08() {
         super();
         inputs = new HashMap<>();
@@ -43,10 +32,7 @@ public class IC74HC08 implements IntegratedCircuit {
         observers = new HashMap<>();
 
         Integer[] inputPinNumbers = new Integer[] { 1, 2, 4, 5, 9, 10, 12, 13 };
-
         Integer[] outputPinNumbers = new Integer[] { 3, 6, 8, 11 };
-
-        globalId = PinGenerator.generatePinNumber(1, 10000);
 
         for (Integer input : inputPinNumbers) {
             inputs.put(input, new ComponentPin());
@@ -57,12 +43,20 @@ public class IC74HC08 implements IntegratedCircuit {
         }
 
         componentClass = ComponentClass.IC;
+        humanName = this.getClass().getSimpleName() + "_" + getGlobalId();
     }
 
+    @Override
+    public String getHumanName() {
+        return humanName;
+    }
+
+    @Override
     public ComponentClass getComponentClass() {
         return componentClass;
     }
 
+    @Override
     public void setPinState(int pinNumber, boolean value) throws UnknownPin {
 
         ComponentPin componentPin = inputs.get(pinNumber);
@@ -78,6 +72,7 @@ public class IC74HC08 implements IntegratedCircuit {
         notifyObserver(pinNumber);
     }
 
+    @Override
     public boolean getPinState(int pinNumber) throws UnknownPin {
         ComponentPin componentPin = outputs.get(pinNumber);
         if (componentPin == null) {
@@ -100,7 +95,7 @@ public class IC74HC08 implements IntegratedCircuit {
         } else if (pinOut != null) {
             return PinType.OUT;
         } else {
-            throw new UnknownPin(globalId, pinNumber);
+            throw new UnknownPin(this.globalId, pinNumber);
         }
     }
 
@@ -136,11 +131,6 @@ public class IC74HC08 implements IntegratedCircuit {
         for (ComponentObserver observer : circuitObservers) {
             observer.update(state);
         }
-    }
-
-    @Override
-    public int getGlobalId() {
-        return this.globalId;
     }
 
     @Override
@@ -188,16 +178,5 @@ public class IC74HC08 implements IntegratedCircuit {
         } catch (UnknownPin e) {
             throw e;
         }
-    }
-
-    @Override
-    public String printStates(int tick) {
-        StringBuilder sb = new StringBuilder("ComponentId: " + this.globalId + " " + "Tick no. " + tick + "\n");
-        Set<ComponentPinState> states = this.getStates();
-        for (ComponentPinState state : states) {
-            sb.append("pinNumber: " + state.pinId() + " " + "state: " + state.state() + "\n");
-        }
-
-        return sb.toString();
     }
 }
