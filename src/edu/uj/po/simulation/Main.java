@@ -1,29 +1,37 @@
 package edu.uj.po.simulation;
 
-import edu.uj.po.simulation.debugger.FileHandler;
 import edu.uj.po.simulation.interfaces.*;
-import java.io.IOException;
-import java.time.LocalDateTime;
+import edu.uj.po.simulation.timer.TimeSimulationPropagator;
+import edu.uj.po.simulation.utils.StateChangeNotifierImpl;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class Main {
-    public static void main(String[] args) throws UnknownPin, UnknownChip, UnknownComponent, ShortCircuitException, UnknownStateException, SecurityException, IOException {
-        String logFilePath = "./src/edu/uj/po/simulation/logs/componentLog.log";
+    public static void main(String[] args) throws Exception {
+        System.out.println("Running propagator...");
+        TimeSimulationPropagator propagator = TimeSimulationPropagator.getInstance();
+        Thread th = new Thread(propagator);
+        th.start();
+
+        StateChangeNotifierImpl stateChangeNotifier = StateChangeNotifierImpl.getInstance();
         DebugUserInterfaceImpl ui = new DebugUserInterfaceImpl();
+        Set<ComponentPinState> stationaryState = new HashSet<>();
         Set<ComponentPinState> states0 = new HashSet<>();
+        int globalId1, globalId2, globalId3, globalId4 = 0;
+        System.out.println("Waiting...");
+        Thread.sleep(5000);
         try {
-            int globalId1 = ui.createChip(7408);
+            globalId1 = ui.createChip(7408);
             System.out.println("Chip 7408 FIRST has been created: " + globalId1);
 
-            int globalId2 = ui.createChip(7408);
+            globalId2 = ui.createChip(7408);
             System.out.println("Chip 7408 SECOND has been created: " + globalId2);
 
-            int globalId3 = ui.createInputPinHeader(4);
+            globalId3 = ui.createInputPinHeader(4);
             System.out.println("InputHeader has been created: " + globalId3);
 
-            int globalId4 = ui.createOutputPinHeader(4);
+            globalId4 = ui.createOutputPinHeader(4);
             System.out.println("OutputHeader has been created: " + globalId4);
 
             ui.connect(globalId3, 1, globalId1, 1);
@@ -34,24 +42,30 @@ public class Main {
 
             ui.connect(globalId2, 3, globalId4, 1);
 
-            states0.add(new ComponentPinState(globalId3, 1, PinState.HIGH));
-            states0.add(new ComponentPinState(globalId3, 2, PinState.HIGH));
+            stationaryState.add(new ComponentPinState(globalId3, 1, PinState.HIGH));
+            stationaryState.add(new ComponentPinState(globalId3, 2, PinState.HIGH));
 
+            ui.stationaryState(stationaryState);
         } catch (UnknownChip | UnknownPin e) {
             System.out.println("Critical error has occured: " + e.getMessage());
             throw e;
         }
+
+        Component test = ui.getChip(globalId4);
+        Set<ComponentPinState> getStates = test.getStates();
+        for(ComponentPinState pinState : getStates) {
+            System.out.println(pinState);
+        }
+
+        states0.add(new ComponentPinState(globalId3, 3, PinState.HIGH));
         Map<Integer, Set<ComponentPinState>> result = ui.simulation(states0, 60);
 
-        LocalDateTime date = LocalDateTime.now();
-        FileHandler fh = new FileHandler(logFilePath, date);
         for (Map.Entry<Integer, Set<ComponentPinState>> res : result.entrySet()) {
             for (ComponentPinState state : res.getValue()) {
-                String message = "ComponentId: " + state.componentId() + " " + "PinId: " + state.pinId() + " "
-                        + "State: " + state.state() + "\n";
-                fh.write(message, true);
+                stateChangeNotifier.notify(state.componentId(), state.pinId(), state.state());
             }
         }
-        fh.write("----------------------------------------------------------------------------------", true);
+
+        stateChangeNotifier.save();
     }
 }

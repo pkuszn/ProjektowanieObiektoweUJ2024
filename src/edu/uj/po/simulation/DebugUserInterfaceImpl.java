@@ -16,6 +16,7 @@ import edu.uj.po.simulation.interfaces.UnknownComponent;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.interfaces.UnknownStateException;
 import edu.uj.po.simulation.interfaces.UserInterface;
+import edu.uj.po.simulation.timer.TimeSimulationPropagator;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,15 +24,17 @@ import java.util.Set;
 
 public class DebugUserInterfaceImpl implements UserInterface {
 
-    private Map<Integer, Component> components; // integer as global identifier
-    private Map<Integer, IntegratedCircuitBuilder> builders; // integer as type of circuit
-    private CircuitDirector director;
+    private final Map<Integer, Component> components; // integer as global identifier
+    private final Map<Integer, IntegratedCircuitBuilder> builders; // integer as type of circuit
+    private final CircuitDirector director;
+    private final TimeSimulationPropagator propagator;
 
     public DebugUserInterfaceImpl() {
         super();
         this.components = new HashMap<>();
         this.builders = new HashMap<>();
         this.director = new CircuitDirector();
+        this.propagator = TimeSimulationPropagator.getInstance();
         this.builders.put(7408, new IC74HC08Builder());
     }
 
@@ -108,8 +111,10 @@ public class DebugUserInterfaceImpl implements UserInterface {
                         PinStateMapper.toPinState(value));
                 try {
                     target.setState(state);
-                    System.out.println(toMessage(source, sourcePin, target, targetPin));
                 } catch (UnknownPin e) {
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
             });
         } catch (UnknownPin e) {
@@ -119,20 +124,34 @@ public class DebugUserInterfaceImpl implements UserInterface {
 
     @Override
     public void stationaryState(Set<ComponentPinState> states) throws UnknownStateException {
-        return;
+        for (ComponentPinState componentPinState : states) {
+            try {
+                Component component = components.get(componentPinState.componentId());
+                component.setState(componentPinState);
+            } catch (UnknownPin e) {
+                System.out.println(e.getMessage());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
-    public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks)
-            throws UnknownStateException {
+    public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks) throws UnknownStateException {
         for (ComponentPinState componentPinState : states0) {
             try {
                 Component component = components.get(componentPinState.componentId());
                 component.setState(componentPinState);
             } catch (UnknownPin e) {
                 System.out.println(e.getMessage());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
+
+        propagator.setThreshold(ticks);
+        propagator.reset();
+
         Map<Integer, Set<ComponentPinState>> result = new HashMap<>();
         for (Map.Entry<Integer, Component> component : components.entrySet()) {
             result.put(component.getKey(), component.getValue().getStates());
@@ -145,17 +164,4 @@ public class DebugUserInterfaceImpl implements UserInterface {
     public Set<Integer> optimize(Set<ComponentPinState> states0, int ticks) throws UnknownStateException {
         return null;
     }
-
-    private static String toMessage(Component source, int sourcePin, Component target, int targetPin) {
-        if (source == null || target == null) {
-            System.out.println("Can't connect because of nullable");
-        }
-
-        StringBuilder str = new StringBuilder("Connection: ");
-        str.append("Component with id: ").append(source.getHumanName()).append("\n");
-        str.append("connected with component id: ").append(target.getHumanName()).append("\n");
-        str.append("[").append(source.getHumanName()).append("] ").append(sourcePin).append("   ---->    [").append(target.getHumanName()).append("] ").append(targetPin);
-        return str.toString();
-    }
-
 }

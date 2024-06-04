@@ -9,6 +9,7 @@ import edu.uj.po.simulation.interfaces.IntegratedCircuit;
 import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.pins.ComponentPin;
+import edu.uj.po.simulation.timer.TimeSimulationPropagator;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,18 +17,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
 public class InputPinHeaderImpl extends AbstractComponent implements InputPinHeader {
     private final Map<Integer, ComponentPin> inputs;
     private final Map<Integer, List<ComponentObserver>> observers;
     private final ComponentClass componentClass;
     private final String humanName;
+    private TimeSimulationPropagator propagator;
+
     public InputPinHeaderImpl(int size) {
         super();
         inputs = new HashMap<>();
         observers = new HashMap<>();
         componentClass = ComponentClass.IN;
-        for (int i = 1; i < size; i++) {
+        for (int i = 1; i <= size; i++) {
             inputs.put(i, new ComponentPin());
         }
         humanName = this.getClass().getSimpleName() + "_" + getGlobalId();
@@ -58,7 +62,7 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
     }
 
     @Override
-    public void setPinState(int pinNumber, boolean value) {
+    public void setPinState(int pinNumber, boolean value) throws InterruptedException {
         ComponentPin pin = inputs.get(pinNumber);
         if (pin == null) {
             System.out.println("Pin not updated");
@@ -96,7 +100,12 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
     }
 
     @Override
-    public void notifyObserver(int pinNumber) {
+    public void notifyObserver(int pinNumber) throws InterruptedException {
+        propagator = TimeSimulationPropagator.getInstance();
+        CountDownLatch latch = new CountDownLatch(1);
+        propagator.setLatch(latch);
+
+        latch.await();
         List<ComponentObserver> circuitObservers = observers.get(pinNumber);
         if (circuitObservers == null) {
             System.out.println("No observer connected!");
@@ -104,6 +113,7 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
         }
         boolean state = getPinState(pinNumber);
         for (ComponentObserver observer : circuitObservers) {
+            System.out.println(propagator.getName() + " from OutputHeader: " + propagator.getCounter());
             observer.update(state);
         }
     }
@@ -120,7 +130,7 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
     }
 
     @Override
-    public void setState(ComponentPinState state) {
+    public void setState(ComponentPinState state) throws InterruptedException {
         int pinNumber = state.pinId();
         setPinState(pinNumber, PinStateMapper.toBoolean(state.state()));
     }

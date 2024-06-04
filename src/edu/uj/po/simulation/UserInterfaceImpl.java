@@ -16,6 +16,7 @@ import edu.uj.po.simulation.interfaces.UnknownComponent;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.interfaces.UnknownStateException;
 import edu.uj.po.simulation.interfaces.UserInterface;
+import edu.uj.po.simulation.timer.TimeSimulationPropagator;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,12 +27,14 @@ public class UserInterfaceImpl implements UserInterface {
     private final Map<Integer, Component> components; // integer as global identifier
     private final Map<Integer, IntegratedCircuitBuilder> builders; // integer as type of circuit
     private final CircuitDirector director;
-
+    private final TimeSimulationPropagator propagator;
+    
     public UserInterfaceImpl() {
         super();
         this.components = new HashMap<>();
         this.builders = new HashMap<>();
         this.director = new CircuitDirector();
+        this.propagator = TimeSimulationPropagator.getInstance();
         this.builders.put(7408, new IC74HC08Builder());
     }
 
@@ -101,10 +104,9 @@ public class UserInterfaceImpl implements UserInterface {
                         PinStateMapper.toPinState(value));
                 try {
                     target.setState(state);
-                } catch (UnknownPin e) {
+                } catch (UnknownPin | InterruptedException e) {
                     System.out.println(e.getMessage());
                 }
-                System.out.println(toMessage(source, sourcePin, target, targetPin));
             });
         } catch (UnknownPin e) {
             throw e;
@@ -113,7 +115,15 @@ public class UserInterfaceImpl implements UserInterface {
 
     @Override
     public void stationaryState(Set<ComponentPinState> states) throws UnknownStateException {
-        return;
+        for (ComponentPinState componentPinState : states) {
+            try {
+                Component component = components.get(componentPinState.componentId());
+                component.setState(componentPinState);
+            } catch (UnknownPin e) {
+                System.out.println(e.getMessage());
+            } catch (InterruptedException ex) {
+            }
+        }
     }
 
     @Override
@@ -125,8 +135,13 @@ public class UserInterfaceImpl implements UserInterface {
                 component.setState(componentPinState);
             } catch (UnknownPin e) {
                 System.out.println(e.getMessage());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
+
+        propagator.setThreshold(ticks);
+        propagator.reset();
 
         Map<Integer, Set<ComponentPinState>> result = new HashMap<>();
 
@@ -141,17 +156,4 @@ public class UserInterfaceImpl implements UserInterface {
     public Set<Integer> optimize(Set<ComponentPinState> states0, int ticks) throws UnknownStateException {
         return null;
     }
-
-    private static String toMessage(Component source, int sourcePin, Component target, int targetPin) {
-        if (source == null || target == null) {
-            System.out.println("Can't connect because of nullable");
-        }
-
-        StringBuilder str = new StringBuilder("Connection: ");
-        str.append("Component with id: ").append(source.getGlobalId()).append("\n");
-        str.append("connected with component id: ").append(target.getGlobalId()).append("\n");
-        str.append("[").append(source.getGlobalId()).append("] ").append(sourcePin).append("   ---->    [").append(target.getGlobalId()).append("] ").append(targetPin);
-        return str.toString();
-    }
-
 }

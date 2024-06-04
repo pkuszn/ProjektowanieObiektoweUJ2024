@@ -19,7 +19,7 @@ import java.util.Set;
 /*
  * Description: https://eduinf.waw.pl/inf/prg/010_uc/7408.php
  */
-public class IC74HC08 extends AbstractComponent implements IntegratedCircuit {
+public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { //TODO: AbstractComponent, ktory zawiera wszystkie te metody??
     private final Map<Integer, ComponentPin> inputs;
     private final Map<Integer, ComponentPin> outputs;
     private final Map<Integer, List<ComponentObserver>> observers;

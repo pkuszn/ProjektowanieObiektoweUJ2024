@@ -8,6 +8,7 @@ import edu.uj.po.simulation.interfaces.OutputPinHeader;
 import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.pins.ComponentPin;
+import edu.uj.po.simulation.timer.TimeSimulationPropagator;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,13 +22,14 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
     private final Map<Integer, List<ComponentObserver>> observers;
     private final ComponentClass componentClass;
     private final String humanName;
+    private TimeSimulationPropagator propagator;
 
     public OutputPinHeaderImpl(int size) {
         super();
         outputs = new HashMap<>();
         observers = new HashMap<>();
         componentClass = ComponentClass.OUT;
-        for (int i = 1; i < size; i++) {
+        for (int i = 1; i <= size; i++) {
             outputs.put(i, new ComponentPin());
         }
         humanName = getClass().getSimpleName() + "_" + getGlobalId();
@@ -82,6 +84,7 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
 
     @Override
     public void notifyObserver(int pinNumber) {
+        propagator = TimeSimulationPropagator.getInstance();
         List<ComponentObserver> circuitObservers = observers.get(pinNumber);
         if (circuitObservers == null) {
             System.out.println("No observer connected!");
@@ -89,6 +92,7 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
         }
         boolean state = getPinState(pinNumber);
         for (ComponentObserver observer : circuitObservers) {
+            System.out.println(propagator.getName() + " from OutputHeader: " + propagator.getCounter());
             observer.update(state);
         }
     }
