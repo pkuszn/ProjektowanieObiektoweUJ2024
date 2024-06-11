@@ -8,6 +8,8 @@ import edu.uj.po.simulation.interfaces.IntegratedCircuit;
 import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.pins.ComponentPin;
+import edu.uj.po.simulation.timer.TimeSimulationPropagator;
+import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
 /*
  * Description: https://eduinf.waw.pl/inf/prg/010_uc/7408.php
@@ -25,6 +28,7 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
     private final Map<Integer, List<ComponentObserver>> observers;
     private final ComponentClass componentClass;
     private final String humanName;
+    private TimeSimulationPropagator propagator;
     public IC74HC08() {
         super();
         inputs = new HashMap<>();
@@ -57,8 +61,11 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
     }
 
     @Override
-    public void setPinState(int pinNumber, boolean value) throws UnknownPin {
-
+    public void setPinState(int pinNumber, boolean value) throws UnknownPin, InterruptedException {
+        if (pinNumber == 4) 
+        {
+            System.out.println("test");
+        }
         ComponentPin componentPin = inputs.get(pinNumber);
         if (componentPin == null) {
             componentPin = outputs.get(pinNumber);
@@ -121,16 +128,22 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
     }
 
     @Override
-    public void notifyObserver(int pinNumber) throws UnknownPin {
+    public void notifyObserver(int pinNumber) throws UnknownPin, InterruptedException {
         List<ComponentObserver> circuitObservers = observers.get(pinNumber);
         if (circuitObservers == null) {
-            System.out.println("No observer connected!");
+            ComponentLogger.logNoObserver(globalId, pinNumber);
             return;
         }
+        propagator = TimeSimulationPropagator.getInstance();
+        CountDownLatch latch = new CountDownLatch(1);
+        propagator.setLatch(latch);
+
         boolean state = getPinState(pinNumber);
         for (ComponentObserver observer : circuitObservers) {
+            ComponentLogger.logPinState(this.globalId, pinNumber, state);
             observer.update(state);
         }
+        latch.await();
     }
 
     @Override
@@ -171,7 +184,7 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
     }
 
     @Override
-    public void setState(ComponentPinState state) throws UnknownPin {
+    public void setState(ComponentPinState state) throws UnknownPin, InterruptedException {
         try {
             int pinNumber = state.pinId();
             setPinState(pinNumber, PinStateMapper.toBoolean(state.state()));

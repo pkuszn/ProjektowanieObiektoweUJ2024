@@ -7,10 +7,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TimeSimulationPropagator implements Runnable {
     private volatile AtomicInteger counter;
     private String name;
-    private static final Integer TIME_DELAY = 2000;
+    private static final Integer TIME_DELAY = 5009;
     private static TimeSimulationPropagator instance;
     private Integer threshold;
     private CountDownLatch latch;
+    private boolean frozen;
+    private int latchCount = 0;
+    public boolean isFrozen() {
+        return frozen;
+    }
+
+    public void setFrozen(boolean frozen) {
+        this.frozen = frozen;
+    }
 
     private TimeSimulationPropagator() {
         super();
@@ -18,6 +27,7 @@ public class TimeSimulationPropagator implements Runnable {
         this.name = "TimeSimulationPropagator_MAIN_" + rdn.nextInt();
         this.counter = new AtomicInteger();
         this.threshold = 3600;
+        this.frozen = false;
     }
 
     public synchronized static TimeSimulationPropagator getInstance() {
@@ -33,6 +43,8 @@ public class TimeSimulationPropagator implements Runnable {
 
     public void setLatch(CountDownLatch latch) {
         this.latch = latch;
+        this.latchCount += 1;
+        System.out.println("Setting latch..." + " " + this.latchCount);
     }
 
     public void setCounter(AtomicInteger counter) {
@@ -47,10 +59,12 @@ public class TimeSimulationPropagator implements Runnable {
         return counter;
     }
 
-    public void tick() {
+    public synchronized void tick() {
         counter.incrementAndGet();
         if (latch != null) {
+            System.out.println("Releasing latch...");
             latch.countDown();
+            latch = null;
         }
     }
 
@@ -69,9 +83,11 @@ public class TimeSimulationPropagator implements Runnable {
     public void start() throws InterruptedException {
         synchronized (this) {
             while (counter.get() < threshold) {
-                tick();
-                wait(TIME_DELAY);
-                System.out.println(this.name + " " + "Counter: " + counter.get());
+                if (!frozen) {
+                    tick();
+                    wait(TIME_DELAY);
+                    System.out.println(this.name + " " + "Counter: " + counter.get());
+                }
             }
         }
     }

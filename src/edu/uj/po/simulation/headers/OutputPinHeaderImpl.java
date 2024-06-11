@@ -9,6 +9,7 @@ import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.pins.ComponentPin;
 import edu.uj.po.simulation.timer.TimeSimulationPropagator;
+import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
 public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinHeader {
     private final Map<Integer, ComponentPin> outputs;
@@ -42,7 +44,7 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
 
     @Override
     public void setState(ComponentPinState state) {
-        return; // TODO
+        ComponentLogger.logPinState(state.componentId(), state.pinId(), PinStateMapper.toBoolean(state.state()));
     }
 
     @Override
@@ -83,18 +85,23 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
     }
 
     @Override
-    public void notifyObserver(int pinNumber) {
-        propagator = TimeSimulationPropagator.getInstance();
+    public void notifyObserver(int pinNumber) throws InterruptedException {
         List<ComponentObserver> circuitObservers = observers.get(pinNumber);
         if (circuitObservers == null) {
-            System.out.println("No observer connected!");
+            ComponentLogger.logNoObserver(globalId, pinNumber);
             return;
         }
+
+        propagator = TimeSimulationPropagator.getInstance();
+        CountDownLatch latch = new CountDownLatch(1);
+        propagator.setLatch(latch);
+
         boolean state = getPinState(pinNumber);
         for (ComponentObserver observer : circuitObservers) {
-            System.out.println(propagator.getName() + " from OutputHeader: " + propagator.getCounter());
+            ComponentLogger.logPinState(this.globalId, pinNumber, state);
             observer.update(state);
         }
+        latch.await();
     }
 
     @Override

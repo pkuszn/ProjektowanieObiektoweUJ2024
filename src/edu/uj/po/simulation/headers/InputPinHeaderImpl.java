@@ -10,6 +10,7 @@ import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.pins.ComponentPin;
 import edu.uj.po.simulation.timer.TimeSimulationPropagator;
+import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,21 +102,21 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
 
     @Override
     public void notifyObserver(int pinNumber) throws InterruptedException {
+        List<ComponentObserver> circuitObservers = observers.get(pinNumber);
+        if (circuitObservers == null) {
+            ComponentLogger.logNoObserver(globalId, pinNumber);
+            return;
+        }
         propagator = TimeSimulationPropagator.getInstance();
         CountDownLatch latch = new CountDownLatch(1);
         propagator.setLatch(latch);
 
-        latch.await();
-        List<ComponentObserver> circuitObservers = observers.get(pinNumber);
-        if (circuitObservers == null) {
-            System.out.println("No observer connected!");
-            return;
-        }
         boolean state = getPinState(pinNumber);
         for (ComponentObserver observer : circuitObservers) {
-            System.out.println(propagator.getName() + " from OutputHeader: " + propagator.getCounter());
+            ComponentLogger.logPinState(this.globalId, pinNumber, state);
             observer.update(state);
         }
+        latch.await();
     }
 
     @Override

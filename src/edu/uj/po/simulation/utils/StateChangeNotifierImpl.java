@@ -10,12 +10,12 @@ public class StateChangeNotifierImpl {
     private final List<String> journal;
     private static StateChangeNotifierImpl instance;
     private final String filePath = "./src/edu/uj/po/simulation/logs/componentLog.log";
-    private final FileHandler fh;
+    private final CustomFileHandler fh;
 
     private StateChangeNotifierImpl() throws SecurityException, IOException {
         super();
         this.journal = new ArrayList<>();
-        this.fh = new FileHandler(filePath);
+        this.fh = new CustomFileHandler(filePath);
     }
 
     public void notify(int componentId, PinState state) {

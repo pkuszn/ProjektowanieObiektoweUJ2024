@@ -7,19 +7,19 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class FileHandler {
+public class CustomFileHandler {
     private final String path;
     private final File file;
     private LocalDateTime date;
 
-    public FileHandler(String path, LocalDateTime date) {
+    public CustomFileHandler(String path, LocalDateTime date) {
         super();
         this.path = path;
         file = new File(this.path);
         this.date = date;
     }
 
-    public FileHandler(String path) {
+    public CustomFileHandler(String path) {
         super();
         this.path = path;
         file = new File(this.path);

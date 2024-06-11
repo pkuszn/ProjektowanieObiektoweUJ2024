@@ -17,6 +17,7 @@ import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.interfaces.UnknownStateException;
 import edu.uj.po.simulation.interfaces.UserInterface;
 import edu.uj.po.simulation.timer.TimeSimulationPropagator;
+import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,8 +89,9 @@ public class DebugUserInterfaceImpl implements UserInterface {
         PinType pinType1 = firstComponent.getPinType(pin1);
         PinType pinType2 = secondComponent.getPinType(pin2);
 
-        if (pinType1 == PinType.OUT && pinType2 == PinType.OUT 
-            && (firstComponent.getComponentClass() != ComponentClass.OUT && secondComponent.getComponentClass() != ComponentClass.OUT)) {
+        if (pinType1 == PinType.OUT && pinType2 == PinType.OUT
+                && (firstComponent.getComponentClass() != ComponentClass.OUT
+                        && secondComponent.getComponentClass() != ComponentClass.OUT)) {
             throw new ShortCircuitException();
         }
 
@@ -106,15 +108,14 @@ public class DebugUserInterfaceImpl implements UserInterface {
 
     private void addObserver(Component source, int sourcePin, Component target, int targetPin) throws UnknownPin {
         try {
+            ComponentLogger.logAddObserver(source.getGlobalId(), sourcePin, target.getGlobalId(), targetPin);
             source.addObserver(sourcePin, value -> {
                 ComponentPinState state = new ComponentPinState(target.getGlobalId(), targetPin,
                         PinStateMapper.toPinState(value));
                 try {
                     target.setState(state);
-                } catch (UnknownPin e) {
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                } catch (UnknownPin | InterruptedException e) {
+                    System.out.println(e.getMessage());
                 }
             });
         } catch (UnknownPin e) {
@@ -127,31 +128,33 @@ public class DebugUserInterfaceImpl implements UserInterface {
         for (ComponentPinState componentPinState : states) {
             try {
                 Component component = components.get(componentPinState.componentId());
+                ComponentLogger.logSettingStationaryState(componentPinState.componentId(), componentPinState);
                 component.setState(componentPinState);
             } catch (UnknownPin e) {
                 System.out.println(e.getMessage());
             } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }
 
     @Override
-    public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks) throws UnknownStateException {
+    public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks)
+            throws UnknownStateException {
+        propagator.setThreshold(ticks);
+        propagator.reset();
         for (ComponentPinState componentPinState : states0) {
             try {
                 Component component = components.get(componentPinState.componentId());
+                ComponentLogger.logSimulationState(componentPinState.componentId(), componentPinState);
                 component.setState(componentPinState);
             } catch (UnknownPin e) {
                 System.out.println(e.getMessage());
             } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
-
+        
         propagator.setThreshold(ticks);
         propagator.reset();
-
         Map<Integer, Set<ComponentPinState>> result = new HashMap<>();
         for (Map.Entry<Integer, Component> component : components.entrySet()) {
             result.put(component.getKey(), component.getValue().getStates());
