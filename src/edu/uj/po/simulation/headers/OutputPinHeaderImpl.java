@@ -8,7 +8,6 @@ import edu.uj.po.simulation.interfaces.OutputPinHeader;
 import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.pins.ComponentPin;
-import edu.uj.po.simulation.timer.TimeSimulationPropagator;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.ArrayList;
@@ -17,14 +16,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 
 public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinHeader {
     private final Map<Integer, ComponentPin> outputs;
     private final Map<Integer, List<ComponentObserver>> observers;
     private final ComponentClass componentClass;
     private final String humanName;
-    private TimeSimulationPropagator propagator;
 
     public OutputPinHeaderImpl(int size) {
         super();
@@ -56,12 +53,11 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
     public boolean getPinState(int pinNumber) {
         return outputs.get(pinNumber).getPin();
     }
-    
+
     @Override
     public String getHumanName() {
         return humanName;
     }
-
 
     @Override
     public void addObserver(int pinNumber, ComponentObserver observer) {
@@ -92,16 +88,11 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
             return;
         }
 
-        propagator = TimeSimulationPropagator.getInstance();
-        CountDownLatch latch = new CountDownLatch(1);
-        propagator.setLatch(latch);
-
         boolean state = getPinState(pinNumber);
         for (ComponentObserver observer : circuitObservers) {
             ComponentLogger.logPinState(this.globalId, pinNumber, state);
             observer.update(state);
         }
-        latch.await();
     }
 
     @Override

@@ -1,14 +1,13 @@
 package edu.uj.po.simulation.circuits;
 
 import edu.uj.po.simulation.interfaces.AbstractComponent;
-import edu.uj.po.simulation.interfaces.ComponentClass;
-import edu.uj.po.simulation.interfaces.ComponentObserver;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
-import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
+import edu.uj.po.simulation.interfaces.enums.ComponentClass;
+import edu.uj.po.simulation.interfaces.enums.PinType;
+import edu.uj.po.simulation.interfaces.observers.ComponentObserver;
 import edu.uj.po.simulation.pins.ComponentPin;
-import edu.uj.po.simulation.timer.TimeSimulationPropagator;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.ArrayList;
@@ -17,18 +16,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 
 /*
  * Description: https://eduinf.waw.pl/inf/prg/010_uc/7408.php
  */
-public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { //TODO: AbstractComponent, ktory zawiera wszystkie te metody??
+public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { // TODO: AbstractComponent, ktory zawiera
+                                                                               // wszystkie te metody??
     private final Map<Integer, ComponentPin> inputs;
     private final Map<Integer, ComponentPin> outputs;
     private final Map<Integer, List<ComponentObserver>> observers;
     private final ComponentClass componentClass;
     private final String humanName;
-    private TimeSimulationPropagator propagator;
+
     public IC74HC08() {
         super();
         inputs = new HashMap<>();
@@ -62,10 +61,6 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
 
     @Override
     public void setPinState(int pinNumber, boolean value) throws UnknownPin, InterruptedException {
-        if (pinNumber == 4) 
-        {
-            System.out.println("test");
-        }
         ComponentPin componentPin = inputs.get(pinNumber);
         if (componentPin == null) {
             componentPin = outputs.get(pinNumber);
@@ -134,16 +129,11 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
             ComponentLogger.logNoObserver(globalId, pinNumber);
             return;
         }
-        propagator = TimeSimulationPropagator.getInstance();
-        CountDownLatch latch = new CountDownLatch(1);
-        propagator.setLatch(latch);
-
         boolean state = getPinState(pinNumber);
         for (ComponentObserver observer : circuitObservers) {
             ComponentLogger.logPinState(this.globalId, pinNumber, state);
             observer.update(state);
         }
-        latch.await();
     }
 
     @Override

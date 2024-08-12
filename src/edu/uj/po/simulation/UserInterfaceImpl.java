@@ -16,7 +16,6 @@ import edu.uj.po.simulation.interfaces.UnknownComponent;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.interfaces.UnknownStateException;
 import edu.uj.po.simulation.interfaces.UserInterface;
-import edu.uj.po.simulation.timer.TimeSimulationPropagator;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.HashMap;
@@ -24,18 +23,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class UserInterfaceImpl implements UserInterface {
-
     private final Map<Integer, Component> components; // integer as global identifier
     private final Map<Integer, IntegratedCircuitBuilder> builders; // integer as type of circuit
     private final CircuitDirector director;
-    private final TimeSimulationPropagator propagator;
-    
+
     public UserInterfaceImpl() {
         super();
         this.components = new HashMap<>();
         this.builders = new HashMap<>();
         this.director = new CircuitDirector();
-        this.propagator = TimeSimulationPropagator.getInstance();
         this.builders.put(7408, new IC74HC08Builder());
     }
 
@@ -142,9 +138,6 @@ public class UserInterfaceImpl implements UserInterface {
             } catch (InterruptedException e) {
             }
         }
-
-        propagator.setThreshold(ticks);
-        propagator.reset();
 
         Map<Integer, Set<ComponentPinState>> result = new HashMap<>();
 

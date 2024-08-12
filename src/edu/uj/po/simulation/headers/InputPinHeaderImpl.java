@@ -9,7 +9,6 @@ import edu.uj.po.simulation.interfaces.IntegratedCircuit;
 import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.pins.ComponentPin;
-import edu.uj.po.simulation.timer.TimeSimulationPropagator;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.ArrayList;
@@ -18,14 +17,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 
 public class InputPinHeaderImpl extends AbstractComponent implements InputPinHeader {
     private final Map<Integer, ComponentPin> inputs;
     private final Map<Integer, List<ComponentObserver>> observers;
     private final ComponentClass componentClass;
     private final String humanName;
-    private TimeSimulationPropagator propagator;
 
     public InputPinHeaderImpl(int size) {
         super();
@@ -56,7 +53,6 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
         return inputs.get(pinNumber).getPin();
     }
 
-
     @Override
     public PinType getPinType(int pinNumber) throws UnknownPin {
         return PinType.IN;
@@ -72,7 +68,8 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
         notifyObserver(pinNumber);
     }
 
-    public void connectIntegratedCircuitToPinHeader(int pinNumber, IntegratedCircuit integratedCircuit) throws UnknownPin {
+    public void connectIntegratedCircuitToPinHeader(int pinNumber, IntegratedCircuit integratedCircuit)
+            throws UnknownPin {
         ComponentPin outputComponentPin = getInput(pinNumber);
         integratedCircuit.addObserver(pinNumber, (boolean newState) -> {
             outputComponentPin.setPin(newState);
@@ -107,24 +104,21 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
             ComponentLogger.logNoObserver(globalId, pinNumber);
             return;
         }
-        propagator = TimeSimulationPropagator.getInstance();
-        CountDownLatch latch = new CountDownLatch(1);
-        propagator.setLatch(latch);
 
         boolean state = getPinState(pinNumber);
         for (ComponentObserver observer : circuitObservers) {
             ComponentLogger.logPinState(this.globalId, pinNumber, state);
             observer.update(state);
         }
-        latch.await();
     }
 
     @Override
     public Set<ComponentPinState> getStates() {
         Set<ComponentPinState> states = new HashSet<>();
 
-        for(Map.Entry<Integer, ComponentPin> entry : inputs.entrySet()) {
-            states.add(new ComponentPinState(globalId, entry.getKey(), PinStateMapper.toPinState(entry.getValue().getPin())));
+        for (Map.Entry<Integer, ComponentPin> entry : inputs.entrySet()) {
+            states.add(new ComponentPinState(globalId, entry.getKey(),
+                    PinStateMapper.toPinState(entry.getValue().getPin())));
         }
 
         return states;
