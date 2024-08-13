@@ -1,10 +1,11 @@
 package edu.uj.po.simulation.utils;
 
-import edu.uj.po.simulation.interfaces.PinState;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.uj.po.simulation.interfaces.PinState;
 
 public class StateChangeNotifierImpl {
     private final List<String> journal;

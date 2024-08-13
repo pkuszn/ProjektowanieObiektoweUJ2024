@@ -1,12 +1,13 @@
 package edu.uj.po.simulation.headers;
 
 import edu.uj.po.simulation.interfaces.AbstractComponent;
-import edu.uj.po.simulation.interfaces.ComponentClass;
-import edu.uj.po.simulation.interfaces.ComponentObserver;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.OutputPinHeader;
-import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
+import edu.uj.po.simulation.interfaces.enums.ComponentBehaviour;
+import edu.uj.po.simulation.interfaces.enums.ComponentClass;
+import edu.uj.po.simulation.interfaces.enums.PinType;
+import edu.uj.po.simulation.interfaces.observers.ComponentObserver;
 import edu.uj.po.simulation.pins.ComponentPin;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
@@ -22,6 +23,15 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
     private final Map<Integer, List<ComponentObserver>> observers;
     private final ComponentClass componentClass;
     private final String humanName;
+    private ComponentBehaviour behaviour;
+
+    public ComponentBehaviour getBehaviour() {
+        return behaviour;
+    }
+
+    public void setBehaviour(ComponentBehaviour behaviour) {
+        this.behaviour = behaviour;
+    }
 
     public OutputPinHeaderImpl(int size) {
         super();
@@ -32,6 +42,7 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
             outputs.put(i, new ComponentPin());
         }
         humanName = getClass().getSimpleName() + "_" + getGlobalId();
+        behaviour = ComponentBehaviour.UNLOCK;
     }
 
     @Override
@@ -41,7 +52,13 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
 
     @Override
     public void setState(ComponentPinState state) {
-        ComponentLogger.logPinState(state.componentId(), state.pinId(), PinStateMapper.toBoolean(state.state()));
+        while (true) {
+            if (getBehaviour() == ComponentBehaviour.UNLOCK) {
+                ComponentLogger.logPinState(state.componentId(), state.pinId(), PinStateMapper.toBoolean(state.state()));
+                break;
+            }
+            System.out.println("Component " + humanName + " is locked...");
+        }
     }
 
     @Override

@@ -7,12 +7,12 @@ import java.util.Map;
 import java.util.Set;
 
 public class Main {
-    private static final double TIME_DELAY = 5000;
     public static void main(String[] args) throws Exception {
         StateChangeNotifierImpl stateChangeNotifier = StateChangeNotifierImpl.getInstance();
         DebugUserInterfaceImpl ui = new DebugUserInterfaceImpl();
         Set<ComponentPinState> stationaryState = new HashSet<>();
         Set<ComponentPinState> states0 = new HashSet<>();
+
         int globalId1, globalId2, globalId3, globalId4, globalId5 = 0;
         System.out.println("Waiting...");
         try {

@@ -2,12 +2,12 @@ package edu.uj.po.simulation.builders;
 
 import edu.uj.po.simulation.circuits.IC74HC08;
 import edu.uj.po.simulation.creators.AndGateCreator;
-import edu.uj.po.simulation.interfaces.ComponentPinObserver;
-import edu.uj.po.simulation.interfaces.GateObserver;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
-import edu.uj.po.simulation.interfaces.IntegratedCircuitBuilder;
 import edu.uj.po.simulation.interfaces.LogicGate;
 import edu.uj.po.simulation.interfaces.UnknownPin;
+import edu.uj.po.simulation.interfaces.builders.IntegratedCircuitBuilder;
+import edu.uj.po.simulation.interfaces.observers.ComponentPinObserver;
+import edu.uj.po.simulation.interfaces.observers.GateObserver;
 import edu.uj.po.simulation.pins.ComponentPin;
 
 public class IC74HC08Builder implements IntegratedCircuitBuilder {

@@ -1,13 +1,14 @@
 package edu.uj.po.simulation.headers;
 
 import edu.uj.po.simulation.interfaces.AbstractComponent;
-import edu.uj.po.simulation.interfaces.ComponentClass;
-import edu.uj.po.simulation.interfaces.ComponentObserver;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.InputPinHeader;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
-import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
+import edu.uj.po.simulation.interfaces.enums.ComponentBehaviour;
+import edu.uj.po.simulation.interfaces.enums.ComponentClass;
+import edu.uj.po.simulation.interfaces.enums.PinType;
+import edu.uj.po.simulation.interfaces.observers.ComponentObserver;
 import edu.uj.po.simulation.pins.ComponentPin;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
@@ -23,6 +24,16 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
     private final Map<Integer, List<ComponentObserver>> observers;
     private final ComponentClass componentClass;
     private final String humanName;
+    private ComponentBehaviour behaviour;
+
+
+    public ComponentBehaviour getBehaviour() {
+        return behaviour;
+    }
+
+    public void setBehaviour(ComponentBehaviour behaviour) {
+        this.behaviour = behaviour;
+    }
 
     public InputPinHeaderImpl(int size) {
         super();
@@ -33,6 +44,7 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
             inputs.put(i, new ComponentPin());
         }
         humanName = this.getClass().getSimpleName() + "_" + getGlobalId();
+        behaviour = ComponentBehaviour.UNLOCK;
     }
 
     @Override
@@ -60,12 +72,18 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
 
     @Override
     public void setPinState(int pinNumber, boolean value) throws InterruptedException {
-        ComponentPin pin = inputs.get(pinNumber);
-        if (pin == null) {
-            System.out.println("Pin not updated");
+        while (true) {
+            if (getBehaviour() == ComponentBehaviour.UNLOCK) {
+                ComponentPin pin = inputs.get(pinNumber);
+                if (pin == null) {
+                    System.out.println("Pin not updated");
+                }
+                pin.setPin(value);
+                notifyObserver(pinNumber);
+                break;
+            }
+            System.out.println("Component " + humanName + " is locked...");
         }
-        pin.setPin(value);
-        notifyObserver(pinNumber);
     }
 
     public void connectIntegratedCircuitToPinHeader(int pinNumber, IntegratedCircuit integratedCircuit)

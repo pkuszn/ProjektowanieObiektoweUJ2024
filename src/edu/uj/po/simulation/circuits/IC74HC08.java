@@ -4,6 +4,7 @@ import edu.uj.po.simulation.interfaces.AbstractComponent;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
 import edu.uj.po.simulation.interfaces.UnknownPin;
+import edu.uj.po.simulation.interfaces.enums.ComponentBehaviour;
 import edu.uj.po.simulation.interfaces.enums.ComponentClass;
 import edu.uj.po.simulation.interfaces.enums.PinType;
 import edu.uj.po.simulation.interfaces.observers.ComponentObserver;
@@ -27,6 +28,7 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
     private final Map<Integer, List<ComponentObserver>> observers;
     private final ComponentClass componentClass;
     private final String humanName;
+    private ComponentBehaviour behaviour;
 
     public IC74HC08() {
         super();
@@ -47,6 +49,7 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
 
         componentClass = ComponentClass.IC;
         humanName = this.getClass().getSimpleName() + "_" + getGlobalId();
+        behaviour = ComponentBehaviour.UNLOCK;
     }
 
     @Override
@@ -61,17 +64,23 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
 
     @Override
     public void setPinState(int pinNumber, boolean value) throws UnknownPin, InterruptedException {
-        ComponentPin componentPin = inputs.get(pinNumber);
-        if (componentPin == null) {
-            componentPin = outputs.get(pinNumber);
+        while (true) {
+            if (getBehaviour() == ComponentBehaviour.UNLOCK) {
+                ComponentPin componentPin = inputs.get(pinNumber);
+                if (componentPin == null) {
+                    componentPin = outputs.get(pinNumber);
+                }
+        
+                if (componentPin == null) {
+                    throw new UnknownPin(this.getGlobalId(), pinNumber);
+                }
+        
+                componentPin.setPin(value);
+                notifyObserver(pinNumber);
+                break;
+            }
+            System.out.println("Component " + humanName + " is locked...");
         }
-
-        if (componentPin == null) {
-            throw new UnknownPin(this.getGlobalId(), pinNumber);
-        }
-
-        componentPin.setPin(value);
-        notifyObserver(pinNumber);
     }
 
     @Override
@@ -181,5 +190,25 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
         } catch (UnknownPin e) {
             throw e;
         }
+    }
+
+    public Map<Integer, ComponentPin> getInputs() {
+        return inputs;
+    }
+
+    public Map<Integer, ComponentPin> getOutputs() {
+        return outputs;
+    }
+
+    public Map<Integer, List<ComponentObserver>> getObservers() {
+        return observers;
+    }
+
+    public ComponentBehaviour getBehaviour() {
+        return behaviour;
+    }
+
+    public void setBehaviour(ComponentBehaviour behaviour) {
+        this.behaviour = behaviour;
     }
 }
