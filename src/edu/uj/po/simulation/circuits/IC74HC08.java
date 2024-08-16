@@ -1,5 +1,6 @@
 package edu.uj.po.simulation.circuits;
 
+import edu.uj.po.simulation.consts.ComponentType;
 import edu.uj.po.simulation.interfaces.AbstractComponent;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
@@ -22,7 +23,9 @@ import java.util.Set;
  * Description: https://eduinf.waw.pl/inf/prg/010_uc/7408.php
  */
 public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { // TODO: AbstractComponent, ktory zawiera
-                                                                               // wszystkie te metody??
+    private final String type = ComponentType.COMPONENT_74HC08;
+
+    // wszystkie te metody??
     private final Map<Integer, ComponentPin> inputs;
     private final Map<Integer, ComponentPin> outputs;
     private final Map<Integer, List<ComponentObserver>> observers;
@@ -51,7 +54,7 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
         humanName = this.getClass().getSimpleName() + "_" + getGlobalId();
         behaviour = ComponentBehaviour.UNLOCK;
     }
-
+    
     @Override
     public String getHumanName() {
         return humanName;
@@ -60,6 +63,31 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
     @Override
     public ComponentClass getComponentClass() {
         return componentClass;
+    }
+
+    public Map<Integer, ComponentPin> getInputs() {
+        return inputs;
+    }
+
+    public Map<Integer, ComponentPin> getOutputs() {
+        return outputs;
+    }
+
+    public Map<Integer, List<ComponentObserver>> getObservers() {
+        return observers;
+    }
+
+    public ComponentBehaviour getBehaviour() {
+        return behaviour;
+    }
+
+    public void setBehaviour(ComponentBehaviour behaviour) {
+        this.behaviour = behaviour;
+    }
+
+    @Override
+    public String getComponentType() {
+        return type;
     }
 
     @Override
@@ -190,25 +218,5 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
         } catch (UnknownPin e) {
             throw e;
         }
-    }
-
-    public Map<Integer, ComponentPin> getInputs() {
-        return inputs;
-    }
-
-    public Map<Integer, ComponentPin> getOutputs() {
-        return outputs;
-    }
-
-    public Map<Integer, List<ComponentObserver>> getObservers() {
-        return observers;
-    }
-
-    public ComponentBehaviour getBehaviour() {
-        return behaviour;
-    }
-
-    public void setBehaviour(ComponentBehaviour behaviour) {
-        this.behaviour = behaviour;
     }
 }

@@ -1,5 +1,6 @@
 package edu.uj.po.simulation.headers;
 
+import edu.uj.po.simulation.consts.ComponentType;
 import edu.uj.po.simulation.interfaces.AbstractComponent;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.OutputPinHeader;
@@ -19,19 +20,12 @@ import java.util.Map;
 import java.util.Set;
 
 public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinHeader {
+    private final String type = ComponentType.COMPONENT_OUTPUT_HEADER;
     private final Map<Integer, ComponentPin> outputs;
     private final Map<Integer, List<ComponentObserver>> observers;
     private final ComponentClass componentClass;
     private final String humanName;
     private ComponentBehaviour behaviour;
-
-    public ComponentBehaviour getBehaviour() {
-        return behaviour;
-    }
-
-    public void setBehaviour(ComponentBehaviour behaviour) {
-        this.behaviour = behaviour;
-    }
 
     public OutputPinHeaderImpl(int size) {
         super();
@@ -43,6 +37,20 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
         }
         humanName = getClass().getSimpleName() + "_" + getGlobalId();
         behaviour = ComponentBehaviour.UNLOCK;
+    }
+
+    public ComponentBehaviour getBehaviour() {
+        return behaviour;
+    }
+
+    @Override
+    public void setBehaviour(ComponentBehaviour behaviour) {
+        this.behaviour = behaviour;
+    }
+
+    @Override
+    public String getComponentType() {
+        return type;
     }
 
     @Override
@@ -123,4 +131,6 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
 
         return states;
     }
+
+
 }

@@ -18,4 +18,5 @@ public interface Component {
     public ComponentClass getComponentClass();
     public String getHumanName();
     public void setBehaviour(ComponentBehaviour behaviour);
+    public String getComponentType();
 }
