@@ -1,7 +1,7 @@
 package edu.uj.po.simulation.builders;
 
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
-import edu.uj.po.simulation.interfaces.IntegratedCircuitBuilder;
+import edu.uj.po.simulation.interfaces.builders.IntegratedCircuitBuilder;
 
 public class IC74138Builder implements IntegratedCircuitBuilder {
 

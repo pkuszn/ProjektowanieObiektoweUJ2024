@@ -5,18 +5,19 @@ import edu.uj.po.simulation.builders.IC74HC08Builder;
 import edu.uj.po.simulation.headers.InputPinHeaderImpl;
 import edu.uj.po.simulation.headers.OutputPinHeaderImpl;
 import edu.uj.po.simulation.interfaces.Component;
-import edu.uj.po.simulation.interfaces.ComponentClass;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
-import edu.uj.po.simulation.interfaces.IntegratedCircuitBuilder;
-import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.ShortCircuitException;
 import edu.uj.po.simulation.interfaces.UnknownChip;
 import edu.uj.po.simulation.interfaces.UnknownComponent;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.interfaces.UnknownStateException;
 import edu.uj.po.simulation.interfaces.UserInterface;
-import edu.uj.po.simulation.timer.TimeSimulationPropagator;
+import edu.uj.po.simulation.interfaces.builders.IntegratedCircuitBuilder;
+import edu.uj.po.simulation.interfaces.enums.ComponentClass;
+import edu.uj.po.simulation.interfaces.enums.PinType;
+import edu.uj.po.simulation.recorder.ComponentStateRecorder;
+import edu.uj.po.simulation.recorder.SessionType;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.HashMap;
@@ -24,19 +25,23 @@ import java.util.Map;
 import java.util.Set;
 
 public class DebugUserInterfaceImpl implements UserInterface {
-
     private final Map<Integer, Component> components; // integer as global identifier
     private final Map<Integer, IntegratedCircuitBuilder> builders; // integer as type of circuit
     private final CircuitDirector director;
-    private final TimeSimulationPropagator propagator;
+    private final TimePropagator propagator;
+    private final ComponentStateRecorder recorder;
+    private final Thread th;
 
     public DebugUserInterfaceImpl() {
         super();
         this.components = new HashMap<>();
         this.builders = new HashMap<>();
         this.director = new CircuitDirector();
-        this.propagator = TimeSimulationPropagator.getInstance();
         this.builders.put(7408, new IC74HC08Builder());
+        this.propagator = new TimePropagator();
+        this.th = new Thread(this.propagator);
+        this.th.start();
+        this.recorder = ComponentStateRecorder.getInstance();
     }
 
     public Component getChip(int globalId) throws UnknownChip {
@@ -55,6 +60,7 @@ public class DebugUserInterfaceImpl implements UserInterface {
         }
         try {
             IntegratedCircuit circuit = director.make(builder);
+            propagator.addObserver(circuit);
             int globalId = circuit.getGlobalId();
             components.put(globalId, circuit);
             return globalId;
@@ -67,6 +73,7 @@ public class DebugUserInterfaceImpl implements UserInterface {
     @Override
     public int createInputPinHeader(int size) {
         InputPinHeaderImpl inputHeader = new InputPinHeaderImpl(size);
+        propagator.addObserver(inputHeader);
         int globalId = inputHeader.getGlobalId();
         components.put(globalId, inputHeader);
         return globalId;
@@ -75,6 +82,7 @@ public class DebugUserInterfaceImpl implements UserInterface {
     @Override
     public int createOutputPinHeader(int size) {
         OutputPinHeaderImpl outputHeader = new OutputPinHeaderImpl(size);
+        propagator.addObserver(outputHeader);
         int globalId = outputHeader.getGlobalId();
         components.put(globalId, outputHeader);
         return globalId;
@@ -125,7 +133,7 @@ public class DebugUserInterfaceImpl implements UserInterface {
 
     @Override
     public void stationaryState(Set<ComponentPinState> states) throws UnknownStateException {
-        for (ComponentPinState componentPinState : states) {
+        states.parallelStream().forEach(componentPinState -> {
             try {
                 Component component = components.get(componentPinState.componentId());
                 ComponentLogger.logSettingStationaryState(componentPinState.componentId(), componentPinState);
@@ -133,16 +141,25 @@ public class DebugUserInterfaceImpl implements UserInterface {
             } catch (UnknownPin e) {
                 System.out.println(e.getMessage());
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); 
             }
-        }
+        });
+        for (int i = 0; i < 5; i++) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+            }
+            System.out.println("Please, wait patiently to safely propagate signals over the circuit...");
+        } 
+        propagator.setTicks(0);
+        recorder.save(SessionType.STATIONARY_TYPE);
     }
 
     @Override
     public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks)
             throws UnknownStateException {
-        propagator.setThreshold(ticks);
-        propagator.reset();
-        for (ComponentPinState componentPinState : states0) {
+        propagator.setTickLimit(ticks);
+        states0.parallelStream().forEach(componentPinState -> {
             try {
                 Component component = components.get(componentPinState.componentId());
                 ComponentLogger.logSimulationState(componentPinState.componentId(), componentPinState);
@@ -150,16 +167,18 @@ public class DebugUserInterfaceImpl implements UserInterface {
             } catch (UnknownPin e) {
                 System.out.println(e.getMessage());
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
-        }
+        });
         
-        propagator.setThreshold(ticks);
-        propagator.reset();
         Map<Integer, Set<ComponentPinState>> result = new HashMap<>();
         for (Map.Entry<Integer, Component> component : components.entrySet()) {
             result.put(component.getKey(), component.getValue().getStates());
         }
 
+        propagator.setTicks(0);
+        recorder.save(SessionType.SIMULATION);
+        th.interrupt();
         return result;
     }
 

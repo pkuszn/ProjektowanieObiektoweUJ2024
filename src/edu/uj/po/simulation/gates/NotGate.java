@@ -1,7 +1,7 @@
 package edu.uj.po.simulation.gates;
 
-import edu.uj.po.simulation.interfaces.GateObserver;
 import edu.uj.po.simulation.interfaces.LogicGate;
+import edu.uj.po.simulation.interfaces.observers.GateObserver;
 
 public class NotGate implements LogicGate {
 

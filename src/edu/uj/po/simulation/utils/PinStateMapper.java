@@ -9,14 +9,14 @@ public class PinStateMapper {
 
     public static boolean toBoolean(PinState state) {
         switch (state) {
-            case HIGH:
+            case HIGH -> {
                 return true;
-            case LOW:
+            }
+            case LOW -> {
                 return false;
-            case UNKNOWN:
-                throw new IllegalArgumentException("Cannot convert PinState.UNKNOWN to boolean");
-            default:
-                throw new IllegalArgumentException("Unknown PinState: " + state);
+            }
+            case UNKNOWN -> throw new IllegalArgumentException("Cannot convert PinState.UNKNOWN to boolean");
+            default -> throw new IllegalArgumentException("Unknown PinState: " + state);
         }
     }
 }

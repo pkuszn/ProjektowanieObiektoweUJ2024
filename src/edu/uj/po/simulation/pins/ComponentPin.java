@@ -1,8 +1,9 @@
 package edu.uj.po.simulation.pins;
 
-import edu.uj.po.simulation.interfaces.ComponentPinObserver;
 import edu.uj.po.simulation.interfaces.Pin;
-import edu.uj.po.simulation.interfaces.PinType;
+import edu.uj.po.simulation.interfaces.enums.PinType;
+import edu.uj.po.simulation.interfaces.observers.ComponentPinObserver;
+
 import java.util.ArrayList;
 import java.util.List;
 

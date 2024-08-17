@@ -5,18 +5,17 @@ import edu.uj.po.simulation.builders.IC74HC08Builder;
 import edu.uj.po.simulation.headers.InputPinHeaderImpl;
 import edu.uj.po.simulation.headers.OutputPinHeaderImpl;
 import edu.uj.po.simulation.interfaces.Component;
-import edu.uj.po.simulation.interfaces.ComponentClass;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.IntegratedCircuit;
-import edu.uj.po.simulation.interfaces.IntegratedCircuitBuilder;
-import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.ShortCircuitException;
 import edu.uj.po.simulation.interfaces.UnknownChip;
 import edu.uj.po.simulation.interfaces.UnknownComponent;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.interfaces.UnknownStateException;
 import edu.uj.po.simulation.interfaces.UserInterface;
-import edu.uj.po.simulation.timer.TimeSimulationPropagator;
+import edu.uj.po.simulation.interfaces.builders.IntegratedCircuitBuilder;
+import edu.uj.po.simulation.interfaces.enums.ComponentClass;
+import edu.uj.po.simulation.interfaces.enums.PinType;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.HashMap;
@@ -24,18 +23,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class UserInterfaceImpl implements UserInterface {
-
     private final Map<Integer, Component> components; // integer as global identifier
     private final Map<Integer, IntegratedCircuitBuilder> builders; // integer as type of circuit
     private final CircuitDirector director;
-    private final TimeSimulationPropagator propagator;
-    
+
     public UserInterfaceImpl() {
         super();
         this.components = new HashMap<>();
         this.builders = new HashMap<>();
         this.director = new CircuitDirector();
-        this.propagator = TimeSimulationPropagator.getInstance();
         this.builders.put(7408, new IC74HC08Builder());
     }
 
@@ -142,9 +138,6 @@ public class UserInterfaceImpl implements UserInterface {
             } catch (InterruptedException e) {
             }
         }
-
-        propagator.setThreshold(ticks);
-        propagator.reset();
 
         Map<Integer, Set<ComponentPinState>> result = new HashMap<>();
 

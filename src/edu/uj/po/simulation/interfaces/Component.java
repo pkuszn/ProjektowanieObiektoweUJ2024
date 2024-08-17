@@ -1,5 +1,9 @@
 package edu.uj.po.simulation.interfaces;
 
+import edu.uj.po.simulation.interfaces.enums.ComponentBehaviour;
+import edu.uj.po.simulation.interfaces.enums.ComponentClass;
+import edu.uj.po.simulation.interfaces.enums.PinType;
+import edu.uj.po.simulation.interfaces.observers.ComponentObserver;
 import java.util.Set;
 
 public interface Component {
@@ -12,4 +16,7 @@ public interface Component {
     public Set<ComponentPinState> getStates();
     public ComponentClass getComponentClass();
     public String getHumanName();
+    public void setBehaviour(ComponentBehaviour behaviour);
+    public String getComponentType();
+    public void setTick(int tick);
 }

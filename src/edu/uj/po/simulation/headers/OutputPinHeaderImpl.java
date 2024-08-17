@@ -1,30 +1,34 @@
 package edu.uj.po.simulation.headers;
 
+import edu.uj.po.simulation.consts.ComponentType;
 import edu.uj.po.simulation.interfaces.AbstractComponent;
-import edu.uj.po.simulation.interfaces.ComponentClass;
-import edu.uj.po.simulation.interfaces.ComponentObserver;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.OutputPinHeader;
-import edu.uj.po.simulation.interfaces.PinType;
 import edu.uj.po.simulation.interfaces.UnknownPin;
+import edu.uj.po.simulation.interfaces.enums.ComponentBehaviour;
+import edu.uj.po.simulation.interfaces.enums.ComponentClass;
+import edu.uj.po.simulation.interfaces.enums.PinType;
+import edu.uj.po.simulation.interfaces.observers.ComponentObserver;
 import edu.uj.po.simulation.pins.ComponentPin;
-import edu.uj.po.simulation.timer.TimeSimulationPropagator;
+import edu.uj.po.simulation.recorder.ComponentState;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 
 public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinHeader {
+    private final String type = ComponentType.COMPONENT_OUTPUT_HEADER;
     private final Map<Integer, ComponentPin> outputs;
     private final Map<Integer, List<ComponentObserver>> observers;
     private final ComponentClass componentClass;
     private final String humanName;
-    private TimeSimulationPropagator propagator;
+    private ComponentBehaviour behaviour;
+    private int tick;
 
     public OutputPinHeaderImpl(int size) {
         super();
@@ -35,6 +39,30 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
             outputs.put(i, new ComponentPin());
         }
         humanName = getClass().getSimpleName() + "_" + getGlobalId();
+        behaviour = ComponentBehaviour.UNLOCK;
+    }
+    
+    public int getTick() {
+        return tick;
+    }
+
+    @Override
+    public void setTick(int tick) {
+        this.tick = tick;
+    }
+
+    public ComponentBehaviour getBehaviour() {
+        return behaviour;
+    }
+
+    @Override
+    public void setBehaviour(ComponentBehaviour behaviour) {
+        this.behaviour = behaviour;
+    }
+
+    @Override
+    public String getComponentType() {
+        return type;
     }
 
     @Override
@@ -44,7 +72,23 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
 
     @Override
     public void setState(ComponentPinState state) {
-        ComponentLogger.logPinState(state.componentId(), state.pinId(), PinStateMapper.toBoolean(state.state()));
+        while (true) {
+            if (getBehaviour() == ComponentBehaviour.UNLOCK) {
+                System.out.println(this.globalId +  " unlock");
+                ComponentLogger.logPinState(state.componentId(), state.pinId(), PinStateMapper.toBoolean(state.state()));
+                ComponentState componentState = new ComponentState(
+                    state.pinId(), 
+                    humanName, 
+                    type, 
+                    componentClass, 
+                    state.pinId(), 
+                    tick, 
+                    state.state(), 
+                    LocalDateTime.now());
+                this.addComponentState(this.globalId, componentState);
+                break;
+            }
+        }
     }
 
     @Override
@@ -56,12 +100,11 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
     public boolean getPinState(int pinNumber) {
         return outputs.get(pinNumber).getPin();
     }
-    
+
     @Override
     public String getHumanName() {
         return humanName;
     }
-
 
     @Override
     public void addObserver(int pinNumber, ComponentObserver observer) {
@@ -92,16 +135,11 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
             return;
         }
 
-        propagator = TimeSimulationPropagator.getInstance();
-        CountDownLatch latch = new CountDownLatch(1);
-        propagator.setLatch(latch);
-
         boolean state = getPinState(pinNumber);
         for (ComponentObserver observer : circuitObservers) {
             ComponentLogger.logPinState(this.globalId, pinNumber, state);
             observer.update(state);
         }
-        latch.await();
     }
 
     @Override
@@ -115,4 +153,6 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
 
         return states;
     }
+
+
 }
