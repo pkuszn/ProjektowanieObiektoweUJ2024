@@ -11,8 +11,11 @@ import edu.uj.po.simulation.interfaces.enums.ComponentClass;
 import edu.uj.po.simulation.interfaces.enums.PinType;
 import edu.uj.po.simulation.interfaces.observers.ComponentObserver;
 import edu.uj.po.simulation.pins.ComponentPin;
+import edu.uj.po.simulation.recorder.ComponentState;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +30,7 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
     private final ComponentClass componentClass;
     private final String humanName;
     private ComponentBehaviour behaviour;
+    private int tick;
 
     public InputPinHeaderImpl(int size) {
         super();
@@ -38,6 +42,15 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
         }
         humanName = this.getClass().getSimpleName() + "_" + getGlobalId();
         behaviour = ComponentBehaviour.UNLOCK;
+    }
+
+    public int getTick() {
+        return tick;
+    }
+
+    @Override
+    public void setTick(int tick) {
+        this.tick = tick;
     }
 
     @Override
@@ -85,6 +98,16 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
                 if (pin == null) {
                     System.out.println("Pin not updated");
                 }
+                ComponentState componentState = new ComponentState(
+                    pinNumber, 
+                    humanName, 
+                    type, 
+                    componentClass, 
+                    pinNumber, 
+                    tick, 
+                    PinStateMapper.toPinState(value), 
+                    LocalDateTime.now());
+                this.addComponentState(this.globalId, componentState);
                 pin.setPin(value);
                 notifyObserver(pinNumber);
                 break;

@@ -38,3 +38,7 @@ build/
 nbbuild/
 dist/
 nbdist/
+
+
+*.csv
+*.csv#

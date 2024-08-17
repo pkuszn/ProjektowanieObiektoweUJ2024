@@ -1,11 +1,10 @@
 package edu.uj.po.simulation.interfaces;
 
-import java.util.Set;
-
 import edu.uj.po.simulation.interfaces.enums.ComponentBehaviour;
 import edu.uj.po.simulation.interfaces.enums.ComponentClass;
 import edu.uj.po.simulation.interfaces.enums.PinType;
 import edu.uj.po.simulation.interfaces.observers.ComponentObserver;
+import java.util.Set;
 
 public interface Component {
     public void addObserver(int pinNumber, ComponentObserver observer) throws UnknownPin;
@@ -19,4 +18,5 @@ public interface Component {
     public String getHumanName();
     public void setBehaviour(ComponentBehaviour behaviour);
     public String getComponentType();
+    public void setTick(int tick);
 }

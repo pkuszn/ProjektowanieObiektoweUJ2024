@@ -10,8 +10,10 @@ import edu.uj.po.simulation.interfaces.enums.ComponentClass;
 import edu.uj.po.simulation.interfaces.enums.PinType;
 import edu.uj.po.simulation.interfaces.observers.ComponentObserver;
 import edu.uj.po.simulation.pins.ComponentPin;
+import edu.uj.po.simulation.recorder.ComponentState;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,6 +34,7 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
     private final ComponentClass componentClass;
     private final String humanName;
     private ComponentBehaviour behaviour;
+    private int tick;
 
     public IC74HC08() {
         super();
@@ -55,6 +58,11 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
         behaviour = ComponentBehaviour.UNLOCK;
     }
     
+    @Override
+    public void setTick(int tick) {
+        this.tick = tick;
+    }
+
     @Override
     public String getHumanName() {
         return humanName;
@@ -81,6 +89,7 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
         return behaviour;
     }
 
+    @Override
     public void setBehaviour(ComponentBehaviour behaviour) {
         this.behaviour = behaviour;
     }
@@ -103,8 +112,19 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
                     throw new UnknownPin(this.getGlobalId(), pinNumber);
                 }
         
+				ComponentState componentState = new ComponentState(
+                    pinNumber, 
+                    humanName, 
+                    type, 
+                    componentClass, 
+                    pinNumber, 
+                    tick, 
+                    PinStateMapper.toPinState(value), 
+                    LocalDateTime.now());
+                this.addComponentState(this.globalId, componentState);
                 componentPin.setPin(value);
                 notifyObserver(pinNumber);
+
                 break;
             }
             System.out.println("Component " + humanName + " is locked...");

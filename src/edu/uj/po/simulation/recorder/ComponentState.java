@@ -1,26 +1,36 @@
 package edu.uj.po.simulation.recorder;
 
+import edu.uj.po.simulation.interfaces.PinState;
 import edu.uj.po.simulation.interfaces.enums.ComponentClass;
 import java.time.LocalDateTime;
 
-public class TickState {
+public class ComponentState {
     private int globalId;
     private String humanName;
     private String type;
     private ComponentClass componentClass;
-    private int tickNumber;
     private int pinNumber;
+    private int tickNumber;
+    private PinState pinState;
     private LocalDateTime date;
 
-    public TickState(int globalId, String humanName, String type, ComponentClass componentClass, int tickNumber,
-            int pinNumber, LocalDateTime date) {
+    public ComponentState(
+        int globalId, 
+        String humanName, 
+        String type, 
+        ComponentClass componentClass, 
+        int pinNumber, 
+        int tickNumbers, 
+        PinState pinStates, 
+        LocalDateTime dates) {
         this.globalId = globalId;
         this.humanName = humanName;
         this.type = type;
         this.componentClass = componentClass;
-        this.tickNumber = tickNumber;
         this.pinNumber = pinNumber;
-        this.date = date;
+        this.tickNumber = tickNumbers;
+        this.pinState = pinStates;
+        this.date = dates;
     }
     
     public int getGlobalId() {
@@ -64,5 +74,11 @@ public class TickState {
     }
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+    public PinState getPinState() {
+        return pinState;
+    }
+    public void setPinState(PinState pinState) {
+        this.pinState = pinState;
     }
 }

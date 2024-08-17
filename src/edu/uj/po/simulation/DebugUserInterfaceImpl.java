@@ -16,6 +16,8 @@ import edu.uj.po.simulation.interfaces.UserInterface;
 import edu.uj.po.simulation.interfaces.builders.IntegratedCircuitBuilder;
 import edu.uj.po.simulation.interfaces.enums.ComponentClass;
 import edu.uj.po.simulation.interfaces.enums.PinType;
+import edu.uj.po.simulation.recorder.ComponentStateRecorder;
+import edu.uj.po.simulation.recorder.SessionType;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.HashMap;
@@ -27,6 +29,8 @@ public class DebugUserInterfaceImpl implements UserInterface {
     private final Map<Integer, IntegratedCircuitBuilder> builders; // integer as type of circuit
     private final CircuitDirector director;
     private final TimePropagator propagator;
+    private final ComponentStateRecorder recorder;
+    private final Thread th;
 
     public DebugUserInterfaceImpl() {
         super();
@@ -35,8 +39,9 @@ public class DebugUserInterfaceImpl implements UserInterface {
         this.director = new CircuitDirector();
         this.builders.put(7408, new IC74HC08Builder());
         this.propagator = new TimePropagator();
-        Thread th = new Thread(this.propagator);
-        th.start();
+        this.th = new Thread(this.propagator);
+        this.th.start();
+        this.recorder = ComponentStateRecorder.getInstance();
     }
 
     public Component getChip(int globalId) throws UnknownChip {
@@ -138,6 +143,15 @@ public class DebugUserInterfaceImpl implements UserInterface {
             } catch (InterruptedException e) {
             }
         }
+        for (int i = 0; i < 5; i++) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+            }
+            System.out.println("Please, wait patiently to safely propagate signals over the circuit...");
+        } 
+
+        recorder.save(SessionType.STATIONARY_TYPE);
     }
 
     @Override
@@ -159,6 +173,8 @@ public class DebugUserInterfaceImpl implements UserInterface {
             result.put(component.getKey(), component.getValue().getStates());
         }
 
+        recorder.save(SessionType.SIMULATION);
+        th.interrupt();
         return result;
     }
 

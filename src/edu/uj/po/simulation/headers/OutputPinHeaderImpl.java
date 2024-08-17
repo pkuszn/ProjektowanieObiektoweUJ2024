@@ -10,8 +10,11 @@ import edu.uj.po.simulation.interfaces.enums.ComponentClass;
 import edu.uj.po.simulation.interfaces.enums.PinType;
 import edu.uj.po.simulation.interfaces.observers.ComponentObserver;
 import edu.uj.po.simulation.pins.ComponentPin;
+import edu.uj.po.simulation.recorder.ComponentState;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +29,7 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
     private final ComponentClass componentClass;
     private final String humanName;
     private ComponentBehaviour behaviour;
+    private int tick;
 
     public OutputPinHeaderImpl(int size) {
         super();
@@ -37,6 +41,15 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
         }
         humanName = getClass().getSimpleName() + "_" + getGlobalId();
         behaviour = ComponentBehaviour.UNLOCK;
+    }
+    
+    public int getTick() {
+        return tick;
+    }
+
+    @Override
+    public void setTick(int tick) {
+        this.tick = tick;
     }
 
     public ComponentBehaviour getBehaviour() {
@@ -63,6 +76,16 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
         while (true) {
             if (getBehaviour() == ComponentBehaviour.UNLOCK) {
                 ComponentLogger.logPinState(state.componentId(), state.pinId(), PinStateMapper.toBoolean(state.state()));
+                ComponentState componentState = new ComponentState(
+                    state.pinId(), 
+                    humanName, 
+                    type, 
+                    componentClass, 
+                    state.pinId(), 
+                    tick, 
+                    state.state(), 
+                    LocalDateTime.now());
+                this.addComponentState(this.globalId, componentState);
                 break;
             }
             System.out.println("Component " + humanName + " is locked...");
