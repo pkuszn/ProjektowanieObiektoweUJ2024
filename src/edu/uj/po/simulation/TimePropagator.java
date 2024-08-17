@@ -13,7 +13,7 @@ public class TimePropagator implements Runnable{
     private static final String PROPAGATION_DELAY_KEY = "PROPAGATION_DELAY";
     private final List<PropagatorObserver> componentBehaviours;
     private int ticks = 0;
-
+    private int tickLimit;
     public TimePropagator() {
         super();
         Properties prop = ConfigReader.loadProperties();
@@ -32,18 +32,29 @@ public class TimePropagator implements Runnable{
         this.ticks = ticks;
     }
     
+    public int getTickLimit() {
+        return tickLimit;
+    }
+
+    public void setTickLimit(int tickLimit) {
+        this.tickLimit = tickLimit;
+    }
+
     public void propagate() throws InterruptedException {
-        while (!Thread.currentThread().isInterrupted()) {
+        while (!Thread.currentThread().isInterrupted() && this.tickLimit > ticks) {
             ticks++;
-            setLock(ComponentBehaviour.LOCK);
-            System.out.println("Tick" + ticks + " components locked...");
-            Thread.sleep(TIME_DELAY);
+            setLock(ComponentBehaviour.LOCK);            
+            try {
+                Thread.sleep(TIME_DELAY);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+    
             setLock(ComponentBehaviour.UNLOCK);
-            System.out.println("Tick" + ticks + " components unlocked...");
         }
         System.out.println("Propagator has been disabled...");
     }
-
     public synchronized void addObserver(Component component) {
         if (component == null) {
             System.out.println("Component is null!");

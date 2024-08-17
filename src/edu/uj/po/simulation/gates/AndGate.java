@@ -1,17 +1,16 @@
 package edu.uj.po.simulation.gates;
 
+import edu.uj.po.simulation.interfaces.LogicGate;
+import edu.uj.po.simulation.interfaces.observers.GateObserver;
+import edu.uj.po.simulation.pins.GatePin;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.uj.po.simulation.interfaces.LogicGate;
-import edu.uj.po.simulation.interfaces.observers.GateObserver;
-import edu.uj.po.simulation.pins.GatePin;
-
 public class AndGate implements LogicGate {
-    private Map<Integer, GatePin> pins = new HashMap<>();
-    private List<GateObserver> gateObservers = new ArrayList<>();
+    private final Map<Integer, GatePin> pins = new HashMap<>();
+    private final List<GateObserver> gateObservers = new ArrayList<>();
 
     public AndGate(int size) {
         for (int i = 1; i < size + 1; i++) {
@@ -19,6 +18,7 @@ public class AndGate implements LogicGate {
         }
     }
 
+    @Override
     public void setPinState(int pinNumber, boolean value) {
         GatePin pin = pins.get(pinNumber);
         pin.setPin(value);

@@ -14,7 +14,6 @@ import edu.uj.po.simulation.pins.ComponentPin;
 import edu.uj.po.simulation.recorder.ComponentState;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,6 +93,7 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
     public void setPinState(int pinNumber, boolean value) throws InterruptedException {
         while (true) {
             if (getBehaviour() == ComponentBehaviour.UNLOCK) {
+                System.out.println(this.globalId +  " unlock");
                 ComponentPin pin = inputs.get(pinNumber);
                 if (pin == null) {
                     System.out.println("Pin not updated");

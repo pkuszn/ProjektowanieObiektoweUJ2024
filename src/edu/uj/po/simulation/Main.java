@@ -15,6 +15,7 @@ public class Main {
 
         int globalId1, globalId2, globalId3, globalId4, globalId5 = 0;
         System.out.println("Waiting...");
+        Thread.sleep(10000);
         try {
             globalId1 = ui.createChip(7408);
             System.out.println("Chip 7408 FIRST has been created: " + globalId1);
@@ -37,10 +38,7 @@ public class Main {
             ui.connect(globalId1, 3, globalId2, 1);
             ui.connect(globalId1, 3, globalId2, 2);
 
-            ui.connect(globalId2, 3, globalId5, 4);
-            ui.connect(globalId2, 3, globalId5, 5);
-
-            ui.connect(globalId5, 6, globalId4, 1);
+            ui.connect(globalId2, 3, globalId4, 1);
 
             stationaryState.add(new ComponentPinState(globalId3, 1, PinState.HIGH));
             stationaryState.add(new ComponentPinState(globalId3, 2, PinState.HIGH));
@@ -55,7 +53,7 @@ public class Main {
         System.out.println("Starting simulation...");
         states0.add(new ComponentPinState(globalId3, 2, PinState.LOW));
         states0.add(new ComponentPinState(globalId3, 2, PinState.HIGH));
-        Map<Integer, Set<ComponentPinState>> result = ui.simulation(states0, 5);
+        Map<Integer, Set<ComponentPinState>> result = ui.simulation(states0, 50);
 
         for (Map.Entry<Integer, Set<ComponentPinState>> res : result.entrySet()) {
             for (ComponentPinState state : res.getValue()) {

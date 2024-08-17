@@ -103,6 +103,7 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
     public void setPinState(int pinNumber, boolean value) throws UnknownPin, InterruptedException {
         while (true) {
             if (getBehaviour() == ComponentBehaviour.UNLOCK) {
+                System.out.println(this.globalId +  " unlock");
                 ComponentPin componentPin = inputs.get(pinNumber);
                 if (componentPin == null) {
                     componentPin = outputs.get(pinNumber);
@@ -124,10 +125,8 @@ public class IC74HC08 extends AbstractComponent implements IntegratedCircuit { /
                 this.addComponentState(this.globalId, componentState);
                 componentPin.setPin(value);
                 notifyObserver(pinNumber);
-
                 break;
             }
-            System.out.println("Component " + humanName + " is locked...");
         }
     }
 

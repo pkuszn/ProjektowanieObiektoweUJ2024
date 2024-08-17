@@ -133,7 +133,7 @@ public class DebugUserInterfaceImpl implements UserInterface {
 
     @Override
     public void stationaryState(Set<ComponentPinState> states) throws UnknownStateException {
-        for (ComponentPinState componentPinState : states) {
+        states.parallelStream().forEach(componentPinState -> {
             try {
                 Component component = components.get(componentPinState.componentId());
                 ComponentLogger.logSettingStationaryState(componentPinState.componentId(), componentPinState);
@@ -141,8 +141,9 @@ public class DebugUserInterfaceImpl implements UserInterface {
             } catch (UnknownPin e) {
                 System.out.println(e.getMessage());
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); 
             }
-        }
+        });
         for (int i = 0; i < 5; i++) {
             try {
                 Thread.sleep(500);
@@ -150,14 +151,15 @@ public class DebugUserInterfaceImpl implements UserInterface {
             }
             System.out.println("Please, wait patiently to safely propagate signals over the circuit...");
         } 
-
+        propagator.setTicks(0);
         recorder.save(SessionType.STATIONARY_TYPE);
     }
 
     @Override
     public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks)
             throws UnknownStateException {
-        for (ComponentPinState componentPinState : states0) {
+        propagator.setTickLimit(ticks);
+        states0.parallelStream().forEach(componentPinState -> {
             try {
                 Component component = components.get(componentPinState.componentId());
                 ComponentLogger.logSimulationState(componentPinState.componentId(), componentPinState);
@@ -165,14 +167,16 @@ public class DebugUserInterfaceImpl implements UserInterface {
             } catch (UnknownPin e) {
                 System.out.println(e.getMessage());
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
-        }
+        });
         
         Map<Integer, Set<ComponentPinState>> result = new HashMap<>();
         for (Map.Entry<Integer, Component> component : components.entrySet()) {
             result.put(component.getKey(), component.getValue().getStates());
         }
 
+        propagator.setTicks(0);
         recorder.save(SessionType.SIMULATION);
         th.interrupt();
         return result;

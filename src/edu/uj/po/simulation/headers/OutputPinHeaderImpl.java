@@ -13,7 +13,6 @@ import edu.uj.po.simulation.pins.ComponentPin;
 import edu.uj.po.simulation.recorder.ComponentState;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,6 +74,7 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
     public void setState(ComponentPinState state) {
         while (true) {
             if (getBehaviour() == ComponentBehaviour.UNLOCK) {
+                System.out.println(this.globalId +  " unlock");
                 ComponentLogger.logPinState(state.componentId(), state.pinId(), PinStateMapper.toBoolean(state.state()));
                 ComponentState componentState = new ComponentState(
                     state.pinId(), 
@@ -88,7 +88,6 @@ public class OutputPinHeaderImpl extends AbstractComponent implements OutputPinH
                 this.addComponentState(this.globalId, componentState);
                 break;
             }
-            System.out.println("Component " + humanName + " is locked...");
         }
     }
 
