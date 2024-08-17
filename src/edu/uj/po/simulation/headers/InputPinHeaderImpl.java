@@ -112,7 +112,6 @@ public class InputPinHeaderImpl extends AbstractComponent implements InputPinHea
                 notifyObserver(pinNumber);
                 break;
             }
-            System.out.println("Component " + humanName + " is locked...");
         }
     }
 
