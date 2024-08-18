@@ -1,4 +1,4 @@
-package edu.uj.po.simulation.interfaces.enums;
+package edu.uj.po.simulation.enums;
 
 public enum ComponentClass {
     IN, OUT, IC

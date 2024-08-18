@@ -1,23 +1,27 @@
 package edu.uj.po.simulation.builders;
 
+import edu.uj.po.simulation.abstractions.IntegratedCircuit;
+import edu.uj.po.simulation.abstractions.LogicGate;
+import edu.uj.po.simulation.abstractions.builders.IntegratedCircuitBuilder;
 import edu.uj.po.simulation.circuits.IC74HC08;
 import edu.uj.po.simulation.creators.AndGateCreator;
-import edu.uj.po.simulation.interfaces.IntegratedCircuit;
-import edu.uj.po.simulation.interfaces.LogicGate;
+import edu.uj.po.simulation.gates.AndGate;
 import edu.uj.po.simulation.interfaces.UnknownPin;
-import edu.uj.po.simulation.interfaces.builders.IntegratedCircuitBuilder;
-import edu.uj.po.simulation.interfaces.observers.ComponentPinObserver;
-import edu.uj.po.simulation.interfaces.observers.GateObserver;
 import edu.uj.po.simulation.pins.ComponentPin;
+import java.util.Arrays;
 
 public class IC74HC08Builder implements IntegratedCircuitBuilder {
     private IC74HC08 integratedCircuit;
 
-    private LogicGate andGateOne;
-    private LogicGate andGateTwo;
-    private LogicGate andGateThree;
-    private LogicGate andGateFour;
+    private AndGate andGateOne;
+    private AndGate andGateTwo;
+    private AndGate andGateThree;
+    private AndGate andGateFour;
 
+    /**
+     * Pin instrunction for 74HC08 component
+     * [../housings/74HC08.png]
+     */
     public IC74HC08Builder() {
         super();
     }
@@ -30,10 +34,10 @@ public class IC74HC08Builder implements IntegratedCircuitBuilder {
     @Override
     public void setLogicGates() {
         AndGateCreator andGateCreator = new AndGateCreator();
-        andGateOne = andGateCreator.createGate(2);
-        andGateTwo = andGateCreator.createGate(2);
-        andGateThree = andGateCreator.createGate(2);
-        andGateFour = andGateCreator.createGate(2);
+        andGateOne = (AndGate) andGateCreator.createGate(2);
+        andGateTwo = (AndGate) andGateCreator.createGate(2);
+        andGateThree = (AndGate) andGateCreator.createGate(2);
+        andGateFour = (AndGate) andGateCreator.createGate(2);
     }
 
     @Override
@@ -69,17 +73,14 @@ public class IC74HC08Builder implements IntegratedCircuitBuilder {
     private void connectGateToOutput(LogicGate gate, int outputPinNumber) throws UnknownPin {
         try {
             ComponentPin outputComponentPin = integratedCircuit.getOutputPin(outputPinNumber);
-            gate.addObserver(new GateObserver() {
-                @Override
-                public void update(boolean newState) {
-                    outputComponentPin.setPin(newState);
-                }
+            gate.addObserver((boolean newState) -> {
+                outputComponentPin.setPin(newState);
             });
         } catch (UnknownPin p) {
-            System.out.println(p.getStackTrace());
+            System.out.println(Arrays.toString(p.getStackTrace()));
             throw p;
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             throw e;
         }
     }
@@ -87,11 +88,8 @@ public class IC74HC08Builder implements IntegratedCircuitBuilder {
     private void connectInputToGate(int inputPinNumber, LogicGate gate, int gatePinNumber) throws UnknownPin {
         try {
             ComponentPin pin = integratedCircuit.getInputPin(inputPinNumber);
-            pin.addObserver(new ComponentPinObserver() {
-                @Override
-                public void update(boolean newState) {
-                    gate.setPinState(gatePinNumber, newState);
-                }
+            pin.addObserver((boolean newState) -> {
+                gate.setPinState(gatePinNumber, newState);
             });
         } catch (UnknownPin p) {
             System.out.println(p.getMessage());

@@ -1,13 +1,5 @@
 package edu.uj.po.simulation;
 
-import edu.uj.po.simulation.interfaces.Component;
-import edu.uj.po.simulation.interfaces.enums.ComponentBehaviour;
-import edu.uj.po.simulation.interfaces.observers.PropagatorObserver;
-import edu.uj.po.simulation.utils.ConfigReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
 public class TimePropagator implements Runnable{
     private static long TIME_DELAY = 0;
     private static final String PROPAGATION_DELAY_KEY = "PROPAGATION_DELAY";

@@ -1,6 +1,6 @@
-package edu.uj.po.simulation.interfaces.builders;
+package edu.uj.po.simulation.abstractions.builders;
 
-import edu.uj.po.simulation.interfaces.IntegratedCircuit;
+import edu.uj.po.simulation.abstractions.IntegratedCircuit;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 
 public interface Director {

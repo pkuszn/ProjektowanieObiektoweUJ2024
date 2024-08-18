@@ -1,9 +1,9 @@
 package edu.uj.po.simulation.builders;
 
-import edu.uj.po.simulation.interfaces.IntegratedCircuit;
+import edu.uj.po.simulation.abstractions.IntegratedCircuit;
+import edu.uj.po.simulation.abstractions.builders.Director;
+import edu.uj.po.simulation.abstractions.builders.IntegratedCircuitBuilder;
 import edu.uj.po.simulation.interfaces.UnknownPin;
-import edu.uj.po.simulation.interfaces.builders.Director;
-import edu.uj.po.simulation.interfaces.builders.IntegratedCircuitBuilder;
 
 public class CircuitDirector implements Director {
 

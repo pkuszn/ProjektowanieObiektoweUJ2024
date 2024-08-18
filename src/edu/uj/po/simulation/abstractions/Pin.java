@@ -1,7 +1,8 @@
-package edu.uj.po.simulation.interfaces;
+package edu.uj.po.simulation.abstractions;
 
-import edu.uj.po.simulation.interfaces.enums.PinType;
-import edu.uj.po.simulation.interfaces.observers.ComponentPinObserver;
+import edu.uj.po.simulation.abstractions.observers.ComponentPinObserver;
+import edu.uj.po.simulation.enums.PinType;
+
 
 public interface Pin {
     boolean getPin();

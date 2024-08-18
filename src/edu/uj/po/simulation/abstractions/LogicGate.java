@@ -1,6 +1,6 @@
-package edu.uj.po.simulation.interfaces;
+package edu.uj.po.simulation.abstractions;
 
-import edu.uj.po.simulation.interfaces.observers.GateObserver;
+import edu.uj.po.simulation.abstractions.observers.GateObserver;
 
 public interface LogicGate {
     void setPinState(int pinNumber, boolean value);

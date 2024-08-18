@@ -1,7 +1,7 @@
 package edu.uj.po.simulation.builders;
 
-import edu.uj.po.simulation.interfaces.IntegratedCircuit;
-import edu.uj.po.simulation.interfaces.builders.IntegratedCircuitBuilder;
+import edu.uj.po.simulation.abstractions.IntegratedCircuit;
+import edu.uj.po.simulation.abstractions.builders.IntegratedCircuitBuilder;
 
 public class IC74HC20Builder implements IntegratedCircuitBuilder {
 
