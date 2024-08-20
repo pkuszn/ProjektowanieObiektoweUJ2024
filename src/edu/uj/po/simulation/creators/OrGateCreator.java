@@ -12,7 +12,7 @@ public class OrGateCreator implements LogicGateCreator {
 
     @Override
     public LogicGate createGate(int size) {
-        return new OrGate();
+        return new OrGate(size);
     }
     
 }

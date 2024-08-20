@@ -2,17 +2,12 @@ package edu.uj.po.simulation.creators;
 
 import edu.uj.po.simulation.abstractions.LogicGate;
 import edu.uj.po.simulation.abstractions.builders.LogicGateCreator;
-import edu.uj.po.simulation.gates.NorGate;
+import edu.uj.po.simulation.gates.Gate;
 
-public class NorGateCreator implements LogicGateCreator {
-
-    public NorGateCreator() {
-        super();
-    }
+public class GateCreator implements LogicGateCreator {
 
     @Override
     public LogicGate createGate(int size) {
-        return new NorGate(size);
+        return new Gate();
     }
-    
 }

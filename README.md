@@ -20,4 +20,3 @@ install
 ```bash
 sudo apt install openjdk-21-jdk
 ```
-

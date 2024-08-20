@@ -12,7 +12,7 @@ public class NxorGateCreator implements LogicGateCreator{
 
     @Override
     public LogicGate createGate(int size) {
-        return new NxorGate();
+        return new NxorGate(size);
     }
     
 }

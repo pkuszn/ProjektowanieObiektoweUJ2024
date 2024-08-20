@@ -5,11 +5,11 @@ import edu.uj.po.simulation.enums.ComponentBehaviour;
 import edu.uj.po.simulation.enums.ComponentClass;
 import edu.uj.po.simulation.pins.ComponentPin;
 import java.util.HashMap;
-/*
- * Description: https://eduinf.waw.pl/inf/prg/010_uc/7408.php
- */
-public class IC74HC08 extends BaseComponent {
 
+public class IC74HC08 extends BaseComponent {
+    /**
+     * Description: https://eduinf.waw.pl/inf/prg/010_uc/7408.php
+     */
     public IC74HC08() {
         super();
         this.inputs = new HashMap<>();
