@@ -1,7 +1,7 @@
 package edu.uj.po.simulation.recorder;
 
+import edu.uj.po.simulation.enums.ComponentClass;
 import edu.uj.po.simulation.interfaces.PinState;
-import edu.uj.po.simulation.interfaces.enums.ComponentClass;
 import java.time.LocalDateTime;
 
 public class ComponentState {

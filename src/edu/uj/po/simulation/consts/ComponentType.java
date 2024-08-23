@@ -8,6 +8,7 @@ public class ComponentType {
     public static final String COMPONENT_74HC10 = "74HC10";
     public static final String COMPONENT_74HC11= "74HC11";
     public static final String COMPONENT_74HC20 = "74HC20";
+    public static final String COMPONENT_74LS00 = "74LS00";
     public static final String COMPONENT_74LS31 = "74LS31";
     public static final String COMPONENT_74LS32 = "74LS32";
     public static final String COMPONENT_74LS42 = "74LS42";

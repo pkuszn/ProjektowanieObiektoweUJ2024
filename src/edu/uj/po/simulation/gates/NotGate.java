@@ -1,42 +1,19 @@
 package edu.uj.po.simulation.gates;
 
-import edu.uj.po.simulation.interfaces.LogicGate;
-import edu.uj.po.simulation.interfaces.observers.GateObserver;
+import edu.uj.po.simulation.pins.GatePin;
 
-public class NotGate implements LogicGate {
-
+public class NotGate extends BaseGate {
     public NotGate() {
         super();
+        this.pins.put(1, new GatePin());
     }
 
     @Override
     public boolean getState() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getOutput'");
+        return !pins.entrySet()
+            .iterator()
+            .next()
+            .getValue()
+            .getPin();
     }
-
-    @Override
-    public void setPinState(int pinNumber, boolean value) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setPinState'");
-    }
-
-    @Override
-    public void addObserver(GateObserver observer) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addObserver'");
-    }
-
-    @Override
-    public void removeObserver(GateObserver observer) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeObserver'");
-    }
-
-    @Override
-    public void notifyObservers() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'notifyObservers'");
-    }
-    
 }
