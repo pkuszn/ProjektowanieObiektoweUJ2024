@@ -6,7 +6,6 @@ import edu.uj.po.simulation.enums.ComponentClass;
 import edu.uj.po.simulation.enums.PinType;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.UnknownPin;
-
 import java.util.Set;
 
 public interface Component {

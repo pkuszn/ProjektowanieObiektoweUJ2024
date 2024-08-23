@@ -47,7 +47,7 @@ public abstract class BaseComponent implements IntegratedCircuit {
     protected void addComponentState(int id, ComponentState componentState) {
         recorder.addComponentState(id, componentState);
     }
-    
+
     protected void addComponentStates(Map<Integer, ComponentState> componentStatesMap) {
         recorder.addComponentStates(componentStatesMap);
     }
@@ -94,31 +94,33 @@ public abstract class BaseComponent implements IntegratedCircuit {
     }
 
     @Override
-    public void setPinState(int pinNumber, boolean value) throws UnknownPin, InterruptedException {
+    public void setState(ComponentPinState state) throws UnknownPin, InterruptedException {
         while (true) {
             if (getBehaviour() == ComponentBehaviour.UNLOCK) {
-                System.out.println(this.globalId +  " unlock");
-                ComponentPin componentPin = inputs.get(pinNumber);
+                System.out.println(this.globalId + " unlock");
+                ComponentPin componentPin = inputs.get(state.pinId());
                 if (componentPin == null) {
-                    componentPin = outputs.get(pinNumber);
+                    componentPin = outputs.get(state.pinId());
                 }
-        
+
                 if (componentPin == null) {
-                    throw new UnknownPin(this.getGlobalId(), pinNumber);
+                    throw new UnknownPin(this.getGlobalId(), state.pinId());
                 }
-        
-				ComponentState componentState = new ComponentState(
-                    pinNumber, 
-                    humanName, 
-                    type, 
-                    componentClass, 
-                    pinNumber, 
-                    tick, 
-                    PinStateMapper.toPinState(value), 
-                    LocalDateTime.now());
+
+                ComponentState componentState = new ComponentState(
+                        this.globalId,
+                        humanName,
+                        type,
+                        componentClass,
+                        state.pinId(),
+                        tick,
+                        state.state(),
+                        LocalDateTime.now());
+
                 this.addComponentState(this.globalId, componentState);
-                componentPin.setPin(value);
-                notifyObserver(pinNumber);
+                componentPin.setPin(PinStateMapper.toBoolean((state.state())));
+                notifyObserver(state.pinId());
+
                 break;
             }
         }
@@ -126,7 +128,7 @@ public abstract class BaseComponent implements IntegratedCircuit {
 
     @Override
     public boolean getPinState(int pinNumber) throws UnknownPin {
-        ComponentPin componentPin = outputs.get(pinNumber);
+        ComponentPin componentPin = outputs != null ? outputs.get(pinNumber) : null;
         if (componentPin == null) {
             componentPin = inputs.get(pinNumber);
         }
@@ -140,8 +142,8 @@ public abstract class BaseComponent implements IntegratedCircuit {
 
     @Override
     public PinType getPinType(int pinNumber) throws UnknownPin {
-        ComponentPin pinIn = inputs.get(pinNumber);
-        ComponentPin pinOut = outputs.get(pinNumber);
+        ComponentPin pinIn = inputs != null ? inputs.get(pinNumber) : null;
+        ComponentPin pinOut = outputs != null ? outputs.get(pinNumber) : null;
         if (pinIn != null) {
             return PinType.IN;
         } else if (pinOut != null) {
@@ -188,7 +190,7 @@ public abstract class BaseComponent implements IntegratedCircuit {
 
     @Override
     public ComponentPin getOutputPin(int pinNumber) throws UnknownPin {
-        ComponentPin pin = outputs.get(pinNumber);
+        ComponentPin pin = outputs != null ? outputs.get(pinNumber) : null;
         if (pin == null) {
             throw new UnknownPin(this.globalId, pinNumber);
         }
@@ -198,7 +200,7 @@ public abstract class BaseComponent implements IntegratedCircuit {
 
     @Override
     public ComponentPin getInputPin(int pinNumber) throws UnknownPin {
-        ComponentPin pin = inputs.get(pinNumber);
+        ComponentPin pin = inputs != null ? inputs.get(pinNumber) : null;
         if (pin == null) {
             throw new UnknownPin(this.globalId, pinNumber);
         }
@@ -210,26 +212,19 @@ public abstract class BaseComponent implements IntegratedCircuit {
     public Set<ComponentPinState> getStates() {
         Set<ComponentPinState> states = new HashSet<>();
 
-        for (Map.Entry<Integer, ComponentPin> entry : inputs.entrySet()) {
-            states.add(new ComponentPinState(globalId, entry.getKey(),
-                    PinStateMapper.toPinState(entry.getValue().getPin())));
+        if (inputs != null) {
+            for (Map.Entry<Integer, ComponentPin> entry : inputs.entrySet()) {
+                states.add(new ComponentPinState(globalId, entry.getKey(),
+                        PinStateMapper.toPinState(entry.getValue().getPin())));
+            }
         }
 
-        for (Map.Entry<Integer, ComponentPin> entry : outputs.entrySet()) {
-            states.add(new ComponentPinState(globalId, entry.getKey(),
-                    PinStateMapper.toPinState(entry.getValue().getPin())));
+        if (outputs != null) {
+            for (Map.Entry<Integer, ComponentPin> entry : outputs.entrySet()) {
+                states.add(new ComponentPinState(globalId, entry.getKey(),
+                        PinStateMapper.toPinState(entry.getValue().getPin())));
+            }
         }
-
         return states;
-    }
-
-    @Override
-    public void setState(ComponentPinState state) throws UnknownPin, InterruptedException {
-        try {
-            int pinNumber = state.pinId();
-            setPinState(pinNumber, PinStateMapper.toBoolean(state.state()));
-        } catch (UnknownPin e) {
-            throw e;
-        }
     }
 }

@@ -1,21 +1,17 @@
 package edu.uj.po.simulation;
 
 import edu.uj.po.simulation.interfaces.*;
-import edu.uj.po.simulation.utils.StateChangeNotifierImpl;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        StateChangeNotifierImpl stateChangeNotifier = StateChangeNotifierImpl.getInstance();
-        DebugUserInterfaceImpl ui = new DebugUserInterfaceImpl();
+        UserInterface ui = new UserInterfaceImpl();
         Set<ComponentPinState> stationaryState = new HashSet<>();
         Set<ComponentPinState> states0 = new HashSet<>();
 
         int globalId1, globalId2, globalId3, globalId4, globalId5 = 0;
-        System.out.println("Waiting...");
-        Thread.sleep(10000);
         try {
             globalId1 = ui.createChip(7408);
             System.out.println("Chip 7408 FIRST has been created: " + globalId1);
@@ -54,12 +50,5 @@ public class Main {
         states0.add(new ComponentPinState(globalId3, 2, PinState.LOW));
         states0.add(new ComponentPinState(globalId3, 2, PinState.HIGH));
         Map<Integer, Set<ComponentPinState>> result = ui.simulation(states0, 50);
-
-        for (Map.Entry<Integer, Set<ComponentPinState>> res : result.entrySet()) {
-            for (ComponentPinState state : res.getValue()) {
-                stateChangeNotifier.notify(state.componentId(), state.pinId(), state.state());
-            }
-        }
-        stateChangeNotifier.save();
     }
 }

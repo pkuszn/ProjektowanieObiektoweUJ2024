@@ -5,7 +5,6 @@ import edu.uj.po.simulation.pins.ComponentPin;
 
 public interface IntegratedCircuit extends Component {
     public boolean getPinState(int pinNumber) throws UnknownPin;
-    public void setPinState(int pinNumber, boolean value) throws UnknownPin, InterruptedException;
     public ComponentPin getOutputPin(int pinNumber) throws UnknownPin;
     public ComponentPin getInputPin(int pinNumber) throws UnknownPin;
 }
