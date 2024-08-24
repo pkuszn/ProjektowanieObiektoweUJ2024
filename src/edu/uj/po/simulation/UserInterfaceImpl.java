@@ -1,31 +1,36 @@
 package edu.uj.po.simulation;
 
 import edu.uj.po.simulation.abstractions.Component;
-import edu.uj.po.simulation.abstractions.IntegratedCircuit;
 import edu.uj.po.simulation.abstractions.ComponentBuilder;
+import edu.uj.po.simulation.abstractions.Director;
+import edu.uj.po.simulation.abstractions.HeaderBuilder;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.PinType;
 import edu.uj.po.simulation.designers.CircuitDirector;
 import edu.uj.po.simulation.designers.IC74HC08Builder;
+import edu.uj.po.simulation.designers.InputHeaderBuilder;
+import edu.uj.po.simulation.designers.OutputHeaderBuilder;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
+import edu.uj.po.simulation.interfaces.PinState;
 import edu.uj.po.simulation.interfaces.ShortCircuitException;
 import edu.uj.po.simulation.interfaces.UnknownChip;
 import edu.uj.po.simulation.interfaces.UnknownComponent;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.interfaces.UnknownStateException;
 import edu.uj.po.simulation.interfaces.UserInterface;
-import edu.uj.po.simulation.models.headers.InputPinHeaderImpl;
+import edu.uj.po.simulation.models.ComponentPin;
+import edu.uj.po.simulation.models.headers.InputPinHeader;
 import edu.uj.po.simulation.models.headers.OutputPinHeader;
 import edu.uj.po.simulation.utils.ComponentLogger;
-import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class UserInterfaceImpl implements UserInterface {
     private final Map<Integer, Component> components; // integer as global identifier
     private final Map<Integer, ComponentBuilder> builders; // integer as type of circuit
-    private final CircuitDirector director;
+    private final Director director;
 
     public UserInterfaceImpl() {
         super();
@@ -41,20 +46,16 @@ public class UserInterfaceImpl implements UserInterface {
         if (builder == null) {
             throw new UnknownChip();
         }
-        try {
-            Component component = director.make(builder);
-            int globalId = component.getGlobalId();
-            components.put(globalId, component);
-            return globalId;
-        } catch (UnknownPin e) {
-            System.out.println(e.getMessage());
-            throw e;
-        }
+        Component component = director.make(builder);
+        int globalId = component.getGlobalId();
+        components.put(globalId, component);
+        return globalId;
     }
 
     @Override
     public int createInputPinHeader(int size) {
-        InputPinHeaderImpl inputHeader = new InputPinHeaderImpl(size);
+        HeaderBuilder builder = new InputHeaderBuilder();
+        InputPinHeader inputHeader = (InputPinHeader) director.make(builder, size);
         int globalId = inputHeader.getGlobalId();
         components.put(globalId, inputHeader);
         return globalId;
@@ -62,14 +63,16 @@ public class UserInterfaceImpl implements UserInterface {
 
     @Override
     public int createOutputPinHeader(int size) {
-        OutputPinHeader outputHeader = new OutputPinHeader(size);
-        int globalId = outputHeader.getGlobalId();
-        components.put(globalId, outputHeader);
+        HeaderBuilder builder = new OutputHeaderBuilder();
+        OutputPinHeader outputPinHeader = (OutputPinHeader) director.make(builder, size);
+        int globalId = outputPinHeader.getGlobalId();
+        components.put(globalId, outputPinHeader);
         return globalId;
     }
 
     @Override
-    public void connect(int component1, int pin1, int component2, int pin2) throws UnknownComponent, UnknownPin, ShortCircuitException {
+    public void connect(int component1, int pin1, int component2, int pin2)
+            throws UnknownComponent, UnknownPin, ShortCircuitException {
         Component firstComponent = getComponent(component1);
         Component secondComponent = getComponent(component2);
 
@@ -79,7 +82,7 @@ public class UserInterfaceImpl implements UserInterface {
 
         if (secondComponent == null) {
             throw new UnknownComponent(component2);
-        } 
+        }
 
         PinType pinType1 = firstComponent.getPinType(pin1);
         PinType pinType2 = secondComponent.getPinType(pin2);
@@ -88,9 +91,9 @@ public class UserInterfaceImpl implements UserInterface {
             throw new UnknownPin(component1, pin1);
         }
 
-        if (pinType2 == null || pinType2 )
-
-
+        if (pinType2 == null || pinType2 == PinType.NONE) {
+            throw new UnknownPin(component2, pin2);
+        }
 
         if (pinType1 == PinType.OUT && pinType2 == PinType.OUT
                 && (firstComponent.getComponentClass() != ComponentClass.OUT
@@ -113,11 +116,10 @@ public class UserInterfaceImpl implements UserInterface {
         try {
             ComponentLogger.logAddObserver(source.getGlobalId(), sourcePin, target.getGlobalId(), targetPin);
             source.addObserver(sourcePin, value -> {
-                ComponentPinState state = new ComponentPinState(target.getGlobalId(), targetPin,
-                        PinStateMapper.toPinState(value));
+                ComponentPinState state = new ComponentPinState(target.getGlobalId(), targetPin, value);
                 try {
                     target.setState(state);
-                } catch (UnknownPin | InterruptedException e) {
+                } catch (UnknownPin e) {
                     System.out.println(e.getMessage());
                 }
             });
@@ -128,14 +130,40 @@ public class UserInterfaceImpl implements UserInterface {
 
     @Override
     public void stationaryState(Set<ComponentPinState> states) throws UnknownStateException {
-        for (ComponentPinState componentPinState : states) {
+        for (ComponentPinState state : states) {
+            if (state.state() == PinState.UNKNOWN) {
+                throw new UnknownStateException(state);
+            }
+
+            Component component = components.get(state.componentId());
+            if (component == null) {
+                throw new UnknownStateException(state);
+            }
+
             try {
-                Component component = components.get(componentPinState.componentId());
-                ComponentLogger.logSettingStationaryState(componentPinState.componentId(), componentPinState);
-                component.setState(componentPinState);
+                component.setState(state);
             } catch (UnknownPin e) {
-                System.out.println(e.getMessage());
-            } catch (InterruptedException ex) {
+                throw new UnknownStateException(state);
+            }
+        }
+
+        for (Component component : components.values()) {
+            for (ComponentPin pin : new HashSet<>(component.getPins().values())) {
+                if (pin.getState() == PinState.UNKNOWN) {
+                    ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(), pin.getPinNumber(),
+                            pin.getState());
+                    throw new UnknownStateException(unknownState);
+                }
+            }
+
+            component.func();
+
+            for (ComponentPin pin : new HashSet<>(component.getPins().values())) {
+                if (pin.getState() == PinState.UNKNOWN) {
+                    ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(), pin.getPinNumber(),
+                            pin.getState());
+                    throw new UnknownStateException(unknownState);
+                }
             }
         }
     }
@@ -150,7 +178,6 @@ public class UserInterfaceImpl implements UserInterface {
                 component.setState(componentPinState);
             } catch (UnknownPin e) {
                 System.out.println(e.getMessage());
-            } catch (InterruptedException e) {
             }
         }
 

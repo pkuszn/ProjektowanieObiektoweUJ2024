@@ -10,10 +10,12 @@ import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.models.ComponentPin;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public abstract class BaseComponent implements Component {
     protected final int globalId;
@@ -23,6 +25,7 @@ public abstract class BaseComponent implements Component {
     protected ComponentClass componentClass;
     protected String type;
     protected int tick;
+    protected Consumer<Void> func;
 
     public BaseComponent() {
         super();
@@ -53,6 +56,7 @@ public abstract class BaseComponent implements Component {
         this.componentClass = className;
     }
 
+    @Override
     public Map<Integer, ComponentPin> getPins() {
         return pins;
     }
@@ -67,32 +71,13 @@ public abstract class BaseComponent implements Component {
     }
 
     @Override
-    public void setState(ComponentPinState state) throws UnknownPin, InterruptedException {
-        while (true) {
-            // if (getBehaviour() == ComponentBehaviour.UNLOCK) {
-            // System.out.println(this.globalId + " unlock");
-            // ComponentPin componentPin = pins.get(state.pinId());
-            // if (componentPin == null) {
-            // throw new UnknownPin(this.getGlobalId(), state.pinId());
-            // }
-
-            // ComponentState componentState = new ComponentState(
-            // this.globalId,
-            // humanName,
-            // type,
-            // componentClass,
-            // state.pinId(),
-            // tick,
-            // state.state(),
-            // LocalDateTime.now());
-
-            // this.addComponentState(this.globalId, componentState);
-            // componentPin.setPin(PinStateMapper.toBoolean((state.state())));
-            // notifyObserver(state.pinId());
-
-            // break;
-            // }
+    public void setState(ComponentPinState state) throws UnknownPin {
+        ComponentPin pin = pins.get(state.pinId());
+        if (pin == null) {
+            throw new UnknownPin(state.componentId(), state.pinId());
         }
+
+        pin.setState(state.state());
     }
 
     @Override
@@ -136,7 +121,7 @@ public abstract class BaseComponent implements Component {
     }
 
     @Override
-    public void notifyObserver(int pinNumber) throws UnknownPin, InterruptedException {
+    public void notifyObserver(int pinNumber) throws UnknownPin {
         List<ComponentObserver> circuitObservers = observers.get(pinNumber);
         if (circuitObservers == null) {
             ComponentLogger.logNoObserver(globalId, pinNumber);
@@ -151,7 +136,19 @@ public abstract class BaseComponent implements Component {
 
     @Override
     public Set<ComponentPinState> getStates() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getStates'");
+        Set<ComponentPinState> states = new HashSet<>();
+        for (ComponentPin pin : this.pins.values()) {
+            states.add(new ComponentPinState(globalId, pin.getPinNumber(), pin.getState()));
+        }
+
+        return states;
+    }
+
+    public Consumer<Void> getFunc() {
+        return func;
+    }
+
+    public void setFunc(Consumer<Void> func) {
+        this.func = func;
     }
 }

@@ -20,6 +20,9 @@ public class ComponentPin {
 
     public void setState(PinState state) {
         this.state = state;
+        if (connectedPin != null) {
+            connectedPin.setState(state);
+        }
     }
 
     public PinType getPinType() {

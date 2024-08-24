@@ -1,5 +1,6 @@
 package edu.uj.po.simulation.designers;
 
+import edu.uj.po.simulation.abstractions.Component;
 import edu.uj.po.simulation.abstractions.HeaderBuilder;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.ComponentType;
@@ -34,7 +35,7 @@ public class InputHeaderBuilder implements HeaderBuilder {
     }
 
     @Override
-    public InputPinHeader buildComponent() {
+    public Component buildComponent() {
         return component;
     }
 
