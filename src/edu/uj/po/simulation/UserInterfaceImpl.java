@@ -2,13 +2,11 @@ package edu.uj.po.simulation;
 
 import edu.uj.po.simulation.abstractions.Component;
 import edu.uj.po.simulation.abstractions.IntegratedCircuit;
-import edu.uj.po.simulation.abstractions.builders.IntegratedCircuitBuilder;
-import edu.uj.po.simulation.builders.CircuitDirector;
-import edu.uj.po.simulation.builders.IC74HC08Builder;
-import edu.uj.po.simulation.enums.ComponentClass;
-import edu.uj.po.simulation.enums.PinType;
-import edu.uj.po.simulation.headers.InputPinHeaderImpl;
-import edu.uj.po.simulation.headers.OutputPinHeaderImpl;
+import edu.uj.po.simulation.abstractions.ComponentBuilder;
+import edu.uj.po.simulation.consts.ComponentClass;
+import edu.uj.po.simulation.consts.PinType;
+import edu.uj.po.simulation.designers.CircuitDirector;
+import edu.uj.po.simulation.designers.IC74HC08Builder;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.ShortCircuitException;
 import edu.uj.po.simulation.interfaces.UnknownChip;
@@ -16,6 +14,8 @@ import edu.uj.po.simulation.interfaces.UnknownComponent;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.interfaces.UnknownStateException;
 import edu.uj.po.simulation.interfaces.UserInterface;
+import edu.uj.po.simulation.models.headers.InputPinHeaderImpl;
+import edu.uj.po.simulation.models.headers.OutputPinHeader;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import edu.uj.po.simulation.utils.PinStateMapper;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import java.util.Set;
 
 public class UserInterfaceImpl implements UserInterface {
     private final Map<Integer, Component> components; // integer as global identifier
-    private final Map<Integer, IntegratedCircuitBuilder> builders; // integer as type of circuit
+    private final Map<Integer, ComponentBuilder> builders; // integer as type of circuit
     private final CircuitDirector director;
 
     public UserInterfaceImpl() {
@@ -37,14 +37,14 @@ public class UserInterfaceImpl implements UserInterface {
 
     @Override
     public int createChip(int code) throws UnknownChip, UnknownPin {
-        IntegratedCircuitBuilder builder = builders.get(code);
+        ComponentBuilder builder = builders.get(code);
         if (builder == null) {
             throw new UnknownChip();
         }
         try {
-            IntegratedCircuit circuit = director.make(builder);
-            int globalId = circuit.getGlobalId();
-            components.put(globalId, circuit);
+            Component component = director.make(builder);
+            int globalId = component.getGlobalId();
+            components.put(globalId, component);
             return globalId;
         } catch (UnknownPin e) {
             System.out.println(e.getMessage());
@@ -62,20 +62,35 @@ public class UserInterfaceImpl implements UserInterface {
 
     @Override
     public int createOutputPinHeader(int size) {
-        OutputPinHeaderImpl outputHeader = new OutputPinHeaderImpl(size);
+        OutputPinHeader outputHeader = new OutputPinHeader(size);
         int globalId = outputHeader.getGlobalId();
         components.put(globalId, outputHeader);
         return globalId;
     }
 
     @Override
-    public void connect(int component1, int pin1, int component2, int pin2)
-            throws UnknownComponent, UnknownPin, ShortCircuitException {
+    public void connect(int component1, int pin1, int component2, int pin2) throws UnknownComponent, UnknownPin, ShortCircuitException {
         Component firstComponent = getComponent(component1);
         Component secondComponent = getComponent(component2);
 
+        if (firstComponent == null) {
+            throw new UnknownComponent(component1);
+        }
+
+        if (secondComponent == null) {
+            throw new UnknownComponent(component2);
+        } 
+
         PinType pinType1 = firstComponent.getPinType(pin1);
         PinType pinType2 = secondComponent.getPinType(pin2);
+
+        if (pinType1 == null || pinType1 == PinType.NONE) {
+            throw new UnknownPin(component1, pin1);
+        }
+
+        if (pinType2 == null || pinType2 )
+
+
 
         if (pinType1 == PinType.OUT && pinType2 == PinType.OUT
                 && (firstComponent.getComponentClass() != ComponentClass.OUT
