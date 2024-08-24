@@ -1,4 +1,4 @@
-package edu.uj.po.simulation.models.circuits;
+package edu.uj.po.simulation.models.components;
 
 import edu.uj.po.simulation.abstractions.Component;
 import edu.uj.po.simulation.abstractions.ComponentObserver;
@@ -8,10 +8,7 @@ import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.PinState;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.models.ComponentPin;
-import edu.uj.po.simulation.utils.ComponentLogger;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,7 +18,7 @@ public abstract class BaseComponent implements Component {
     protected final int globalId;
     protected static final AtomicInteger counter = new AtomicInteger();
     protected Map<Integer, ComponentPin> pins;
-    protected Map<Integer, List<ComponentObserver>> observers;
+    protected Set<ComponentObserver> observers;
     protected ComponentClass componentClass;
     protected String type;
     protected int tick;
@@ -66,10 +63,6 @@ public abstract class BaseComponent implements Component {
         this.pins = pins;
     }
 
-    public Map<Integer, List<ComponentObserver>> getObservers() {
-        return observers;
-    }
-
     @Override
     public void setState(ComponentPinState state) throws UnknownPin {
         ComponentPin pin = pins.get(state.pinId());
@@ -78,6 +71,7 @@ public abstract class BaseComponent implements Component {
         }
 
         pin.setState(state.state());
+        notifyObserver(state.state());
     }
 
     @Override
@@ -100,36 +94,14 @@ public abstract class BaseComponent implements Component {
     }
 
     @Override
-    public void addObserver(int pinNumber, ComponentObserver observer) {
-        List<ComponentObserver> circuitObservers = observers.get(pinNumber);
-        if (circuitObservers == null) {
-            circuitObservers = new ArrayList<>();
-            circuitObservers.add(observer);
-            observers.put(pinNumber, circuitObservers);
-        } else {
-            circuitObservers.add(observer);
-        }
+    public void addObserver(ComponentObserver observer) {
+        observers.add(observer);
     }
 
-    @Override
-    public void removeObserver(int pinNumber, ComponentObserver observer) {
-        List<ComponentObserver> circuitObservers = observers.get(pinNumber);
-        if (observers == null) {
-            return;
-        }
-        circuitObservers.remove(observer);
-    }
 
     @Override
-    public void notifyObserver(int pinNumber) throws UnknownPin {
-        List<ComponentObserver> circuitObservers = observers.get(pinNumber);
-        if (circuitObservers == null) {
-            ComponentLogger.logNoObserver(globalId, pinNumber);
-            return;
-        }
-        PinState state = getPinState(pinNumber);
-        for (ComponentObserver observer : circuitObservers) {
-            ComponentLogger.logPinState(this.globalId, pinNumber, state);
+    public void notifyObserver(PinState state) throws UnknownPin {
+        for (ComponentObserver observer : observers) {
             observer.update(state);
         }
     }
@@ -144,11 +116,18 @@ public abstract class BaseComponent implements Component {
         return states;
     }
 
-    public Consumer<Void> getFunc() {
+    @Override
+    public Consumer<Void> getConsumer() {
         return func;
     }
 
-    public void setFunc(Consumer<Void> func) {
+    @Override
+    public void setConsumer(Consumer<Void> func) {
         this.func = func;
+    }
+
+    @Override
+    public Set<ComponentObserver> getObservers() {
+        return this.observers;
     }
 }

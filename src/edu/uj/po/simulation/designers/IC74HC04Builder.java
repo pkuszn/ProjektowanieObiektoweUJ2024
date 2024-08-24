@@ -7,9 +7,8 @@ import edu.uj.po.simulation.abstractions.ComponentBuilder;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.ComponentType;
 import edu.uj.po.simulation.consts.PinType;
-import edu.uj.po.simulation.designers.creators.NotGateCreator;
 import edu.uj.po.simulation.models.ComponentPin;
-import edu.uj.po.simulation.models.circuits.IC74HC04;
+import edu.uj.po.simulation.models.components.IC74HC04;
 
 public class IC74HC04Builder implements ComponentBuilder {
     private IC74HC04 component;
@@ -29,7 +28,7 @@ public class IC74HC04Builder implements ComponentBuilder {
 
     @Override
     public void defineLogic() {
-        NotGateCreator notGateCreator = new NotGateCreator();
+        // TODO: Define logic for this component
     }
 
     @Override

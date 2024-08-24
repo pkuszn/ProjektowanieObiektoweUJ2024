@@ -9,7 +9,7 @@ import java.util.Map;
 
 import edu.uj.po.simulation.abstractions.ComponentBuilder;
 import edu.uj.po.simulation.models.ComponentPin;
-import edu.uj.po.simulation.models.circuits.IC74HC20;
+import edu.uj.po.simulation.models.components.IC74HC20;
 
 public class IC74HC20Builder implements ComponentBuilder {
     private IC74HC20 component;

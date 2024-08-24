@@ -7,9 +7,8 @@ import java.util.HashMap;
 import edu.uj.po.simulation.abstractions.ComponentBuilder;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.PinType;
-import edu.uj.po.simulation.designers.creators.NorGateCreator;
 import edu.uj.po.simulation.models.ComponentPin;
-import edu.uj.po.simulation.models.circuits.IC74HC02;
+import edu.uj.po.simulation.models.components.IC74HC02;
 
 public class IC74HC02Builder implements ComponentBuilder {
     private IC74HC02 component;
@@ -29,8 +28,7 @@ public class IC74HC02Builder implements ComponentBuilder {
 
     @Override
     public void defineLogic() {
-        NorGateCreator norGateCreator = new NorGateCreator();
-        // TODO: define logic
+        // TODO: Define logic for this component
     }
 
     @Override

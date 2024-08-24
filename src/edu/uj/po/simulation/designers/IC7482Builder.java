@@ -1,7 +1,7 @@
 package edu.uj.po.simulation.designers;
 
 import edu.uj.po.simulation.abstractions.ComponentBuilder;
-import edu.uj.po.simulation.models.circuits.IC7482;
+import edu.uj.po.simulation.models.components.IC7482;
 
 public class IC7482Builder implements ComponentBuilder {
 

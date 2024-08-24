@@ -1,15 +1,13 @@
 package edu.uj.po.simulation.designers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import edu.uj.po.simulation.abstractions.ComponentBuilder;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.ComponentType;
 import edu.uj.po.simulation.consts.PinType;
-import edu.uj.po.simulation.designers.creators.GateCreator;
 import edu.uj.po.simulation.models.ComponentPin;
-import edu.uj.po.simulation.models.circuits.IC74ALS34;
+import edu.uj.po.simulation.models.components.IC74ALS34;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IC74ALS34Builder implements ComponentBuilder  {
     private IC74ALS34 component;
@@ -28,8 +26,7 @@ public class IC74ALS34Builder implements ComponentBuilder  {
 
     @Override
     public void defineLogic() {
-        //TODO: Define logic
-        GateCreator gateCreator = new GateCreator();
+        // TODO: Define logic for this component
     }
 
     @Override

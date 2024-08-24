@@ -1,4 +1,4 @@
-package edu.uj.po.simulation.models.circuits;
+package edu.uj.po.simulation.models.components;
 
 public class IC74HC11 extends BaseComponent {
     /**

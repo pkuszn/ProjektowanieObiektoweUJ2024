@@ -7,9 +7,8 @@ import edu.uj.po.simulation.abstractions.ComponentBuilder;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.ComponentType;
 import edu.uj.po.simulation.consts.PinType;
-import edu.uj.po.simulation.designers.creators.NandGateCreator;
 import edu.uj.po.simulation.models.ComponentPin;
-import edu.uj.po.simulation.models.circuits.IC74HC10;
+import edu.uj.po.simulation.models.components.IC74HC10;
 
 public class IC74HC10Builder implements ComponentBuilder {
     private IC74HC10 component;
@@ -29,7 +28,7 @@ public class IC74HC10Builder implements ComponentBuilder {
 
     @Override
     public void defineLogic() {
-        NandGateCreator nandGateCreator = new NandGateCreator();
+        // TODO: Define logic for this component
     }
 
     @Override

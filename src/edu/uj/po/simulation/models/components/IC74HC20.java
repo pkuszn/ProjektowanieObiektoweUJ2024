@@ -1,4 +1,4 @@
-package edu.uj.po.simulation.models.circuits;
+package edu.uj.po.simulation.models.components;
 
 /**
  * Description: https://eduinf.waw.pl/inf/prg/010_uc/7420.php

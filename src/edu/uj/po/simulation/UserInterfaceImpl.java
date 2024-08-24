@@ -2,6 +2,7 @@ package edu.uj.po.simulation;
 
 import edu.uj.po.simulation.abstractions.Component;
 import edu.uj.po.simulation.abstractions.ComponentBuilder;
+import edu.uj.po.simulation.abstractions.ComponentObserver;
 import edu.uj.po.simulation.abstractions.Director;
 import edu.uj.po.simulation.abstractions.HeaderBuilder;
 import edu.uj.po.simulation.consts.ComponentClass;
@@ -115,7 +116,7 @@ public class UserInterfaceImpl implements UserInterface {
     private void addObserver(Component source, int sourcePin, Component target, int targetPin) throws UnknownPin {
         try {
             ComponentLogger.logAddObserver(source.getGlobalId(), sourcePin, target.getGlobalId(), targetPin);
-            source.addObserver(sourcePin, value -> {
+            source.addObserver(value -> {
                 ComponentPinState state = new ComponentPinState(target.getGlobalId(), targetPin, value);
                 try {
                     target.setState(state);
@@ -156,7 +157,7 @@ public class UserInterfaceImpl implements UserInterface {
                 }
             }
 
-            component.func();
+            component.getConsumer();
 
             for (ComponentPin pin : new HashSet<>(component.getPins().values())) {
                 if (pin.getState() == PinState.UNKNOWN) {
@@ -171,27 +172,54 @@ public class UserInterfaceImpl implements UserInterface {
     @Override
     public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks)
             throws UnknownStateException {
-        for (ComponentPinState componentPinState : states0) {
-            try {
-                Component component = components.get(componentPinState.componentId());
-                ComponentLogger.logSimulationState(componentPinState.componentId(), componentPinState);
-                component.setState(componentPinState);
-            } catch (UnknownPin e) {
-                System.out.println(e.getMessage());
-            }
+        stationaryState(states0);
+        Map<Integer, Set<ComponentPinState>> simulationResults = new HashMap<>();
+        for (int tick = 0; tick <= ticks; tick++) {
+            Set<ComponentPinState> currentTickStates = simulateTick(states0);
+
+            notifyObserversAtTick(currentTickStates, tick);
+
+            simulationResults.put(tick, currentTickStates);
+
+            states0 = currentTickStates;
         }
 
-        Map<Integer, Set<ComponentPinState>> result = new HashMap<>();
-
-        for (Map.Entry<Integer, Component> component : components.entrySet()) {
-            result.put(component.getKey(), component.getValue().getStates());
-        }
-
-        return result;
+        return simulationResults;
     }
 
     @Override
     public Set<Integer> optimize(Set<ComponentPinState> states0, int ticks) throws UnknownStateException {
         return null;
+    }
+
+    private void notifyObserversAtTick(Set<ComponentPinState> currentTickStates, int tick) {
+        for (ComponentPinState state : currentTickStates) {
+            Component component = components.get(state.componentId());
+            
+            for (ComponentObserver observer : component.getObservers()) {
+                observer.update(state.state());
+            }
+        }
+    }
+
+    private Set<ComponentPinState> simulateTick(Set<ComponentPinState> states0) {
+        Set<ComponentPinState> nextStates = new HashSet<>();
+        for (ComponentPinState state : states0) {
+            Component component = components.get(state.componentId());
+            if (component != null) {
+                component.getConsumer();
+
+                for (ComponentPin pin : new HashSet<>(component.getPins().values())) {
+                    if (pin.getState() != state.state()) {
+                        try {
+                            component.setState(state);
+                            nextStates.add(new ComponentPinState(component.getGlobalId(), pin.getPinNumber(), pin.getState()));
+                        } catch (UnknownPin e) {
+                        }
+                    }
+                }
+            }
+        }
+        return nextStates;
     }
 }

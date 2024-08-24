@@ -1,6 +1,7 @@
 package edu.uj.po.simulation.utils;
 
 import edu.uj.po.simulation.interfaces.ComponentPinState;
+import edu.uj.po.simulation.interfaces.PinState;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.logging.FileHandler;
@@ -25,7 +26,7 @@ public class ComponentLogger {
         }
     }
 
-    public static void logPinState(int componentId, int pinId, boolean state) {
+    public static void logPinState(int componentId, int pinId, PinState state) {
         String message = String.format("[%s] %sComponent ID:%s %d, %sPin ID:%s %d, %sState:%s %s%s",
                 LocalDateTime.now(),
                 ANSI_CYAN, ANSI_RESET, componentId,
