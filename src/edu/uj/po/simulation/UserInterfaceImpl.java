@@ -203,7 +203,26 @@ public class UserInterfaceImpl implements UserInterface {
 
     @Override
     public Set<Integer> optimize(Set<ComponentPinState> states0, int ticks) throws UnknownStateException {
-        return null;
+        Set<Integer> removableComponents = new HashSet<>();
+        Map<Integer, Set<ComponentPinState>> baselineSimulation = simulation(states0, ticks);
+
+        Set<Component> componentsSnapshot = new HashSet<>(components.values());
+        for (Component component : componentsSnapshot) {
+            int componentId = component.getGlobalId();
+            removeComponent(componentId);
+
+            try {
+                Map<Integer, Set<ComponentPinState>> modifiedSimulation = simulation(states0, ticks);
+
+                if (baselineSimulation.equals(modifiedSimulation)) {
+                    removableComponents.add(componentId);
+                }
+            } finally {
+                addComponent(component);
+            }
+        }
+
+        return removableComponents;
     }
 
     private void notifyObserversAtTick(Set<ComponentPinState> currentTickStates, int tick) {
@@ -237,5 +256,13 @@ public class UserInterfaceImpl implements UserInterface {
             }
         }
         return nextStates;
+    }
+
+    public void removeComponent(int componentId) {
+        components.remove(componentId);
+    }
+
+    public void addComponent(Component component) {
+        components.put(component.getGlobalId(), component);
     }
 }
