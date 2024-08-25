@@ -1,7 +1,10 @@
 package edu.uj.po.simulation;
 
 import edu.uj.po.simulation.interfaces.*;
+import edu.uj.po.simulation.utils.SimulationResultSaver;
+
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Main {
@@ -44,11 +47,11 @@ public class Main {
             throw e;
         }
 
-        // System.out.println("Starting simulation...");
-        // states0.add(new ComponentPinState(globalId3, 2, PinState.LOW));
-        // states0.add(new ComponentPinState(globalId3, 2, PinState.HIGH));
-        // Map<Integer, Set<ComponentPinState>> result = ui.simulation(states0, 50);
-
+        System.out.println("Starting simulation...");
+        states0.add(new ComponentPinState(globalId3, 2, PinState.LOW));
+        states0.add(new ComponentPinState(globalId3, 2, PinState.HIGH));
+        Map<Integer, Set<ComponentPinState>> result = ui.simulation(states0, 50);
+        SimulationResultSaver.saveResultToJson(result);
         System.out.println("Simulation completed...");
     }
 }

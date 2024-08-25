@@ -151,28 +151,30 @@ public class UserInterfaceImpl implements UserInterface {
                 if (pin.getState() == PinState.UNKNOWN && pin.getPinType() != PinType.OUT) {
                     boolean hasUnknownConnectedPin = pin.getConnectedPins().stream()
                             .anyMatch(connectedPin -> connectedPin.getState() == PinState.UNKNOWN);
-    
+
                     if (hasUnknownConnectedPin) {
-                        ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(), pin.getPinNumber(),
+                        ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(),
+                                pin.getPinNumber(),
                                 pin.getState());
                         throw new UnknownStateException(unknownState);
                     }
                 }
             }
-    
+
             if (component.getComponentClass() == ComponentClass.IC) {
                 component.applyCommand();
             }
-    
+
             PinsToJson.saveToJson(component.getGlobalId(), component.getPins());
-    
+
             for (ComponentPin pin : new HashSet<>(component.getPins().values())) {
                 if (pin.getState() == PinState.UNKNOWN) {
                     boolean hasUnknownConnectedPin = pin.getConnectedPins().stream()
                             .anyMatch(connectedPin -> connectedPin.getState() == PinState.UNKNOWN);
-    
+
                     if (hasUnknownConnectedPin) {
-                        ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(), pin.getPinNumber(),
+                        ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(),
+                                pin.getPinNumber(),
                                 pin.getState());
                         throw new UnknownStateException(unknownState);
                     }
@@ -207,7 +209,7 @@ public class UserInterfaceImpl implements UserInterface {
     private void notifyObserversAtTick(Set<ComponentPinState> currentTickStates, int tick) {
         for (ComponentPinState state : currentTickStates) {
             Component component = components.get(state.componentId());
-            
+
             for (ComponentObserver observer : component.getObservers()) {
                 observer.update(state.state());
             }
@@ -219,12 +221,15 @@ public class UserInterfaceImpl implements UserInterface {
         for (ComponentPinState state : states0) {
             Component component = components.get(state.componentId());
             if (component != null) {
-                component.applyCommand();
+                if (component.getComponentClass() == ComponentClass.IC) {
+                    component.applyCommand();
+                }
                 for (ComponentPin pin : new HashSet<>(component.getPins().values())) {
                     if (pin.getState() != state.state()) {
                         try {
                             component.setState(state);
-                            nextStates.add(new ComponentPinState(component.getGlobalId(), pin.getPinNumber(), pin.getState()));
+                            nextStates.add(
+                                    new ComponentPinState(component.getGlobalId(), pin.getPinNumber(), pin.getState()));
                         } catch (UnknownPin e) {
                         }
                     }
