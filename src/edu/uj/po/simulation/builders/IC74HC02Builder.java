@@ -1,14 +1,13 @@
-package edu.uj.po.simulation.designers;
-
-import edu.uj.po.simulation.consts.ComponentType;
-
-import java.util.HashMap;
+package edu.uj.po.simulation.builders;
 
 import edu.uj.po.simulation.abstractions.ComponentBuilder;
+import edu.uj.po.simulation.commands.IC74HC02Command;
 import edu.uj.po.simulation.consts.ComponentClass;
+import edu.uj.po.simulation.consts.ComponentType;
 import edu.uj.po.simulation.consts.PinType;
 import edu.uj.po.simulation.models.ComponentPin;
 import edu.uj.po.simulation.models.components.IC74HC02;
+import java.util.HashMap;
 
 public class IC74HC02Builder implements ComponentBuilder {
     private IC74HC02 component;
@@ -28,9 +27,9 @@ public class IC74HC02Builder implements ComponentBuilder {
 
     @Override
     public void defineLogic() {
-        // TODO: Define logic for this component
+        component.setCommand(new IC74HC02Command());
     }
-
+    
     @Override
     public IC74HC02 buildComponent() {
         return component;
@@ -43,11 +42,11 @@ public class IC74HC02Builder implements ComponentBuilder {
         Integer[] outputPinNumbers = new Integer[] { 1, 4, 10, 13 };
 
         for (Integer input : inputPinNumbers) {
-            pins.put(input, new ComponentPin(input, PinType.IN));
+            pins.put(input, new ComponentPin(input, PinType.IN, component.getGlobalId()));
         }
 
         for (Integer output : outputPinNumbers) {
-            pins.put(output, new ComponentPin(output, PinType.OUT));
+            pins.put(output, new ComponentPin(output, PinType.OUT, component.getGlobalId()));
         }
 
         component.setPins(pins);

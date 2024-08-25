@@ -2,7 +2,6 @@ package edu.uj.po.simulation;
 
 import edu.uj.po.simulation.interfaces.*;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class Main {
@@ -41,14 +40,15 @@ public class Main {
 
             System.out.println("Setting stationary states...");
             ui.stationaryState(stationaryState);
-        } catch (UnknownChip | UnknownPin e) {
-            System.out.println("Critical error has occured: " + e.getMessage());
+        } catch (ShortCircuitException | UnknownChip | UnknownComponent | UnknownPin | UnknownStateException e) {
             throw e;
         }
 
-        System.out.println("Starting simulation...");
-        states0.add(new ComponentPinState(globalId3, 2, PinState.LOW));
-        states0.add(new ComponentPinState(globalId3, 2, PinState.HIGH));
-        Map<Integer, Set<ComponentPinState>> result = ui.simulation(states0, 50);
+        // System.out.println("Starting simulation...");
+        // states0.add(new ComponentPinState(globalId3, 2, PinState.LOW));
+        // states0.add(new ComponentPinState(globalId3, 2, PinState.HIGH));
+        // Map<Integer, Set<ComponentPinState>> result = ui.simulation(states0, 50);
+
+        System.out.println("Simulation completed...");
     }
 }

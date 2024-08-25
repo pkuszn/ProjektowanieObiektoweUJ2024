@@ -1,18 +1,18 @@
-package edu.uj.po.simulation.designers;
+package edu.uj.po.simulation.builders;
 
 import edu.uj.po.simulation.abstractions.ComponentBuilder;
+import edu.uj.po.simulation.commands.IC7482Command;
 import edu.uj.po.simulation.models.components.IC7482;
 
 public class IC7482Builder implements ComponentBuilder {
-
+    private IC7482 component;
     public IC7482Builder() {
         super();
     }
 
     @Override
     public void defineLogic() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setLogicGates'");
+        component.setCommand(new IC7482Command());
     }
 
     @Override
@@ -23,14 +23,12 @@ public class IC7482Builder implements ComponentBuilder {
 
     @Override
     public IC7482 buildComponent() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getResult'");
+        return component;
     }
 
     @Override
     public void defineComponent() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'initCircuit'");
+        component = new IC7482();
     }
 
     @Override

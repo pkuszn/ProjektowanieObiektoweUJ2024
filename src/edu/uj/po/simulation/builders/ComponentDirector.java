@@ -1,11 +1,11 @@
-package edu.uj.po.simulation.designers;
+package edu.uj.po.simulation.builders;
 
 import edu.uj.po.simulation.abstractions.Component;
 import edu.uj.po.simulation.abstractions.ComponentBuilder;
 import edu.uj.po.simulation.abstractions.Director;
 import edu.uj.po.simulation.abstractions.HeaderBuilder;
 
-public class CircuitDirector implements Director {
+public class ComponentDirector implements Director {
 
     @Override
     public Component make(ComponentBuilder builder) {

@@ -1,0 +1,1 @@
+{"1":{"pinNumber":1, "pinType":"IN", "state":"HIGH", "componentId":3, "connectedPins":[1]},"2":{"pinNumber":2, "pinType":"IN", "state":"HIGH", "componentId":3, "connectedPins":[2]},"3":{"pinNumber":3, "pinType":"IN", "state":"UNKNOWN", "componentId":3, "connectedPins":[]},"4":{"pinNumber":4, "pinType":"IN", "state":"UNKNOWN", "componentId":3, "connectedPins":[]}}

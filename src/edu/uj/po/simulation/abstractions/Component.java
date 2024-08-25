@@ -8,7 +8,6 @@ import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.models.ComponentPin;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public interface Component {
     public void addObserver(ComponentObserver observer) throws UnknownPin;
@@ -23,8 +22,9 @@ public interface Component {
     public String getType();
     public void setPins(Map<Integer, ComponentPin> pins);
     public Map<Integer, ComponentPin> getPins();
-    public Consumer<Void> getConsumer();
-    public void setConsumer(Consumer<Void> consumer);
     public Set<ComponentPinState> getStates();
     public Set<ComponentObserver> getObservers();
+    public ComponentPin getPin(Integer pinNumber) throws UnknownPin;
+    public void applyCommand();
+    public void setCommand(ComponentCommand command);
 }

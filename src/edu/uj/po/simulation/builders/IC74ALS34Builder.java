@@ -1,6 +1,7 @@
-package edu.uj.po.simulation.designers;
+package edu.uj.po.simulation.builders;
 
 import edu.uj.po.simulation.abstractions.ComponentBuilder;
+import edu.uj.po.simulation.commands.IC74ALS34Command;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.ComponentType;
 import edu.uj.po.simulation.consts.PinType;
@@ -26,7 +27,7 @@ public class IC74ALS34Builder implements ComponentBuilder  {
 
     @Override
     public void defineLogic() {
-        // TODO: Define logic for this component
+        component.setCommand(new IC74ALS34Command());
     }
 
     @Override
@@ -36,11 +37,11 @@ public class IC74ALS34Builder implements ComponentBuilder  {
         Integer[] outputPinNumbers = new Integer[] { 2, 4, 6, 7, 10, 12 };
 
         for (Integer input : inputPinNumbers) {
-            pins.put(input, new ComponentPin(input, PinType.IN));
+            pins.put(input, new ComponentPin(input, PinType.IN, component.getGlobalId()));
         }
 
         for (Integer output : outputPinNumbers) {
-            pins.put(output, new ComponentPin(output, PinType.OUT));
+            pins.put(output, new ComponentPin(output, PinType.OUT, component.getGlobalId()));
         }
 
         component.setPins(pins);

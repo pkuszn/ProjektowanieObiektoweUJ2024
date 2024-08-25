@@ -1,6 +1,7 @@
 package edu.uj.po.simulation.models.components;
 
 import edu.uj.po.simulation.abstractions.Component;
+import edu.uj.po.simulation.abstractions.ComponentCommand;
 import edu.uj.po.simulation.abstractions.ComponentObserver;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.PinType;
@@ -12,7 +13,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 public abstract class BaseComponent implements Component {
     protected final int globalId;
@@ -22,11 +22,12 @@ public abstract class BaseComponent implements Component {
     protected ComponentClass componentClass;
     protected String type;
     protected int tick;
-    protected Consumer<Void> func;
-
+    protected ComponentCommand command;
+    
     public BaseComponent() {
         super();
         this.globalId = counter.incrementAndGet();
+        this.observers = new HashSet<>();
     }
 
     @Override
@@ -98,7 +99,6 @@ public abstract class BaseComponent implements Component {
         observers.add(observer);
     }
 
-
     @Override
     public void notifyObserver(PinState state) throws UnknownPin {
         for (ComponentObserver observer : observers) {
@@ -117,17 +117,22 @@ public abstract class BaseComponent implements Component {
     }
 
     @Override
-    public Consumer<Void> getConsumer() {
-        return func;
-    }
-
-    @Override
-    public void setConsumer(Consumer<Void> func) {
-        this.func = func;
-    }
-
-    @Override
     public Set<ComponentObserver> getObservers() {
         return this.observers;
+    }
+
+    @Override
+    public ComponentPin getPin(Integer pinNumber) throws UnknownPin {
+        return this.pins.get(pinNumber);
+    }
+
+    @Override 
+    public void applyCommand() {
+        command.execute(this);    
+    }
+
+    @Override
+    public void setCommand(ComponentCommand command) {
+        this.command = command;
     }
 }

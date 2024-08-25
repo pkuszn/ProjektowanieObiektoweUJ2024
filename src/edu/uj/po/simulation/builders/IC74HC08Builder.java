@@ -1,54 +1,53 @@
-package edu.uj.po.simulation.designers;
-
-import java.util.HashMap;
-import java.util.Map;
+package edu.uj.po.simulation.builders;
 
 import edu.uj.po.simulation.abstractions.ComponentBuilder;
+import edu.uj.po.simulation.commands.IC74HC08Command;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.ComponentType;
 import edu.uj.po.simulation.consts.PinType;
 import edu.uj.po.simulation.models.ComponentPin;
-import edu.uj.po.simulation.models.components.IC74LS00;
+import edu.uj.po.simulation.models.components.IC74HC08;
+import java.util.HashMap;
+import java.util.Map;
 
-public class IC74LS00Builder implements ComponentBuilder {
-    private IC74LS00 component;
+public class IC74HC08Builder implements ComponentBuilder {
+    private IC74HC08 component;
 
     /**
-     * Pin instrunction for 74LS00 component
-     * is in [/housings/74LS00.png]
+     * Pin instrunction for 74HC08 component
+     * is in [/housings/74HC08.png]
      */
-    public IC74LS00Builder() {
+    public IC74HC08Builder() {
         super();
+        
     }
-
     @Override
     public void defineComponent() {
-        component = new IC74LS00();
+        this.component = new IC74HC08();
     }
 
     @Override
     public void defineLogic() {
-        // TODO: Define logic for this component
+        component.setCommand(new IC74HC08Command());
     }
 
     @Override
-    public IC74LS00 buildComponent() {
+    public IC74HC08 buildComponent() {
         return component;
     }
 
     @Override
     public void definePins() {
         Map<Integer, ComponentPin> pins = new HashMap<>();
-
         Integer[] inputPinNumbers = new Integer[] { 1, 2, 4, 5, 9, 10, 12, 13 };
         Integer[] outputPinNumbers = new Integer[] { 3, 6, 8, 11 };
 
         for (Integer input : inputPinNumbers) {
-            pins.put(input, new ComponentPin(input, PinType.IN));
+            pins.put(input, new ComponentPin(input, PinType.IN, component.getGlobalId()));
         }
 
         for (Integer output : outputPinNumbers) {
-            pins.put(output, new ComponentPin(output, PinType.OUT));
+            pins.put(output, new ComponentPin(output, PinType.OUT, component.getGlobalId()));
         }
 
         component.setPins(pins);
@@ -57,6 +56,6 @@ public class IC74LS00Builder implements ComponentBuilder {
     @Override
     public void defineProperties() {
         component.setComponentClass(ComponentClass.IC);
-        component.setType(ComponentType.COMPONENT_74LS00);
+        component.setType(ComponentType.COMPONENT_74HC08);
     }
 }

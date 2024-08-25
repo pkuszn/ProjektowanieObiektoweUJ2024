@@ -1,6 +1,5 @@
 package edu.uj.po.simulation.utils;
 
-import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.PinState;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -44,46 +43,12 @@ public class ComponentLogger {
         logger.log(Level.WARNING, message);
     }
 
-    public static void logSettingLatch(int componentId, int pinId) {
-        String message = String.format("[%s] %sSetting latch for Component ID:%d, Pin ID:%d%s",
-                LocalDateTime.now(),
-                ANSI_CYAN, componentId, pinId,
-                ANSI_RESET);
-        logger.log(Level.INFO, message);
-    }
-
-    public static void logReleasingLatch(int componentId, int pinId) {
-        String message = String.format("[%s] %sReleasing latch for Component ID:%d, Pin ID:%d%s",
-                LocalDateTime.now(),
-                ANSI_CYAN, componentId, pinId,
-                ANSI_RESET);
-        logger.log(Level.INFO, message);
-    }
-
     public static void logAddObserver(int sourceComponentId, int sourcePinId, int targetComponentId, int targetPinId) {
         String message = String.format(
-                "[%s] %sAdded observer from Component ID:%d, Pin ID:%d to Component ID:%d, Pin ID:%d%s",
+                "[%s] %sComponent ID:%d, Pin ID:%d is connected to Component ID:%d, Pin ID:%d%s",
                 LocalDateTime.now(),
                 ANSI_CYAN, sourceComponentId, sourcePinId, targetComponentId, targetPinId,
                 ANSI_RESET);
-        logger.log(Level.INFO, message);
-    }
-
-    public static void logSettingStationaryState(int componentId, ComponentPinState stationaryState) {
-        String message = String.format("[%s] %s Stationary state for Component ID:%d%s",
-                LocalDateTime.now(),
-                ANSI_CYAN, componentId,
-                ANSI_RESET);
-
-        logger.log(Level.INFO, message);
-    }
-
-    public static void logSimulationState(int componentId, ComponentPinState stationaryState) {
-        String message = String.format("[%s] %Simulation state for Component ID:%d%s",
-                LocalDateTime.now(),
-                ANSI_CYAN, componentId,
-                ANSI_RESET);
-
         logger.log(Level.INFO, message);
     }
 }

@@ -1,4 +1,4 @@
-package edu.uj.po.simulation.designers;
+package edu.uj.po.simulation.builders;
 
 import edu.uj.po.simulation.abstractions.Component;
 import edu.uj.po.simulation.abstractions.HeaderBuilder;
@@ -22,8 +22,8 @@ public class InputHeaderBuilder implements HeaderBuilder {
     @Override
     public void definePins() {
         Map<Integer, ComponentPin> pins = new HashMap<>();
-        for (int i = 1; i <= size; i++) {
-            pins.put(i, new ComponentPin(i, PinType.IN));
+        for (int i = 1; i <= this.size; i++) {
+            pins.put(i, new ComponentPin(i, PinType.IN, component.getGlobalId()));
         }
         component.setPins(pins);
     }
