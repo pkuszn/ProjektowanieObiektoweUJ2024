@@ -15,7 +15,7 @@ public class IC74HC20Builder implements ComponentBuilder {
 
     /**
      * Pin instrunction for 74HC20 component
-     * is in [/housings/74HC20.png]
+     * is in [docs/housings/74HC20.png]
      */
     public IC74HC20Builder() {
         super();

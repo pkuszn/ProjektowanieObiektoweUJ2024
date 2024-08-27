@@ -6,6 +6,11 @@ import edu.uj.po.simulation.models.components.IC74138;
 
 public class IC74138Builder implements ComponentBuilder {
     private IC74138 component;
+
+    /**
+     * Pin instrunction for 74138 component
+     * is in [docs/housings/74138.png]
+     */
     public IC74138Builder() {
         super();
     }

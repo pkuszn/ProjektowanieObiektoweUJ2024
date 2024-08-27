@@ -15,7 +15,7 @@ public class IC74HC04Builder implements ComponentBuilder {
 
     /**
      * Pin instrunction for 74HC04 component
-     * is in [/housings/74HC04.png]
+     * is in [docs/housings/74HC04.png]
      */
     public IC74HC04Builder() {
         super();

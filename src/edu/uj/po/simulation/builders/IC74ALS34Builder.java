@@ -14,7 +14,7 @@ public class IC74ALS34Builder implements ComponentBuilder  {
     private IC74ALS34 component;
     /**
      * Pin instrunction for 74ALS34 component
-     * is in [/housings/74ALS34.png]
+     * is in [docs/housings/74ALS34.png]
      */
     public IC74ALS34Builder() {
         super();

@@ -15,7 +15,7 @@ public class IC74LS32Builder implements ComponentBuilder {
 
     /**
      * Pin instrunction for 74LS32 component
-     * is in [/housings/74LS32.png]
+     * is in [docs/housings/74LS32.png]
      */
     public IC74LS32Builder() {
         super();

@@ -6,6 +6,11 @@ import edu.uj.po.simulation.models.components.IC74LS44;
 
 public class IC74LS44Builder implements ComponentBuilder {
     private IC74LS44 component;
+
+    /**
+     * Pin instrunction for 74LS44 component
+     * is in [docs/housings/74LS44.png]
+     */
     public IC74LS44Builder() {
         super();
     }
@@ -32,5 +37,5 @@ public class IC74LS44Builder implements ComponentBuilder {
     @Override
     public void defineProperties() {
     }
-    
+
 }

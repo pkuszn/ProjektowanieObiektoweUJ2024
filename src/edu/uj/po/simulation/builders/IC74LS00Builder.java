@@ -15,7 +15,7 @@ public class IC74LS00Builder implements ComponentBuilder {
 
     /**
      * Pin instrunction for 74LS00 component
-     * is in [/housings/74LS00.png]
+     * is in [docs/housings/74LS00.png]
      */
     public IC74LS00Builder() {
         super();

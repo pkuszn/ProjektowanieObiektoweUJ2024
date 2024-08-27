@@ -6,6 +6,11 @@ import edu.uj.po.simulation.models.components.IC7482;
 
 public class IC7482Builder implements ComponentBuilder {
     private IC7482 component;
+
+    /**
+     * Pin instrunction for 7482 component
+     * is in [docs/housings/7482.png]
+     */
     public IC7482Builder() {
         super();
     }
@@ -36,5 +41,5 @@ public class IC7482Builder implements ComponentBuilder {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'defineProperties'");
     }
-    
+
 }

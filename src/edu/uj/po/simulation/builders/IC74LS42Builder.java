@@ -6,6 +6,11 @@ import edu.uj.po.simulation.models.components.IC74LS42;
 
 public class IC74LS42Builder implements ComponentBuilder {
     private IC74LS42 component;
+
+    /**
+     * Pin instrunction for 74LS42 component
+     * is in [docs/housings/74LS42.png]
+     */
     public IC74LS42Builder() {
         super();
     }
