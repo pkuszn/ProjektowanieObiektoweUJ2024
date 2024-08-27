@@ -1,10 +1,9 @@
 package edu.uj.po.simulation.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.uj.po.simulation.consts.PinType;
 import edu.uj.po.simulation.interfaces.PinState;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ComponentPin {
     private final int pinNumber;
@@ -31,15 +30,14 @@ public class ComponentPin {
 
     public void setState(PinState state) {
         if (this.state == state) {
-            return; // No state change, exit early
+            return;
         }
     
         this.state = state;
         
-        // Update all connected pins
         for (ComponentPin connectedPin : connectedPins) {
             if (connectedPin != null) {
-                connectedPin.setState(state); // Propagate state change to connected pins
+                connectedPin.setState(state); 
             }
         }
     }
@@ -47,14 +45,14 @@ public class ComponentPin {
     public void connectToPin(ComponentPin pin) {
         if (pin != null && !connectedPins.contains(pin)) {
             connectedPins.add(pin);
-            pin.connectToPin(this); // Ensure bidirectional connection
+            pin.connectToPin(this); 
         }
     }
 
     public void disconnectFromPin(ComponentPin pin) {
         if (pin != null && connectedPins.contains(pin)) {
             connectedPins.remove(pin);
-            pin.disconnectFromPin(this); // Ensure bidirectional disconnection
+            pin.disconnectFromPin(this); 
         }
     }
 
@@ -84,15 +82,15 @@ public class ComponentPin {
             connectedPinsJson.append(connectedPin.getPinNumber()).append(",");
         }
         if (!connectedPins.isEmpty()) {
-            connectedPinsJson.setLength(connectedPinsJson.length() - 1); // Remove trailing comma
+            connectedPinsJson.setLength(connectedPinsJson.length() - 1);
         }
         connectedPinsJson.append("]");
         
         return String.format(
             "{\"pinNumber\":%d, \"pinType\":\"%s\", \"state\":\"%s\", \"componentId\":%d, \"connectedPins\":%s}",
             pinNumber,
-            pinType.name(), // Assuming PinType has a name() method
-            state.name(),   // Assuming PinState has a name() method
+            pinType.name(), 
+            state.name(),   
             componentId,
             connectedPinsJson.toString()
         );

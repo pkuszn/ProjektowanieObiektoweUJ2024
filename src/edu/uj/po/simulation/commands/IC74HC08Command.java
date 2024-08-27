@@ -11,28 +11,33 @@ public class IC74HC08Command implements ComponentCommand {
     @Override
     public void execute(Component component) {
         HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
-        if (pins.get(1).getState() == PinState.HIGH || pins.get(2).getState() == PinState.HIGH) {
-            pins.get(3).setState(PinState.HIGH);
-        } else if (pins.get(1).getState() != PinState.UNKNOWN && pins.get(2).getState() != PinState.UNKNOWN) {
-            pins.get(3).setState(PinState.LOW);
-        }
+        pins.get(3).setState(andFunc(
+            pins.get(1).getState(),
+            pins.get(2).getState()
+        ));
 
-        if (pins.get(4).getState() == PinState.HIGH || pins.get(5).getState() == PinState.HIGH) {
-            pins.get(6).setState(PinState.HIGH);
-        } else if (pins.get(4).getState() != PinState.UNKNOWN && pins.get(5).getState() != PinState.UNKNOWN) {
-            pins.get(6).setState(PinState.LOW);
-        }
+        pins.get(6).setState(andFunc(
+            pins.get(4).getState(),
+            pins.get(5).getState()
+        ));
 
-        if (pins.get(9).getState() == PinState.HIGH || pins.get(10).getState() == PinState.HIGH) {
-            pins.get(8).setState(PinState.HIGH);
-        } else if (pins.get(9).getState() != PinState.UNKNOWN && pins.get(10).getState() != PinState.UNKNOWN) {
-            pins.get(8).setState(PinState.LOW);
-        }
+        pins.get(8).setState(andFunc(
+            pins.get(9).getState(),
+            pins.get(10).getState()
+        ));
+        
+        pins.get(11).setState(andFunc(
+            pins.get(12).getState(),
+            pins.get(13).getState()
+        ));
+    }
 
-        if (pins.get(12).getState() == PinState.HIGH || pins.get(13).getState() == PinState.HIGH) {
-            pins.get(11).setState(PinState.HIGH);
-        } else if (pins.get(12).getState() != PinState.UNKNOWN && pins.get(13).getState() != PinState.UNKNOWN) {
-            pins.get(11).setState(PinState.LOW);
+    private static PinState andFunc(PinState pin1, PinState pin2) {
+        if (pin1 == PinState.HIGH || pin2 == PinState.HIGH) {
+            return PinState.HIGH;
+        } else if (pin1 != PinState.UNKNOWN && pin2 != PinState.UNKNOWN) {
+            return PinState.LOW;
         }
+        return PinState.UNKNOWN;
     }
 }
