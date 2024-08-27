@@ -5,7 +5,7 @@
 # Usage
 
 ```bash
-java ...
+java Main.java
 ```
 
 # Important

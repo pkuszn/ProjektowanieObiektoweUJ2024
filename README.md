@@ -20,3 +20,11 @@ install
 ```bash
 sudo apt install openjdk-21-jdk
 ```
+
+## Design patterns
+
+### Used design patterns:
+
+- Command pattern
+- Builder pattern
+- Observator pattern
