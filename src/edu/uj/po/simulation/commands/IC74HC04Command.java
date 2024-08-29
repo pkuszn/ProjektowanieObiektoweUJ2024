@@ -11,28 +11,28 @@ public class IC74HC04Command implements ComponentCommand {
   @Override
     public void execute(Component component) {
         HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
-        pins.get(1).setState(notFunc(
-            pins.get(2).getState()
+        pins.get(2).setState(notFunc(
+            pins.get(1).getState()
         ));
 
-        pins.get(3).setState(notFunc(
-            pins.get(4).getState()
+        pins.get(4).setState(notFunc(
+            pins.get(3).getState()
         ));
 
-        pins.get(5).setState(notFunc(
-            pins.get(6).getState()
+        pins.get(6).setState(notFunc(
+            pins.get(5).getState()
         ));
         
-        pins.get(9).setState(notFunc(
-            pins.get(8).getState()
+        pins.get(8).setState(notFunc(
+            pins.get(9).getState()
         ));
 
-        pins.get(11).setState(notFunc(
-            pins.get(10).getState()
+        pins.get(10).setState(notFunc(
+            pins.get(11).getState()
         ));
 
-        pins.get(13).setState(notFunc(
-            pins.get(12).getState()
+        pins.get(12).setState(notFunc(
+            pins.get(13).getState()
         ));
     }
 

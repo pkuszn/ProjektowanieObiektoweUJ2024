@@ -33,7 +33,7 @@ public class IC74HC08Command implements ComponentCommand {
     }
 
     private static PinState andFunc(PinState pin1, PinState pin2) {
-        if (pin1 == PinState.HIGH || pin2 == PinState.HIGH) {
+        if (pin1 == PinState.HIGH && pin2 == PinState.HIGH) {
             return PinState.HIGH;
         } else if (pin1 != PinState.UNKNOWN && pin2 != PinState.UNKNOWN) {
             return PinState.LOW;

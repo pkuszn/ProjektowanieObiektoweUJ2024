@@ -6,6 +6,14 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Tests",
+            "request": "launch",
+            "mainClass": "edu.uj.po.simulation.tests.Main",
+            "projectName": "ProjektowanieObiektoweUJ2024_dbdbc9bb",
+            "vmArgs": "-ea",
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
@@ -22,7 +30,7 @@
             "name": "Main",
             "request": "launch",
             "mainClass": "edu.uj.po.simulation.Main",
-            "projectName": "ProjektowanieObiektoweUJ2024_dbdbc9bb",
+            "projectName": "ProjektowanieObiektoweUJ2024_dbdbc9bb"
         }
     ]
 }
