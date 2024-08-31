@@ -10,6 +10,9 @@ import java.util.Map;
 
 public abstract class TestBase {
     protected final Director director;
+    private static final String ANSI_RED = "\u001B[31m";
+    private static final String ANSI_GREEN = "\u001B[32m";
+    private static final String ANSI_RESET = "\u001B[0m";
     public TestBase() {
         super();
         this.director = new ComponentDirector();
@@ -33,6 +36,10 @@ public abstract class TestBase {
         return true;
     }
 
+    protected boolean verifyOutput(PinState pinState, PinState desiredPinstate) {
+        return pinState.equals(desiredPinstate);
+    }
+
     protected String getCurrentMethodName() {
         return StackWalker.getInstance()
                           .walk(s -> s.skip(1).findFirst())
@@ -41,10 +48,18 @@ public abstract class TestBase {
     }
 
     protected String okMessage(String className, String methodName) {
-        return className + "." + methodName + " -> OK!";
+        return ANSI_GREEN +  className + "." + methodName + " -> OK!" + ANSI_RESET;
     }
 
     protected String failedMessage(String className, String methodName, String ex) {
-        return className + "." + methodName + " -> FAILED!" + " " + "because of: " + ex;
+        return ANSI_RED + className + "." + methodName + " -> FAILED!" + " " + "because of: " + ex + ANSI_RESET;
+    }
+
+    protected String okMessage(String className, String methodName, String gates) {
+        return ANSI_GREEN + className + "." + methodName + " " + gates + " -> OK!" + ANSI_RESET;
+    }
+
+    protected String failedMessage(String className, String methodName, String gates, String ex) {
+        return ANSI_RED + className + "." + methodName + " " + gates + " -> FAILED!" + " " + "because of: " + ex + ANSI_RESET;
     }
 }

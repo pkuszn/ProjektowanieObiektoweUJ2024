@@ -59,5 +59,4 @@ public class IC74LS42Builder implements ComponentBuilder {
         component.setComponentClass(ComponentClass.IC);
         component.setType(ComponentType.COMPONENT_74LS42);
     }
-
 }

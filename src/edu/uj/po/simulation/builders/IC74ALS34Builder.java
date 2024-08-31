@@ -34,7 +34,7 @@ public class IC74ALS34Builder implements ComponentBuilder  {
     public void definePins() {
         Map<Integer, ComponentPin> pins = new HashMap<>();
         Integer[] inputPinNumbers = new Integer[] { 1, 3, 5, 9, 11, 13 };
-        Integer[] outputPinNumbers = new Integer[] { 2, 4, 6, 7, 10, 12 };
+        Integer[] outputPinNumbers = new Integer[] { 2, 4, 6, 8, 10, 12 };
 
         for (Integer input : inputPinNumbers) {
             pins.put(input, new ComponentPin(input, PinType.IN, component.getGlobalId()));

@@ -11,6 +11,8 @@
             "mainClass": "edu.uj.po.simulation.tests.Main",
             "projectName": "ProjektowanieObiektoweUJ2024_dbdbc9bb",
             "vmArgs": "-ea",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
         },
         {
             "type": "java",
@@ -27,10 +29,13 @@
         },
         {
             "type": "java",
-            "name": "Main",
+            "name": "Run simulation",
             "request": "launch",
             "mainClass": "edu.uj.po.simulation.Main",
-            "projectName": "ProjektowanieObiektoweUJ2024_dbdbc9bb"
+            "projectName": "ProjektowanieObiektoweUJ2024_dbdbc9bb",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "preLaunchTask": "build"
         }
     ]
 }

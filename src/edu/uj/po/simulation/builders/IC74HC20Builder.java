@@ -40,8 +40,8 @@ public class IC74HC20Builder implements ComponentBuilder {
     public void definePins() {
         Map<Integer, ComponentPin> pins = new HashMap<>();
 
-        Integer[] inputPinNumbers = new Integer[] { 1, 2, 3, 4, 5, 9, 10, 11, 13 };
-        Integer[] outputPinNumbers = new Integer[] { 6, 8, 12 };
+        Integer[] inputPinNumbers = new Integer[] { 1, 2, 4, 5, 9, 10, 12, 13 };
+        Integer[] outputPinNumbers = new Integer[] { 6, 8 };
 
         for (Integer input : inputPinNumbers) {
             pins.put(input, new ComponentPin(input, PinType.IN, component.getGlobalId()));

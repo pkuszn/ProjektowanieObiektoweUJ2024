@@ -22,7 +22,8 @@ public class Test_IC74HC08 extends TestBase {
     public void testComponent() {
         test_all_gates_should_return_true();
         test_all_gates_should_return_false();
-        test_all_gates_should_return_false_because_of_mixed_states();
+        test_all_gates_should_return_false_because_of_one_true();
+        test_all_gates_should_return_false_because_of_one_false();
     }
 
     /**
@@ -94,7 +95,44 @@ public class Test_IC74HC08 extends TestBase {
     /**
      * Mixes states but should return false
      */
-    private void test_all_gates_should_return_false_because_of_mixed_states() {
+    private void test_all_gates_should_return_false_because_of_one_true() {
+        resetPins(this.component);
+        PinState targetState = PinState.LOW;
+
+        Map<Integer, ComponentPin> pins = this.component.getPins();
+        List<Integer> truePins = new ArrayList<>(Arrays.asList(2, 5, 9, 12));
+        for (ComponentPin pin : pins.values()) {
+            if (pin.getPinType() == PinType.IN) {
+                if (truePins.contains(pin.getPinNumber())) {
+                    pin.setState(PinState.HIGH);
+                } else {
+                    pin.setState(PinState.LOW);
+                }
+            }
+        }
+
+        this.component.applyCommand();
+
+        List<PinState> pinsOut = new ArrayList<>();
+        for (ComponentPin pin : pins.values()) {
+            if (pin.getPinType() == PinType.OUT) {
+                pinsOut.add(pin.getState());
+            }
+        }
+
+        try {
+            assert verifyAllEqualToSpecificState(pinsOut, targetState) == true;
+            System.out.println(okMessage(this.getClass().getSimpleName(), this.getCurrentMethodName()));
+        } catch (AssertionError e) {
+            System.out.println(
+                    failedMessage(this.getClass().getSimpleName(), this.getCurrentMethodName(), e.getMessage()));
+        }
+    }
+
+    /**
+     * Mixes states but should return false
+     */
+    private void test_all_gates_should_return_false_because_of_one_false() {
         resetPins(this.component);
         PinState targetState = PinState.LOW;
 

@@ -4,9 +4,14 @@ import edu.uj.po.simulation.abstractions.Component;
 import edu.uj.po.simulation.abstractions.ComponentCommand;
 import edu.uj.po.simulation.interfaces.PinState;
 import edu.uj.po.simulation.models.ComponentPin;
+
+import java.security.KeyPair;
 import java.util.HashMap;
+import java.util.Map;
 
 public class IC74LS42Command implements ComponentCommand {
+
+    private static final Map<Integer, Integer> DECIMAL_TO_OUTPUT_MAP = createDecimalToOutputMap();
 
     @Override
     public void execute(Component component) {
@@ -19,8 +24,13 @@ public class IC74LS42Command implements ComponentCommand {
 
         int decimalValue = bcdToDecimal(pinA, pinB, pinC, pinD);
 
-        for (int i = 1; i <= 11; i++) {
-            pins.get(i).setState(i - 4 == decimalValue ? PinState.HIGH : PinState.LOW);
+        for (Map.Entry<Integer, ComponentPin> entry : pins.entrySet()) {
+            entry.getValue().setState(PinState.LOW);
+        }
+
+        Integer outputPin = DECIMAL_TO_OUTPUT_MAP.get(decimalValue);
+        if (outputPin != null) {
+            pins.get(outputPin).setState(PinState.HIGH);
         }
     }
 
@@ -41,5 +51,18 @@ public class IC74LS42Command implements ComponentCommand {
         }
 
         return decimalValue;
+    }
+
+    private static Map<Integer, Integer> createDecimalToOutputMap() {
+        Map<Integer, Integer> map = new HashMap<>();
+        Integer[] outputs = new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15};
+
+        for (int i = 0; i < 10; i++) {
+            if (i < outputs.length) {
+                map.put(i, outputs[i]);
+            }
+        }
+
+        return map;
     }
 }

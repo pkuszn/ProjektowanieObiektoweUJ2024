@@ -40,6 +40,7 @@ public class UserInterfaceImpl implements UserInterface {
         this.builders = new HashMap<>();
         this.director = new ComponentDirector();
         this.builders.put(7408, new IC74HC08Builder());
+        //TODO: dodać reszte builderów, użyc może reflections
     }
 
     @Override
