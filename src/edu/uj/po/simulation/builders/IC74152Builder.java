@@ -30,7 +30,7 @@ public class IC74152Builder implements ComponentBuilder {
     public void definePins() {
         Map<Integer, ComponentPin> pins = new HashMap<>();
 
-        Integer[] inputPinNumbers = new Integer[] { 5, 4, 3, 2, 1, 13, 12, 11, 10, 9, 8}; //TODO: do weryfikacji
+        Integer[] inputPinNumbers = new Integer[] { 5, 4, 3, 2, 1, 13, 12, 11, 10, 9, 8};
         Integer[] outputPinNumbers = new Integer[] { 6 };
 
         for (Integer input : inputPinNumbers) {

@@ -30,9 +30,8 @@ public class IC74138Builder implements ComponentBuilder {
     public void definePins() {
         Map<Integer, ComponentPin> pins = new HashMap<>();
 
-        Integer[] inputPinNumbers = new Integer[] { 1, 2, 3};
+        Integer[] inputPinNumbers = new Integer[] { 1, 2, 3, 4, 5, 6};
         Integer[] outputPinNumbers = new Integer[] { 15, 14, 13, 12, 11, 10, 9, 7 };
-        Integer[] controlPinNumbers = new Integer[] { 4, 5, 6};
 
         for (Integer input : inputPinNumbers) {
             pins.put(input, new ComponentPin(input, PinType.IN, component.getGlobalId()));
@@ -41,11 +40,7 @@ public class IC74138Builder implements ComponentBuilder {
         for (Integer output : outputPinNumbers) {
             pins.put(output, new ComponentPin(output, PinType.OUT, component.getGlobalId()));
         }
-
-        for (Integer control : controlPinNumbers) {
-            pins.put(control, new ComponentPin(control, PinType.CONTROL, component.getGlobalId()));
-        }
-
+        
         component.setPins(pins);
     }
 
