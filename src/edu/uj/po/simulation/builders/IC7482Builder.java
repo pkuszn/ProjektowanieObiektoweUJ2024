@@ -30,8 +30,8 @@ public class IC7482Builder implements ComponentBuilder {
     public void definePins() {
         Map<Integer, ComponentPin> pins = new HashMap<>();
 
-        Integer[] inputPinNumbers = new Integer[] { 2, 14, 3, 13, 5 };
-        Integer[] outputPinNumbers = new Integer[] { 1, 12, 10 };
+        Integer[] inputPinNumbers = new Integer[] { 14, 13, 5, 3, 2 };
+        Integer[] outputPinNumbers = new Integer[] { 12, 10, 1 };
 
         for (Integer input : inputPinNumbers) {
             pins.put(input, new ComponentPin(input, PinType.IN, component.getGlobalId()));

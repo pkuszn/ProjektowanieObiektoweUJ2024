@@ -645,17 +645,4 @@ public class Test_IC74LS42 extends TestBase {
         checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
         checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
     }
-
-
-    private void checkPinState(Map<Integer, PinState> pinsOut, Integer pinNumber, PinState targetState, String methodName) {
-        PinState currentState = pinsOut.get(pinNumber);
-        try {
-            assert verifyOutput(currentState, targetState);
-            System.out.println(okMessage(this.getClass().getSimpleName(), methodName,
-                    " output number: " + pinNumber));
-        } catch (AssertionError e) {
-            System.out.println(
-                    failedMessage(this.getClass().getSimpleName(), methodName, e.getMessage()));
-        }
-    }
 }

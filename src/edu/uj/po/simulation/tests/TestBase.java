@@ -62,4 +62,16 @@ public abstract class TestBase {
     protected String failedMessage(String className, String methodName, String gates, String ex) {
         return ANSI_RED + className + "." + methodName + " " + gates + " -> FAILED!" + " " + "because of: " + ex + ANSI_RESET;
     }
+
+    protected void checkPinState(Map<Integer, PinState> pinsOut, Integer pinNumber, PinState targetState, String methodName) {
+        PinState currentState = pinsOut.get(pinNumber);
+        try {
+            assert verifyOutput(currentState, targetState);
+            System.out.println(okMessage(this.getClass().getSimpleName(), methodName,
+                    " output number: " + pinNumber));
+        } catch (AssertionError e) {
+            System.out.println(
+                    failedMessage(this.getClass().getSimpleName(), methodName, e.getMessage()));
+        }
+    }
 }

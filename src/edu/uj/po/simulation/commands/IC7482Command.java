@@ -12,31 +12,31 @@ public class IC7482Command implements ComponentCommand {
     public void execute(Component component) {
         HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
 
-        PinState a0 = pins.get(2).getState(); 
-        PinState a1 = pins.get(14).getState(); 
-        PinState b0 = pins.get(3).getState();
-        PinState b1 = pins.get(13).getState(); 
+        PinState A1 = pins.get(2).getState();
+        PinState B1 = pins.get(3).getState();
+        PinState A2 = pins.get(14).getState();
+        PinState B2 = pins.get(13).getState();
         PinState carryIn = pins.get(5).getState();
 
-        int a0Int = pinStateToInt(a0);
-        int a1Int = pinStateToInt(a1);
-        int b0Int = pinStateToInt(b0);
-        int b1Int = pinStateToInt(b1);
+        int A1Num = pinStateToInt(A1);
+        int B1Num = pinStateToInt(B1);
+        int A2Num = pinStateToInt(A2);
+        int B2Num = pinStateToInt(B2);
         int carryInInt = pinStateToInt(carryIn);
 
-        int[] result = addTwoBitNumbers(a0Int, a1Int, b0Int, b1Int, carryInInt);
+        int[] result = addFourBitNumbers(A1Num, B1Num, A2Num, B2Num, carryInInt);
 
-        pins.get(1).setState(intToPinState(result[0]));
-        pins.get(12).setState(intToPinState(result[1])); 
-        pins.get(10).setState(intToPinState(result[2]));
+        pins.get(1).setState(intToPinState(result[0])); // Sum0
+        pins.get(12).setState(intToPinState(result[1])); // Sum1
+        pins.get(10).setState(intToPinState(result[2])); // CarryOut
     }
 
-    private static int[] addTwoBitNumbers(int a0, int a1, int b0, int b1, int carryIn) {
-        int sum0 = (a0 ^ b0) ^ carryIn;
-        int carryOut0 = (a0 & b0) | ((a0 ^ b0) & carryIn);
+    private static int[] addFourBitNumbers(int A1, int B1, int A2, int B2, int carryIn) {
+        int sum0 = (A1 ^ B1) ^ carryIn;
+        int carryOut0 = (A1 & B1) | ((A1 ^ B1) & carryIn);
 
-        int sum1 = (a1 ^ b1) ^ carryOut0;
-        int carryOut1 = (a1 & b1) | ((a1 ^ b1) & carryOut0);
+        int sum1 = (A2 ^ B2) ^ carryOut0;
+        int carryOut1 = (A2 & B2) | ((A2 ^ B2) & carryOut0);
 
         return new int[] { sum0, sum1, carryOut1 };
     }

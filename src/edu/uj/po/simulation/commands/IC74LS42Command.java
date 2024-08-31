@@ -5,7 +5,6 @@ import edu.uj.po.simulation.abstractions.ComponentCommand;
 import edu.uj.po.simulation.interfaces.PinState;
 import edu.uj.po.simulation.models.ComponentPin;
 
-import java.security.KeyPair;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +25,10 @@ public class IC74LS42Command implements ComponentCommand {
 
         for (Map.Entry<Integer, ComponentPin> entry : pins.entrySet()) {
             entry.getValue().setState(PinState.LOW);
+        }
+
+        if (decimalValue == 0 && pinD == PinState.HIGH) {
+            return;
         }
 
         Integer outputPin = DECIMAL_TO_OUTPUT_MAP.get(decimalValue);
@@ -55,7 +58,7 @@ public class IC74LS42Command implements ComponentCommand {
 
     private static Map<Integer, Integer> createDecimalToOutputMap() {
         Map<Integer, Integer> map = new HashMap<>();
-        Integer[] outputs = new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15};
+        Integer[] outputs = new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 11};
 
         for (int i = 0; i < 10; i++) {
             if (i < outputs.length) {
