@@ -23,13 +23,13 @@
 --
 74LS42 ✅
 --
-74LS44 ❔ 
---
-7482 ❔
+74LS44 ❔ TODO nie wszystko dziala
+-- 
+7482 ❔ TODO nie wszystko dziala
 --
 74138 ✅
 --
-74152 ❔
+74152 ✅
 --
 
 # Tested logic
