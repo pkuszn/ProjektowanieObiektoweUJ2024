@@ -1,8 +1,8 @@
 package edu.uj.po.simulation.tests;
 
-import edu.uj.po.simulation.builders.IC74LS31Builder;
 import edu.uj.po.simulation.consts.PinType;
 import edu.uj.po.simulation.interfaces.PinState;
+import edu.uj.po.simulation.interfaces.UnknownChip;
 import edu.uj.po.simulation.models.ComponentPin;
 import edu.uj.po.simulation.models.components.IC74LS31;
 import java.util.ArrayList;
@@ -13,9 +13,9 @@ import java.util.Map;
 public class Test_IC74LS31 extends TestBase {
     private final IC74LS31 component;
 
-    public Test_IC74LS31() {
+    public Test_IC74LS31() throws UnknownChip {
         super();
-        this.component = (IC74LS31) this.director.make(new IC74LS31Builder());
+        this.component = (IC74LS31) this.director.orderComponentBuild(7431);
     }
 
     @Override

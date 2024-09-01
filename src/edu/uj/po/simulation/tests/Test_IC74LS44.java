@@ -6,18 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.uj.po.simulation.builders.IC74LS44Builder;
 import edu.uj.po.simulation.consts.PinType;
 import edu.uj.po.simulation.interfaces.PinState;
+import edu.uj.po.simulation.interfaces.UnknownChip;
 import edu.uj.po.simulation.models.ComponentPin;
 import edu.uj.po.simulation.models.components.IC74LS44;
 
 public class Test_IC74LS44 extends TestBase {
     private final IC74LS44 component;
 
-    public Test_IC74LS44() {
+    public Test_IC74LS44() throws UnknownChip {
         super();
-        this.component = (IC74LS44) this.director.make(new IC74LS44Builder());
+        this.component = (IC74LS44) this.director.orderComponentBuild(7444);
     }
 
     //TODO: Dokończyć

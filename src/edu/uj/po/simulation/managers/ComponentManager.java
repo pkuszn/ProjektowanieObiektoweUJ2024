@@ -1,12 +1,8 @@
 package edu.uj.po.simulation.managers;
 
 import edu.uj.po.simulation.abstractions.Component;
-import edu.uj.po.simulation.abstractions.ComponentBuilder;
 import edu.uj.po.simulation.abstractions.Director;
-import edu.uj.po.simulation.abstractions.HeaderBuilder;
 import edu.uj.po.simulation.builders.ComponentDirector;
-import edu.uj.po.simulation.builders.InputHeaderBuilder;
-import edu.uj.po.simulation.builders.OutputHeaderBuilder;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.PinType;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
@@ -15,15 +11,12 @@ import edu.uj.po.simulation.interfaces.UnknownChip;
 import edu.uj.po.simulation.interfaces.UnknownComponent;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.models.ComponentPin;
-import edu.uj.po.simulation.models.headers.InputPinHeader;
-import edu.uj.po.simulation.models.headers.OutputPinHeader;
 import edu.uj.po.simulation.utils.ComponentLogger;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ComponentManager {
     private final Map<Integer, Component> components; // integer as global identifier
-    private final Map<Integer, ComponentBuilder> builders; // integer as type of circuit
     private final Director director;
     private final SimulationManager manager;
 
@@ -31,16 +24,11 @@ public class ComponentManager {
         super();
         this.manager = manager;
         this.components = new HashMap<>();
-        this.builders = new HashMap<>();
         this.director = new ComponentDirector();
     }
 
     public int createChip(int code) throws UnknownChip, UnknownPin {
-        ComponentBuilder builder = builders.get(code);
-        if (builder == null) {
-            throw new UnknownChip();
-        }
-        Component component = director.make(builder);
+        Component component = director.orderComponentBuild(code);
         int globalId = component.getGlobalId();
         components.put(globalId, component);
         manager.setComponent(globalId, component);
@@ -48,8 +36,7 @@ public class ComponentManager {
     }
 
     public int createInputPinHeader(int size) {
-        HeaderBuilder builder = new InputHeaderBuilder();
-        InputPinHeader inputHeader = (InputPinHeader) director.make(builder, size);
+        Component inputHeader = director.orderHeaderBuild(ComponentClass.IC, size);
         int globalId = inputHeader.getGlobalId();
         components.put(globalId, inputHeader);
         manager.setComponent(globalId, inputHeader);
@@ -57,8 +44,7 @@ public class ComponentManager {
     }
 
     public int createOutputPinHeader(int size) {
-        HeaderBuilder builder = new OutputHeaderBuilder();
-        OutputPinHeader outputPinHeader = (OutputPinHeader) director.make(builder, size);
+        Component outputPinHeader = director.orderHeaderBuild(ComponentClass.OUT, size);
         int globalId = outputPinHeader.getGlobalId();
         components.put(globalId, outputPinHeader);
         manager.setComponent(globalId, outputPinHeader);
@@ -94,6 +80,7 @@ public class ComponentManager {
                         && secondComponent.getComponentClass() != ComponentClass.OUT)) {
             throw new ShortCircuitException();
         }
+
 
         componentPin1.connectToPin(componentPin2);
         addObserver(firstComponent, pin1, secondComponent, pin2);

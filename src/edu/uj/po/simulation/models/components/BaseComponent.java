@@ -35,10 +35,6 @@ public abstract class BaseComponent implements Component {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     @Override
     public int getGlobalId() {
         return globalId;
@@ -135,4 +131,9 @@ public abstract class BaseComponent implements Component {
     public void setCommand(ComponentCommand command) {
         this.command = command;
     }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 }

@@ -1,23 +1,22 @@
 package edu.uj.po.simulation.tests;
 
+import edu.uj.po.simulation.consts.PinType;
+import edu.uj.po.simulation.interfaces.PinState;
+import edu.uj.po.simulation.interfaces.UnknownChip;
+import edu.uj.po.simulation.models.ComponentPin;
+import edu.uj.po.simulation.models.components.IC74138;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.uj.po.simulation.builders.IC74138Builder;
-import edu.uj.po.simulation.consts.PinType;
-import edu.uj.po.simulation.interfaces.PinState;
-import edu.uj.po.simulation.models.ComponentPin;
-import edu.uj.po.simulation.models.components.IC74138;
-
 public class Test_IC74138 extends TestBase {
     private final IC74138 component;
 
-    public Test_IC74138() {
+    public Test_IC74138() throws UnknownChip {
         super();
-        this.component = (IC74138) this.director.make(new IC74138Builder());
+        this.component = (IC74138) this.director.orderComponentBuild(74138);
     }
 
     @Override
