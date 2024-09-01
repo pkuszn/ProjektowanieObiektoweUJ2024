@@ -24,16 +24,16 @@ public class Test_Simulation extends TestBase {
 
     protected void testComponents()
             throws UnknownChip, UnknownPin, UnknownComponent, ShortCircuitException, UnknownStateException {
-        // test_stationary_state_valid();
-        // test_stationary_state_not_throw_unknown_state_exception_when_pin_has_unknown_but_is_not_connected();
-        // test_stationary_throws_unknown_state_exception_when_pin_state_is_unknown_and_is_connected();
-        // test_stationary_state_with_multiple_chips();
-        // test_stationary_state_with_no_state_change_on_chip();
-        // test_stationary_state_with_input_multiple_headers();
-        // test_stationary_state_with_output_multiple_headers();
+        test_stationary_state_valid();
+        test_stationary_state_not_throw_unknown_state_exception_when_pin_has_unknown_but_is_not_connected();
+        test_stationary_throws_unknown_state_exception_when_pin_state_is_unknown_and_is_connected();
+        test_stationary_state_with_multiple_chips();
+        test_stationary_state_with_no_state_change_on_chip();
+        test_stationary_state_with_input_multiple_headers();
+        test_stationary_state_with_output_multiple_headers();
         test_stationary_state_no_throw_exception_from_do_ukladu17(); // false
-        // test_stationary_state_complex_circuit();
-        // test_stationary_state_max_complex_circuit();
+        test_stationary_state_complex_circuit();
+        test_stationary_state_max_complex_circuit();
     }
 
     private void test_stationary_state_valid()

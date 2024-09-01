@@ -53,6 +53,7 @@ public class SimulationManager {
     }
 
     public void stationaryState(Set<ComponentPinState> states) throws UnknownStateException {
+        // First pass: Set initial states
         for (ComponentPinState state : states) {
             Component component = components.get(state.componentId());
             if (component == null) {
@@ -67,36 +68,33 @@ public class SimulationManager {
         }
 
         for (Component component : components.values()) {
-            for (ComponentPin pin : new HashSet<>(component.getPins().values())) {
-                if (pin.getState() == PinState.UNKNOWN && pin.getPinType() != PinType.OUT) {
-                    boolean hasUnknownConnectedPin = pin.getConnectedPins().stream()
-                            .anyMatch(connectedPin -> connectedPin.getState() == PinState.UNKNOWN);
-
-                    if (hasUnknownConnectedPin) {
-                        ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(),
-                                pin.getPinNumber(),
-                                pin.getState());
-                        throw new UnknownStateException(unknownState);
-                    }
-                }
-            }
-
-            if (component.getComponentClass() == ComponentClass.IC) {
-                component.applyCommand();
-            }
-
+            component.applyCommand();
             PinsToJson.saveToJson(component.getGlobalId(), component.getPins());
+        }
+        int limit = this.components.size() + 1;
+        int iter = 0;
+        boolean isUnknownState = true;
+        while (isUnknownState == true) {
+            iter++;
+            isUnknownState = false;
+            for (Component component : components.values()) {
+                component.applyCommand();
 
-            for (ComponentPin pin : new HashSet<>(component.getPins().values())) {
-                if (pin.getState() == PinState.UNKNOWN) {
-                    boolean hasUnknownConnectedPin = pin.getConnectedPins().stream()
-                            .anyMatch(connectedPin -> connectedPin.getState() == PinState.UNKNOWN);
+                for (ComponentPin pin : new HashSet<>(component.getPins().values())) {
+                    if (pin.getState() == PinState.UNKNOWN && pin.getPinType() != PinType.OUT) {
+                        if (pin.getConnectedPins().isEmpty() && component.getComponentClass() != ComponentClass.OUT) {
+                            continue;
+                        }
+                        boolean hasUnknownConnectedPin = pin.getConnectedPins().stream()
+                                .anyMatch(connectedPin -> connectedPin.getState() == PinState.UNKNOWN);
 
-                    if (hasUnknownConnectedPin) {
-                        ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(),
-                                pin.getPinNumber(),
-                                pin.getState());
-                        throw new UnknownStateException(unknownState);
+                        if (hasUnknownConnectedPin) {
+                            isUnknownState = true;
+                        }
+                        if (hasUnknownConnectedPin && iter > limit) {
+                            ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(), pin.getPinNumber(), pin.getState());
+                            throw new UnknownStateException(unknownState);
+                        }
                     }
                 }
             }
