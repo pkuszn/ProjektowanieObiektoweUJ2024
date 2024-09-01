@@ -36,7 +36,7 @@ public class ComponentManager {
     }
 
     public int createInputPinHeader(int size) {
-        Component inputHeader = director.orderHeaderBuild(ComponentClass.IC, size);
+        Component inputHeader = director.orderHeaderBuild(ComponentClass.IN, size);
         int globalId = inputHeader.getGlobalId();
         components.put(globalId, inputHeader);
         manager.setComponent(globalId, inputHeader);

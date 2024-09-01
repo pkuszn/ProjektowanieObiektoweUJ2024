@@ -124,7 +124,9 @@ public abstract class BaseComponent implements Component {
 
     @Override 
     public void applyCommand() {
-        command.execute(this);    
+        if (this.command != null) {
+            command.execute(this);    
+        }
     }
 
     @Override

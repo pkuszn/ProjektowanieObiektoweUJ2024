@@ -48,10 +48,11 @@ public class ComponentDirector implements Director {
     @Override
     public Component orderHeaderBuild(ComponentClass className, int size) {
         HeaderBuilder builder;
-        switch (className) {
-            case IN -> builder = new InputHeaderBuilder();
-            case OUT -> builder = new OutputHeaderBuilder();
-            default -> builder = new OutputHeaderBuilder();
+
+        if (className.equals(ComponentClass.IN)) {
+            builder = new InputHeaderBuilder();
+        } else {
+            builder = new OutputHeaderBuilder();
         }
 
         builder.setSize(size);
