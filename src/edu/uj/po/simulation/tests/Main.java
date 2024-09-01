@@ -17,7 +17,7 @@ public class Main {
         // new Test_IC7482().testComponent();
         // new Test_IC74138().testComponent();
         // new Test_IC74152().testComponent();
-        new Test_BuildingComponents().testComponents();
+        // new Test_BuildingComponents().testComponents();
         new Test_Simulation().testComponents();
     }
 }

@@ -31,6 +31,10 @@ public class SimulationManager {
         this.components.put(globalId, component);
     }
 
+    public void resetComponents() {
+        this.components.clear();
+    }
+
     public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks)
             throws UnknownStateException {
         stationaryState(states0);
@@ -50,10 +54,6 @@ public class SimulationManager {
 
     public void stationaryState(Set<ComponentPinState> states) throws UnknownStateException {
         for (ComponentPinState state : states) {
-            if (state.state() == PinState.UNKNOWN) {
-                throw new UnknownStateException(state);
-            }
-
             Component component = components.get(state.componentId());
             if (component == null) {
                 throw new UnknownStateException(state);
