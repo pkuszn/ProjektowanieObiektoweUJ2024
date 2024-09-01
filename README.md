@@ -28,3 +28,4 @@ sudo apt install openjdk-21-jdk
 - Command pattern
 - Builder pattern
 - Observator pattern
+- Facade pattern
