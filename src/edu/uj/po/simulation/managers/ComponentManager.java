@@ -26,6 +26,7 @@ public class ComponentManager {
     private final Map<Integer, ComponentBuilder> builders; // integer as type of circuit
     private final Director director;
     private final SimulationManager manager;
+
     public ComponentManager(SimulationManager manager) {
         super();
         this.manager = manager;
@@ -42,6 +43,7 @@ public class ComponentManager {
         Component component = director.make(builder);
         int globalId = component.getGlobalId();
         components.put(globalId, component);
+        manager.setComponent(globalId, component);
         return globalId;
     }
 
@@ -50,6 +52,7 @@ public class ComponentManager {
         InputPinHeader inputHeader = (InputPinHeader) director.make(builder, size);
         int globalId = inputHeader.getGlobalId();
         components.put(globalId, inputHeader);
+        manager.setComponent(globalId, inputHeader);
         return globalId;
     }
 
@@ -58,6 +61,7 @@ public class ComponentManager {
         OutputPinHeader outputPinHeader = (OutputPinHeader) director.make(builder, size);
         int globalId = outputPinHeader.getGlobalId();
         components.put(globalId, outputPinHeader);
+        manager.setComponent(globalId, outputPinHeader);
         return globalId;
     }
 

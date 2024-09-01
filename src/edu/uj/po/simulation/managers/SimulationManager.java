@@ -22,9 +22,13 @@ public class SimulationManager {
         super();
         this.components = new HashMap<>();
     }
-    
+
     public Map<Integer, Component> getComponents() {
         return this.components;
+    }
+
+    public void setComponent(int globalId, Component component) {
+        this.components.put(globalId, component);
     }
 
     public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks)
