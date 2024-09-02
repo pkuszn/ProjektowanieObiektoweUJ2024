@@ -26,6 +26,11 @@ public class ComponentManager {
         this.director = new ComponentDirector();
     }
 
+
+    public void resetComponents() {
+        this.components.clear();
+    }
+
     public int createChip(int code) throws UnknownChip, UnknownPin {
         Component component = director.orderComponentBuild(code);
         int globalId = component.getGlobalId();

@@ -38,7 +38,7 @@ public class SimulationManager {
         Map<Integer, Set<ComponentPinState>> simulationResult = new HashMap<>();
         Set<ComponentPinState> currentStates = new HashSet<>(states0);
     
-        for (int tick = 0; tick < numTicks; tick++) {
+        for (int tick = 0; tick <= numTicks; tick++) {
             for (ComponentPinState state : currentStates) {
                 Component component = components.get(state.componentId());
                 if (component != null) {
