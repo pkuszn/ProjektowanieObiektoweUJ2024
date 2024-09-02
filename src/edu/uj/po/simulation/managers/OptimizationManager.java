@@ -17,17 +17,16 @@ public class OptimizationManager {
 
     public Set<Integer> optimize(Set<ComponentPinState> states0, int ticks) throws UnknownStateException {
         Set<Integer> removableComponents = new HashSet<>();
-        Map<Integer, Set<ComponentPinState>> baselineSimulation = manager.simulation(states0, ticks);
+        Map<Integer, Set<ComponentPinState>> baseSimulation = manager.simulation(states0, ticks);
 
         Set<Component> componentsSnapshot = new HashSet<>(manager.getComponents().values());
         for (Component component : componentsSnapshot) {
             int componentId = component.getGlobalId();
             removeComponent(componentId);
-
             try {
                 Map<Integer, Set<ComponentPinState>> modifiedSimulation = manager.simulation(states0, ticks);
 
-                if (baselineSimulation.equals(modifiedSimulation)) {
+                if (baseSimulation.equals(modifiedSimulation)) {
                     removableComponents.add(componentId);
                 }
             } finally {

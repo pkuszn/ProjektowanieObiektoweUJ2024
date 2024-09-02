@@ -42,7 +42,8 @@ public class Test_StationaryState extends TestBase {
 
     private void test_stationary_state_valid()
             throws UnknownChip, UnknownPin, UnknownComponent, ShortCircuitException, UnknownStateException {
-        simulationManager.resetComponents();
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
         int input = componentManager.createInputPinHeader(4);
         int component = componentManager.createChip(7408);
         int output = componentManager.createOutputPinHeader(4);
@@ -78,7 +79,8 @@ public class Test_StationaryState extends TestBase {
 
     private void test_stationary_state_not_throw_unknown_state_exception_when_pin_has_unknown_but_is_not_connected()
             throws UnknownComponent, UnknownPin, ShortCircuitException, UnknownChip {
-        simulationManager.resetComponents();
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
         int input = componentManager.createInputPinHeader(2);
         int component = componentManager.createChip(7408);
 
@@ -107,7 +109,8 @@ public class Test_StationaryState extends TestBase {
 
     private void test_stationary_throws_unknown_state_exception_when_pin_state_is_unknown_and_is_connected()
             throws UnknownChip, UnknownPin, UnknownComponent, ShortCircuitException {
-        simulationManager.resetComponents();
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
         int input = componentManager.createInputPinHeader(2);
         int component = componentManager.createChip(7408);
 
@@ -138,7 +141,8 @@ public class Test_StationaryState extends TestBase {
 
     private void test_stationary_state_with_multiple_chips()
             throws UnknownChip, UnknownPin, UnknownComponent, ShortCircuitException, UnknownStateException {
-        simulationManager.resetComponents();
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
         int input = componentManager.createInputPinHeader(2);
         int componentOne = componentManager.createChip(7408);
         int componentTwo = componentManager.createChip(7400);
@@ -184,8 +188,8 @@ public class Test_StationaryState extends TestBase {
 
     private void test_stationary_state_with_no_state_change_on_chip()
             throws UnknownComponent, UnknownPin, ShortCircuitException, UnknownChip {
-        simulationManager.resetComponents();
-
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
         int input = componentManager.createInputPinHeader(2);
         int componentOne = componentManager.createChip(7408);
         int componentTwo = componentManager.createChip(7400);
@@ -264,7 +268,8 @@ public class Test_StationaryState extends TestBase {
 
     private void test_stationary_state_with_input_multiple_headers()
             throws UnknownComponent, UnknownPin, ShortCircuitException, UnknownChip {
-        simulationManager.resetComponents();
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
         int chipId0 = componentManager.createInputPinHeader(2);
         int chipId1 = componentManager.createInputPinHeader(2);
         int chipId2 = componentManager.createChip(7400);
@@ -300,7 +305,8 @@ public class Test_StationaryState extends TestBase {
 
     private void test_stationary_state_with_output_multiple_headers()
             throws UnknownComponent, UnknownPin, ShortCircuitException, UnknownChip, UnknownStateException {
-        simulationManager.resetComponents();
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
         int chipId1 = componentManager.createInputPinHeader(2);
         int chipId2 = componentManager.createChip(7400);
         int chipId3 = componentManager.createOutputPinHeader(1);
@@ -339,32 +345,31 @@ public class Test_StationaryState extends TestBase {
 
     private void test_stationary_state_no_throw_exception_from_do_ukladu17()
             throws UnknownComponent, UnknownPin, ShortCircuitException, UnknownChip, UnknownStateException {
-        simulationManager.resetComponents();
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
         int chipId0 = componentManager.createInputPinHeader(2);
-		int chipId1 = componentManager.createChip(7431);
-		int chipId2 = componentManager.createChip(7404);
-		int chipId3 = componentManager.createOutputPinHeader(4);
+        int chipId1 = componentManager.createChip(7431);
+        int chipId2 = componentManager.createChip(7404);
+        int chipId3 = componentManager.createOutputPinHeader(4);
 
+        componentManager.connect(chipId0, 1, chipId1, 11);
+        componentManager.connect(chipId0, 2, chipId1, 10);
 
-		componentManager.connect(chipId0, 1, chipId1, 11);
-		componentManager.connect(chipId0, 2, chipId1, 10);
+        componentManager.connect(chipId1, 9, chipId3, 1);
+        componentManager.connect(chipId1, 9, chipId2, 13);
 
-		componentManager.connect(chipId1, 9, chipId3, 1);
-		componentManager.connect(chipId1, 9, chipId2, 13);
+        componentManager.connect(chipId2, 12, chipId2, 11);
 
-		componentManager.connect(chipId2, 12, chipId2, 11);
+        componentManager.connect(chipId2, 11, chipId3, 2);
 
-		componentManager.connect(chipId2, 11, chipId3, 2);
+        componentManager.connect(chipId2, 10, chipId3, 3);
+        componentManager.connect(chipId2, 10, chipId1, 1);
 
-		componentManager.connect(chipId2, 10, chipId3, 3);
-		componentManager.connect(chipId2, 10, chipId1, 1);
+        componentManager.connect(chipId1, 2, chipId3, 4);
 
-		componentManager.connect(chipId1, 2, chipId3, 4);
-
-
-		Set<ComponentPinState> states = new HashSet<>();
-		states.add(new ComponentPinState(chipId0, 1, PinState.HIGH));
-		states.add(new ComponentPinState(chipId0, 2, PinState.HIGH));
+        Set<ComponentPinState> states = new HashSet<>();
+        states.add(new ComponentPinState(chipId0, 1, PinState.HIGH));
+        states.add(new ComponentPinState(chipId0, 2, PinState.HIGH));
 
         try {
             simulationManager.stationaryState(states);
@@ -413,7 +418,8 @@ public class Test_StationaryState extends TestBase {
 
     private void test_stationary_state_complex_circuit()
             throws UnknownComponent, UnknownPin, ShortCircuitException, UnknownChip, UnknownStateException {
-        simulationManager.resetComponents();
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
         int chipIn1 = componentManager.createInputPinHeader(3);
         int chip7400 = componentManager.createChip(7400);
         int chip7402 = componentManager.createChip(7402);
@@ -465,7 +471,8 @@ public class Test_StationaryState extends TestBase {
 
     void test_stationary_state_max_complex_circuit()
             throws UnknownChip, UnknownStateException, UnknownPin, ShortCircuitException, UnknownComponent {
-        simulationManager.resetComponents();
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
         int chipIn0 = componentManager.createInputPinHeader(1);
         int chipIn1 = componentManager.createInputPinHeader(2);
         int chipIn2 = componentManager.createInputPinHeader(3);
@@ -540,20 +547,22 @@ public class Test_StationaryState extends TestBase {
         }
     }
 
-    private void test_stationary_state_with_delay() throws UnknownChip, UnknownStateException, UnknownPin, ShortCircuitException, UnknownComponent {
-        simulationManager.resetComponents();
+    private void test_stationary_state_with_delay()
+            throws UnknownChip, UnknownStateException, UnknownPin, ShortCircuitException, UnknownComponent {
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
         int chipId0 = componentManager.createInputPinHeader(2);
-		int chipId1 = componentManager.createChip(7431);
-		int chipId2 = componentManager.createOutputPinHeader(1);
+        int chipId1 = componentManager.createChip(7431);
+        int chipId2 = componentManager.createOutputPinHeader(1);
 
-		Set<ComponentPinState> states = new HashSet<>();
-		states.add(new ComponentPinState(chipId0, 1, PinState.HIGH));
-		states.add(new ComponentPinState(chipId0, 2, PinState.HIGH));
+        Set<ComponentPinState> states = new HashSet<>();
+        states.add(new ComponentPinState(chipId0, 1, PinState.HIGH));
+        states.add(new ComponentPinState(chipId0, 2, PinState.HIGH));
 
-		componentManager.connect(chipId0, 1, chipId1, 1);
-		componentManager.connect(chipId0, 2, chipId1, 5);
-		componentManager.connect(chipId1, 2, chipId1, 6);
-		componentManager.connect(chipId1, 7, chipId2, 1);
+        componentManager.connect(chipId0, 1, chipId1, 1);
+        componentManager.connect(chipId0, 2, chipId1, 5);
+        componentManager.connect(chipId1, 2, chipId1, 6);
+        componentManager.connect(chipId1, 7, chipId2, 1);
 
         try {
             simulationManager.stationaryState(states);
@@ -573,20 +582,22 @@ public class Test_StationaryState extends TestBase {
         }
     }
 
-    private void test_stationary_state_with_delay_v1() throws UnknownChip, UnknownStateException, UnknownPin, ShortCircuitException, UnknownComponent {
-        simulationManager.resetComponents();
-		int chipId0 = componentManager.createInputPinHeader(2);
-		int chipId1 = componentManager.createChip(7431);
-		int chipId2 = componentManager.createOutputPinHeader(1);
+    private void test_stationary_state_with_delay_v1()
+            throws UnknownChip, UnknownStateException, UnknownPin, ShortCircuitException, UnknownComponent {
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
+        int chipId0 = componentManager.createInputPinHeader(2);
+        int chipId1 = componentManager.createChip(7431);
+        int chipId2 = componentManager.createOutputPinHeader(1);
 
-		Set<ComponentPinState> states = new HashSet<>();
-		states.add(new ComponentPinState(chipId0, 1, PinState.LOW));
-		states.add(new ComponentPinState(chipId0, 2, PinState.HIGH));
+        Set<ComponentPinState> states = new HashSet<>();
+        states.add(new ComponentPinState(chipId0, 1, PinState.LOW));
+        states.add(new ComponentPinState(chipId0, 2, PinState.HIGH));
 
-		componentManager.connect(chipId0, 1, chipId1, 1);
-		componentManager.connect(chipId0, 2, chipId1, 5);
-		componentManager.connect(chipId1, 2, chipId1, 6);
-		componentManager.connect(chipId1, 7, chipId2, 1);
+        componentManager.connect(chipId0, 1, chipId1, 1);
+        componentManager.connect(chipId0, 2, chipId1, 5);
+        componentManager.connect(chipId1, 2, chipId1, 6);
+        componentManager.connect(chipId1, 7, chipId2, 1);
 
         try {
             simulationManager.stationaryState(states);
@@ -605,21 +616,24 @@ public class Test_StationaryState extends TestBase {
         }
     }
 
-    private void test_stationary_state_with_transitional() throws UnknownChip, UnknownStateException, UnknownPin, ShortCircuitException, UnknownComponent {
+    private void test_stationary_state_with_transitional()
+            throws UnknownChip, UnknownStateException, UnknownPin, ShortCircuitException, UnknownComponent {
+        this.simulationManager.resetComponents();
+        this.componentManager.resetComponents();
         int chipIn0 = componentManager.createInputPinHeader(1);
-		int chip7404Id = componentManager.createChip(7404);
-		int chipOut0 = componentManager.createOutputPinHeader(1);
+        int chip7404Id = componentManager.createChip(7404);
+        int chipOut0 = componentManager.createOutputPinHeader(1);
 
-		componentManager.connect(chipIn0, 1, chip7404Id, 1);
-		componentManager.connect(chip7404Id, 2, chip7404Id, 3);
-		componentManager.connect(chip7404Id, 4, chip7404Id, 5);
-		componentManager.connect(chip7404Id, 6, chip7404Id, 9);
-		componentManager.connect(chip7404Id, 8, chip7404Id, 11);
-		componentManager.connect(chip7404Id, 10, chip7404Id, 13);
-		componentManager.connect(chip7404Id, 12, chipOut0, 1);
+        componentManager.connect(chipIn0, 1, chip7404Id, 1);
+        componentManager.connect(chip7404Id, 2, chip7404Id, 3);
+        componentManager.connect(chip7404Id, 4, chip7404Id, 5);
+        componentManager.connect(chip7404Id, 6, chip7404Id, 9);
+        componentManager.connect(chip7404Id, 8, chip7404Id, 11);
+        componentManager.connect(chip7404Id, 10, chip7404Id, 13);
+        componentManager.connect(chip7404Id, 12, chipOut0, 1);
 
-		Set<ComponentPinState> states = new HashSet<>();
-		states.add(new ComponentPinState(chipIn0, 1, PinState.LOW));
+        Set<ComponentPinState> states = new HashSet<>();
+        states.add(new ComponentPinState(chipIn0, 1, PinState.LOW));
 
         try {
             simulationManager.stationaryState(states);
@@ -638,21 +652,22 @@ public class Test_StationaryState extends TestBase {
         }
     }
 
-    private void test_stationary_state_with_transitional_v2() throws UnknownChip, UnknownStateException, UnknownPin, ShortCircuitException, UnknownComponent {
+    private void test_stationary_state_with_transitional_v2()
+            throws UnknownChip, UnknownStateException, UnknownPin, ShortCircuitException, UnknownComponent {
         int chipIn0 = componentManager.createInputPinHeader(1);
-		int chip7434Id = componentManager.createChip(7434);
-		int chipOut0 = componentManager.createOutputPinHeader(1);
+        int chip7434Id = componentManager.createChip(7434);
+        int chipOut0 = componentManager.createOutputPinHeader(1);
 
-		componentManager.connect(chipIn0, 1, chip7434Id, 1);
-		componentManager.connect(chip7434Id, 2, chip7434Id, 3);
-		componentManager.connect(chip7434Id, 4, chip7434Id, 5);
-		componentManager.connect(chip7434Id, 6, chip7434Id, 9);
-		componentManager.connect(chip7434Id, 8, chip7434Id, 11);
-		componentManager.connect(chip7434Id, 10, chip7434Id, 13);
-		componentManager.connect(chip7434Id, 12, chipOut0, 1);
+        componentManager.connect(chipIn0, 1, chip7434Id, 1);
+        componentManager.connect(chip7434Id, 2, chip7434Id, 3);
+        componentManager.connect(chip7434Id, 4, chip7434Id, 5);
+        componentManager.connect(chip7434Id, 6, chip7434Id, 9);
+        componentManager.connect(chip7434Id, 8, chip7434Id, 11);
+        componentManager.connect(chip7434Id, 10, chip7434Id, 13);
+        componentManager.connect(chip7434Id, 12, chipOut0, 1);
 
-		Set<ComponentPinState> states = new HashSet<>();
-		states.add(new ComponentPinState(chipIn0, 1, PinState.LOW));
+        Set<ComponentPinState> states = new HashSet<>();
+        states.add(new ComponentPinState(chipIn0, 1, PinState.LOW));
 
         try {
             simulationManager.stationaryState(states);
@@ -670,10 +685,6 @@ public class Test_StationaryState extends TestBase {
                     failedMessage(this.getClass().getSimpleName(), this.getCurrentMethodName(), e.getMessage()));
         }
     }
-
-
-
-
 
     private void testUnknown(int idComponent, int pinNumber, PinState state, String methodName) throws UnknownPin {
         String msg = methodName + " compId/PinNumber" + ": " + idComponent + "/" + pinNumber;
