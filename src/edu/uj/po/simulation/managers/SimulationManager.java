@@ -1,7 +1,6 @@
 package edu.uj.po.simulation.managers;
 
 import edu.uj.po.simulation.abstractions.Component;
-import edu.uj.po.simulation.abstractions.ComponentObserver;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.PinType;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
@@ -35,25 +34,50 @@ public class SimulationManager {
         this.components.clear();
     }
 
-    public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int ticks)
-            throws UnknownStateException {
-        stationaryState(states0);
-        Map<Integer, Set<ComponentPinState>> simulationResults = new HashMap<>();
-        for (int tick = 0; tick <= ticks; tick++) {
-            Set<ComponentPinState> currentTickStates = simulateTick(states0);
-
-            notifyObserversAtTick(currentTickStates, tick);
-
-            simulationResults.put(tick, currentTickStates);
-
-            states0 = currentTickStates;
+    public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int numTicks) throws UnknownStateException {
+        Map<Integer, Set<ComponentPinState>> simulationResult = new HashMap<>();
+        Set<ComponentPinState> currentStates = new HashSet<>(states0);
+    
+        for (int tick = 0; tick < numTicks; tick++) {
+            for (ComponentPinState state : currentStates) {
+                Component component = components.get(state.componentId());
+                if (component != null) {
+                    try {
+                        component.applyCommand();
+                        PinsToJson.saveToJson(component.getGlobalId(), component.getPins(), tick);
+                        ComponentPin pin = component.getPin(state.pinId());
+                        if (pin == null) {
+                            ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(),
+                            state.pinId(), state.state());
+                            throw new UnknownStateException(unknownState);  
+                        }
+                        if (pin.getState() == state.state()) {
+                            continue;
+                        }
+                        component.setState(state);
+                    } catch (UnknownPin e) {
+                        ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(),
+                        state.pinId(), state.state());
+                        throw new UnknownStateException(unknownState);
+                    }
+                }
+            }
+    
+            Set<ComponentPinState> tickStates = new HashSet<>();
+            for (Component component : components.values()) {
+                tickStates.addAll(component.getPins().values().stream()
+                        .map(pin -> new ComponentPinState(component.getGlobalId(), pin.getPinNumber(), pin.getState()))
+                        .toList());
+            }
+            simulationResult.put(tick, tickStates);
+    
+            currentStates = tickStates;
         }
-
-        return simulationResults;
+    
+        return simulationResult;
     }
 
     public void stationaryState(Set<ComponentPinState> states) throws UnknownStateException {
-        // First pass: Set initial states
         for (ComponentPinState state : states) {
             Component component = components.get(state.componentId());
             if (component == null) {
@@ -72,10 +96,10 @@ public class SimulationManager {
             PinsToJson.saveToJson(component.getGlobalId(), component.getPins());
         }
         int limit = this.components.size() + 1;
-        int iter = 0;
+        int i = 0;
         boolean isUnknownState = true;
         while (isUnknownState == true) {
-            iter++;
+            i++;
             isUnknownState = false;
             for (Component component : components.values()) {
                 component.applyCommand();
@@ -88,49 +112,16 @@ public class SimulationManager {
                         boolean hasUnknownConnectedPin = pin.getConnectedPins().stream()
                                 .anyMatch(connectedPin -> connectedPin.getState() == PinState.UNKNOWN);
 
-                        if (hasUnknownConnectedPin) {
+                        if (hasUnknownConnectedPin && i > limit) {
+                            ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(),
+                                    pin.getPinNumber(), pin.getState());
+                            throw new UnknownStateException(unknownState);
+                        } else if (hasUnknownConnectedPin) {
                             isUnknownState = true;
                         }
-                        if (hasUnknownConnectedPin && iter > limit) {
-                            ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(), pin.getPinNumber(), pin.getState());
-                            throw new UnknownStateException(unknownState);
-                        }
                     }
                 }
             }
         }
-    }
-
-    private void notifyObserversAtTick(Set<ComponentPinState> currentTickStates, int tick) {
-        for (ComponentPinState state : currentTickStates) {
-            Component component = components.get(state.componentId());
-
-            for (ComponentObserver observer : component.getObservers()) {
-                observer.update(state.state());
-            }
-        }
-    }
-
-    private Set<ComponentPinState> simulateTick(Set<ComponentPinState> states0) {
-        Set<ComponentPinState> nextStates = new HashSet<>();
-        for (ComponentPinState state : states0) {
-            Component component = components.get(state.componentId());
-            if (component != null) {
-                if (component.getComponentClass() == ComponentClass.IC) {
-                    component.applyCommand();
-                }
-                for (ComponentPin pin : new HashSet<>(component.getPins().values())) {
-                    if (pin.getState() != state.state()) {
-                        try {
-                            component.setState(state);
-                            nextStates.add(
-                                    new ComponentPinState(component.getGlobalId(), pin.getPinNumber(), pin.getState()));
-                        } catch (UnknownPin e) {
-                        }
-                    }
-                }
-            }
-        }
-        return nextStates;
     }
 }

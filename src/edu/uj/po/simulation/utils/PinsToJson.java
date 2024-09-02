@@ -1,5 +1,6 @@
 package edu.uj.po.simulation.utils;
 
+import edu.uj.po.simulation.models.ComponentPin;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,8 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.UUID;
 
-import edu.uj.po.simulation.models.ComponentPin;
-
 public class PinsToJson {
     public static final String STATIC_GUID = generateStaticGuid();
 
@@ -19,6 +18,24 @@ public class PinsToJson {
         String timestamp = getCurrentTimestamp();
 
         File directory = new File("json_files/" + STATIC_GUID);
+        if (!directory.exists()) {
+            directory.mkdirs(); 
+        }
+
+        String filename = String.format("%s/pins_%d_%s.json", directory.getPath(), componentId, timestamp);
+        try (FileWriter fileWriter = new FileWriter(filename)) {
+            fileWriter.write(jsonString);
+            System.out.println("Map serialized to JSON and saved to file: " + filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveToJson(int componentId, Map<Integer, ComponentPin> map, int tick) {
+        String jsonString = mapToJson(map);
+        String timestamp = getCurrentTimestamp();
+
+        File directory = new File("json_files/" + STATIC_GUID + "/" + tick);
         if (!directory.exists()) {
             directory.mkdirs(); 
         }

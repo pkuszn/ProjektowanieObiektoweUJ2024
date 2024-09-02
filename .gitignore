@@ -44,3 +44,7 @@ nbdist/
 *.csv#
 
 *.json
+
+*.log
+
+*.log.lck

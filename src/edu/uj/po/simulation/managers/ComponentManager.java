@@ -5,7 +5,6 @@ import edu.uj.po.simulation.abstractions.Director;
 import edu.uj.po.simulation.builders.ComponentDirector;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.PinType;
-import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.ShortCircuitException;
 import edu.uj.po.simulation.interfaces.UnknownChip;
 import edu.uj.po.simulation.interfaces.UnknownComponent;
@@ -97,9 +96,8 @@ public class ComponentManager {
     private void addObserver(Component source, int sourcePin, Component target, int targetPin) throws UnknownPin {
         try {
             source.addObserver(value -> {
-                ComponentPinState state = new ComponentPinState(target.getGlobalId(), targetPin, value);
-                // target.setState(state);
-                ComponentLogger.logAddObserver(source.getGlobalId(), sourcePin, target.getGlobalId(), targetPin);
+                // ComponentPinState state = new ComponentPinState(target.getGlobalId(), targetPin, value);
+                ComponentLogger.logPinState(source.getGlobalId(), sourcePin, value);
             });
         } catch (UnknownPin e) {
             throw e;
