@@ -39,46 +39,28 @@ public class SimulationManager {
             throws UnknownStateException {
         Map<Integer, Set<ComponentPinState>> simulationResult = new HashMap<>();
         Set<ComponentPinState> currentStates = new HashSet<>(states0);
-        Set<Integer> outIds = this.components.values().stream()
-                .filter(component -> component.getComponentClass() == ComponentClass.OUT)
-                .map(Component::getGlobalId)
-                .collect(Collectors.toSet());
 
         for (int tick = 0; tick <= numTicks; tick++) {
-            System.out.println("STARTING PROCESSING THE TICK NUMBER" + tick);
-            Map<Integer, Set<ComponentPinState>> groupComponentPinStates = groupComponentPinStates(currentStates);
-            for (Integer componentId : groupComponentPinStates.keySet()) {
-                Component updateableComponent = components.get(componentId);
-                if (updateableComponent == null) {
-                    continue;
-                }
-                updateableComponent.applyCommand();
-
-                Set<ComponentPinState> states = groupComponentPinStates.get(componentId);
-                for (ComponentPinState state : states) {
+            System.out.println("STARTING PROCESSING THE TICK NUMBER " + tick);
+            for (ComponentPinState state : currentStates) {
+                Component component = components.get(state.componentId());
+                if (component != null) {
                     try {
-                        ComponentPin pin = updateableComponent.getPin(state.pinId());
-                        if (updateableComponent.getGlobalId() == 3 && pin.getPinNumber() == 10) {
-                            System.out.println("Debug");
-                        }
+                        component.applyCommand();
+
+                        ComponentPin pin = component.getPin(state.pinId());
                         if (pin == null) {
-                            ComponentPinState unknownState = new ComponentPinState(updateableComponent.getGlobalId(),
-                                    state.pinId(), state.state());
-                            throw new UnknownStateException(unknownState);
+                            throw new UnknownStateException(
+                                    new ComponentPinState(component.getGlobalId(), state.pinId(), state.state()));
                         }
 
-                        if (pin.getState() == state.state()) {
-                            continue;
+                        if (pin.getState() != state.state()) {
+                            component.setState(state);
                         }
 
-                        // updateableComponent.setState(state);
-                        System.out.println("Component: " + updateableComponent.getGlobalId() + " Pin:" + state.pinId()
-                                + " zmienił stan na " + state.state());
                     } catch (UnknownPin e) {
-                        ComponentPinState unknownState = new ComponentPinState(updateableComponent.getGlobalId(),
-                                state.pinId(), state.state());
-                        throw new UnknownStateException(unknownState);
-
+                        throw new UnknownStateException(
+                                new ComponentPinState(component.getGlobalId(), state.pinId(), state.state()));
                     }
                 }
             }
@@ -89,18 +71,12 @@ public class SimulationManager {
                                     pin.getState())))
                     .collect(Collectors.toSet());
 
-            Set<ComponentPinState> outs = new HashSet<>();
-            for (ComponentPinState pinState : tickStates) {
-                if (outIds.contains(pinState.componentId())) {
-                    outs.add(pinState);
-                }
-            }
-
-            simulationResult.put(tick, outs);
+            simulationResult.put(tick, tickStates);
             currentStates = tickStates;
 
-            for (Component componentTick : this.components.values()) {
-                PinsToJson.saveToJson(componentTick.getGlobalId(), componentTick.getPins(), tick);
+
+            for (Component component : components.values()) {
+                PinsToJson.saveToJson(component.getGlobalId(), component.getPins(), tick);
             }
         }
 
@@ -153,12 +129,5 @@ public class SimulationManager {
                 }
             }
         }
-    }
-
-    private Map<Integer, Set<ComponentPinState>> groupComponentPinStates(Set<ComponentPinState> currentStates) {
-        return currentStates.stream()
-                .collect(Collectors.groupingBy(
-                        ComponentPinState::componentId,
-                        Collectors.toSet()));
     }
 }
