@@ -120,7 +120,7 @@ public class Test_Simulation extends TestBase {
         }
     }
 
-    private void test_simulation_complex_circuit() throws UnknownChip, UnknownStateException, UnknownPin, ShortCircuitException, UnknownComponent {
+        private void test_simulation_complex_circuit() throws UnknownChip, UnknownStateException, UnknownPin, ShortCircuitException, UnknownComponent {
         this.simulationManager.resetComponents();
         this.componentManager.resetComponents();
         int chipIn1 = componentManager.createInputPinHeader(3); // 1
@@ -142,7 +142,7 @@ public class Test_Simulation extends TestBase {
 
 		Set<ComponentPinState> states = new HashSet<>();
 		states.add(new ComponentPinState(chipIn1, 1, PinState.HIGH));
-		states.add(new ComponentPinState(chipIn1, 2, PinState.LOW));
+		states.add(new ComponentPinState(chipIn1, 2, PinState.LOW  ));
 		states.add(new ComponentPinState(chipIn1, 3, PinState.HIGH));
 
 		simulationManager.stationaryState(states);

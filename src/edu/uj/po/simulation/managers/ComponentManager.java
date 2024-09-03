@@ -10,7 +10,6 @@ import edu.uj.po.simulation.interfaces.UnknownChip;
 import edu.uj.po.simulation.interfaces.UnknownComponent;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.models.ComponentPin;
-import edu.uj.po.simulation.utils.ComponentLogger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,7 +101,7 @@ public class ComponentManager {
         try {
             source.addObserver(value -> {
                 // ComponentPinState state = new ComponentPinState(target.getGlobalId(), targetPin, value);
-                ComponentLogger.logPinState(source.getGlobalId(), sourcePin, value);
+                // ComponentLogger.logPinState(source.getGlobalId(), sourcePin, value);
             });
         } catch (UnknownPin e) {
             throw e;
