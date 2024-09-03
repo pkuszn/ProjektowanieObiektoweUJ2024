@@ -3,10 +3,12 @@ package edu.uj.po.simulation.tests;
 import edu.uj.po.simulation.abstractions.Component;
 import edu.uj.po.simulation.abstractions.Director;
 import edu.uj.po.simulation.builders.ComponentDirector;
+import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.PinState;
 import edu.uj.po.simulation.models.ComponentPin;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class TestBase {
     protected final Director director;
@@ -72,6 +74,21 @@ public abstract class TestBase {
         } catch (AssertionError e) {
             System.out.println(
                     failedMessage(this.getClass().getSimpleName(), methodName, e.getMessage()));
+        }
+    }
+    protected void printPinStates(Map<Integer, Set<ComponentPinState>> result) {
+        for (Map.Entry<Integer, Set<ComponentPinState>> entry : result.entrySet()) {
+            Integer tick = entry.getKey();
+            Set<ComponentPinState> pinStates = entry.getValue();
+            
+            System.out.println("Tick " + tick + ":");
+
+            for (ComponentPinState state : pinStates) {
+                System.out.println("  Component ID: " + state.componentId() +
+                                   ", Pin ID: " + state.pinId() +
+                                   ", State: " + state.state());
+            }
+            System.out.println();  // Add a newline for better readability between ticks
         }
     }
 }

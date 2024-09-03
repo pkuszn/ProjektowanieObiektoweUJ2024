@@ -154,7 +154,7 @@ public class Test_Simulation extends TestBase {
 
 		int tick = 3;
 		Map<Integer, Set<ComponentPinState>> result = simulationManager.simulation(states0, tick);
-
+        printPinStates(result);
         for (int i = 0; i<=tick; i++) {
             if (i == 0) {
                 try {
