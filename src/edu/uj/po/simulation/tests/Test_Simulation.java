@@ -58,7 +58,7 @@ public class Test_Simulation extends TestBase {
                 states0.add(new ComponentPinState(chipIn1, 2, PinState.HIGH));
 
                 Map<Integer, Set<ComponentPinState>> result = simulationManager.simulation(states0, 3);
-
+                printSimulationResult(result);
                 PinState state1 = result.get(0).stream()
                                 .filter(a -> a.componentId() == 3)
                                 .findFirst()

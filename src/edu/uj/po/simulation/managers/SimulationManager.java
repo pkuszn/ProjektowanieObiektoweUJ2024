@@ -58,8 +58,12 @@ public class SimulationManager {
             }
 
             Map<Integer, Set<ComponentPinState>> tickStates = getComponentPinStates(this.components);
-            Map<Integer, Set<ComponentPinState>> previousTickStates = new HashMap<>();
             simulationResult.put(0, getOutputHeader(tickStates, outIds));
+            for (Component component : components.values()) {
+                PinsToJson.saveToJson(component.getGlobalId(), component.getPins(), 0);
+            }
+
+            Map<Integer, Set<ComponentPinState>> previousTickStates = new HashMap<>();
 
             for (int tick = 1; tick <= numTicks; tick++) {
                 System.out.println("STARTING PROCESSING THE TICK NUMBER " + tick);
@@ -69,8 +73,10 @@ public class SimulationManager {
                 previousTickStates = tickStates;
                 tickStates = getComponentPinStates(this.components);
 
-                Set<ComponentPinState> toUpdate = getChangedStates(tickStates, previousTickStates);
+                Set<ComponentPinState> toUpdate = getChangedStates(previousTickStates, tickStates);
                 notifyAllObservers(toUpdate);
+
+                tickStates = getComponentPinStates(this.components);
 
                 simulationResult.put(tick, getOutputHeader(tickStates, outIds));
 
