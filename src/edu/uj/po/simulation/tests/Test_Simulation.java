@@ -30,9 +30,9 @@ public class Test_Simulation extends TestBase {
 
         public void testComponents()
                         throws UnknownChip, UnknownStateException, UnknownPin, ShortCircuitException, UnknownComponent {
-                test_simulation_simple_circuit();
+                // test_simulation_simple_circuit();
                 // test_simulation_complex_circuit();
-                // test_simulation_max_complex_circuit();
+                test_simulation_max_complex_circuit();
         }
 
         private void test_simulation_simple_circuit()

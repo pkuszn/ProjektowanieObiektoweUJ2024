@@ -102,7 +102,6 @@ public class ComponentManager {
                 ComponentPin pin = target.getPin(targetPin);
                 pin.setStateTick(state.state());
             } catch (UnknownPin e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         });
