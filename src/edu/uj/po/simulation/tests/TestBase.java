@@ -15,6 +15,7 @@ public abstract class TestBase {
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_GREEN = "\u001B[32m";
     private static final String ANSI_RESET = "\u001B[0m";
+
     public TestBase() {
         super();
         this.director = new ComponentDirector();
@@ -25,7 +26,7 @@ public abstract class TestBase {
         for (ComponentPin pin : pins.values()) {
             pin.setState(PinState.UNKNOWN);
         }
-    } 
+    }
 
     protected abstract void testComponent();
 
@@ -44,13 +45,13 @@ public abstract class TestBase {
 
     protected String getCurrentMethodName() {
         return StackWalker.getInstance()
-                          .walk(s -> s.skip(1).findFirst())
-                          .get()
-                          .getMethodName();
+                .walk(s -> s.skip(1).findFirst())
+                .get()
+                .getMethodName();
     }
 
     protected String okMessage(String className, String methodName) {
-        return ANSI_GREEN +  className + "." + methodName + " -> OK!" + ANSI_RESET;
+        return ANSI_GREEN + className + "." + methodName + " -> OK!" + ANSI_RESET;
     }
 
     protected String failedMessage(String className, String methodName, String ex) {
@@ -62,10 +63,12 @@ public abstract class TestBase {
     }
 
     protected String failedMessage(String className, String methodName, String gates, String ex) {
-        return ANSI_RED + className + "." + methodName + " " + gates + " -> FAILED!" + " " + "because of: " + ex + ANSI_RESET;
+        return ANSI_RED + className + "." + methodName + " " + gates + " -> FAILED!" + " " + "because of: " + ex
+                + ANSI_RESET;
     }
 
-    protected void checkPinState(Map<Integer, PinState> pinsOut, Integer pinNumber, PinState targetState, String methodName) {
+    protected void checkPinState(Map<Integer, PinState> pinsOut, Integer pinNumber, PinState targetState,
+            String methodName) {
         PinState currentState = pinsOut.get(pinNumber);
         try {
             assert verifyOutput(currentState, targetState);
@@ -76,19 +79,17 @@ public abstract class TestBase {
                     failedMessage(this.getClass().getSimpleName(), methodName, e.getMessage()));
         }
     }
-    protected void printPinStates(Map<Integer, Set<ComponentPinState>> result) {
-        for (Map.Entry<Integer, Set<ComponentPinState>> entry : result.entrySet()) {
-            Integer tick = entry.getKey();
-            Set<ComponentPinState> pinStates = entry.getValue();
-            
-            System.out.println("Tick " + tick + ":");
 
-            for (ComponentPinState state : pinStates) {
-                System.out.println("  Component ID: " + state.componentId() +
-                                   ", Pin ID: " + state.pinId() +
-                                   ", State: " + state.state());
+    protected static void printSimulationResult(Map<Integer, Set<ComponentPinState>> result) {
+        for (Map.Entry<Integer, Set<ComponentPinState>> entry : result.entrySet()) {
+            Integer componentId = entry.getKey();
+            Set<ComponentPinState> states = entry.getValue();
+
+            System.out.println("Component ID: " + componentId);
+
+            for (ComponentPinState state : states) {
+                System.out.println("    " + state);
             }
-            System.out.println();  // Add a newline for better readability between ticks
         }
     }
 }

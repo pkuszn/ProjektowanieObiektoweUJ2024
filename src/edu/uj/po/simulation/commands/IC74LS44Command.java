@@ -59,4 +59,34 @@ public class IC74LS44Command implements ComponentCommand {
         }
         return binary;
     }
+
+	@Override
+	public void executeTick(Component component) {
+        HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
+
+        PinState pinA = pins.get(15).getState();
+        PinState pinB = pins.get(14).getState();
+        PinState pinC = pins.get(13).getState();
+        PinState pinD = pins.get(12).getState();
+
+        int grayValue = 0;
+        if (pinA == PinState.HIGH) grayValue |= 1;
+        if (pinB == PinState.HIGH) grayValue |= 2;
+        if (pinC == PinState.HIGH) grayValue |= 4;
+        if (pinD == PinState.HIGH) grayValue |= 8;
+        int binaryValue = grayToBinary(grayValue);
+
+
+        for (ComponentPin pin : pins.values()) {
+            pin.setStateTick(PinState.LOW);
+        }
+
+        Integer outputPinNumber = binaryToOutputPinMap.get(binaryValue);
+        if (outputPinNumber != null) {
+            ComponentPin outputPin = pins.get(outputPinNumber);
+            if (outputPin != null) {
+                outputPin.setStateTick(PinState.HIGH);
+            }
+        }
+	}
 }

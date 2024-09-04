@@ -40,4 +40,28 @@ public class IC74HC08Command implements ComponentCommand {
         }
         return PinState.UNKNOWN;
     }
+
+	@Override
+	public void executeTick(Component component) {
+        HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
+        pins.get(3).setStateTick(andFunc(
+            pins.get(1).getState(),
+            pins.get(2).getState()
+        ));
+
+        pins.get(6).setStateTick(andFunc(
+            pins.get(4).getState(),
+            pins.get(5).getState()
+        ));
+
+        pins.get(8).setStateTick(andFunc(
+            pins.get(9).getState(),
+            pins.get(10).getState()
+        ));
+        
+        pins.get(11).setStateTick(andFunc(
+            pins.get(12).getState(),
+            pins.get(13).getState()
+        ));
+	}
 }

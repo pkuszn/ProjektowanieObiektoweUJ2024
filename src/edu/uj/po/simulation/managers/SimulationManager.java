@@ -1,6 +1,7 @@
 package edu.uj.po.simulation.managers;
 
 import edu.uj.po.simulation.abstractions.Component;
+import edu.uj.po.simulation.abstractions.ComponentObserver;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.PinType;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
@@ -11,8 +12,10 @@ import edu.uj.po.simulation.models.ComponentPin;
 import edu.uj.po.simulation.utils.PinsToJson;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SimulationManager {
     private final Map<Integer, Component> components; // integer as global identifier
@@ -34,46 +37,55 @@ public class SimulationManager {
         this.components.clear();
     }
 
-    public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int numTicks) throws UnknownStateException {
+    public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int numTicks)
+            throws UnknownStateException {
         Map<Integer, Set<ComponentPinState>> simulationResult = new HashMap<>();
         Set<ComponentPinState> currentStates = new HashSet<>(states0);
-    
-        for (int tick = 0; tick <= numTicks; tick++) {
+
+        Set<Integer> outIds = this.components.values().stream()
+                .filter(component -> component.getComponentClass() == ComponentClass.OUT)
+                .map(Component::getGlobalId)
+                .collect(Collectors.toSet());
+
+        try {
+
             for (ComponentPinState state : currentStates) {
                 Component component = components.get(state.componentId());
-                if (component != null) {
-                    try {
-                        component.applyCommand();
-                        PinsToJson.saveToJson(component.getGlobalId(), component.getPins(), tick);
-                        ComponentPin pin = component.getPin(state.pinId());
-                        if (pin == null) {
-                            ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(),
-                            state.pinId(), state.state());
-                            throw new UnknownStateException(unknownState);  
-                        }
-                        if (pin.getState() == state.state()) {
-                            continue;
-                        }
-                        component.setState(state);
-                    } catch (UnknownPin e) {
-                        ComponentPinState unknownState = new ComponentPinState(component.getGlobalId(),
-                        state.pinId(), state.state());
-                        throw new UnknownStateException(unknownState);
-                    }
+                ComponentPin pin = component.getPin(state.pinId());
+                if (pin.getState() != state.state()) {
+                    component.setState(state);
                 }
             }
-    
-            Set<ComponentPinState> tickStates = new HashSet<>();
+
+            Map<Integer, Set<ComponentPinState>> tickStates = getComponentPinStates(this.components);
+            simulationResult.put(0, getOutputHeader(tickStates, outIds));
             for (Component component : components.values()) {
-                tickStates.addAll(component.getPins().values().stream()
-                        .map(pin -> new ComponentPinState(component.getGlobalId(), pin.getPinNumber(), pin.getState()))
-                        .toList());
+                PinsToJson.saveToJson(component.getGlobalId(), component.getPins(), 0);
             }
-            simulationResult.put(tick, tickStates);
-    
-            currentStates = tickStates;
+
+            Map<Integer, Set<ComponentPinState>> previousTickStates = new HashMap<>();
+
+            for (int tick = 1; tick <= numTicks; tick++) {
+                System.out.println("STARTING PROCESSING THE TICK NUMBER " + tick);
+
+                this.components.values().forEach(Component::applyCommandTick);
+
+                previousTickStates = tickStates;
+                tickStates = getComponentPinStates(this.components);
+
+                Set<ComponentPinState> toUpdate = getChangedStates(previousTickStates, tickStates);
+                notifyAllObservers(toUpdate);
+
+                tickStates = getComponentPinStates(this.components);
+
+                simulationResult.put(tick, getOutputHeader(tickStates, outIds));
+
+                for (Component component : components.values()) {
+                    PinsToJson.saveToJson(component.getGlobalId(), component.getPins(), tick);
+                }
+            }
+        } catch (Exception e) {
         }
-    
         return simulationResult;
     }
 
@@ -123,5 +135,78 @@ public class SimulationManager {
                 }
             }
         }
+    }
+
+    private void notifyAllObservers(Set<ComponentPinState> states) {
+        if (states.isEmpty()) {
+            return;
+        }
+        for (ComponentPinState state : states) {
+            Component component = components.get(state.componentId());
+            List<ComponentObserver> observers = component.getObservers().get(state.pinId());
+            for (ComponentObserver observer : observers) {
+                observer.update(state);
+            }
+        }
+    }
+
+    private Set<ComponentPinState> getOutputHeader(Set<ComponentPinState> tickStates, Set<Integer> outsId) {
+        Set<ComponentPinState> outs = new HashSet<>();
+        for (ComponentPinState state : tickStates) {
+            if (outsId.contains(state.componentId())) {
+                outs.add(state);
+            }
+        }
+        return outs;
+    }
+
+    public Set<ComponentPinState> getChangedStates(Map<Integer, Set<ComponentPinState>> previousStates,
+            Map<Integer, Set<ComponentPinState>> currentStates) {
+        Set<ComponentPinState> changedStates = new HashSet<>();
+
+        for (Map.Entry<Integer, Set<ComponentPinState>> entry : currentStates.entrySet()) {
+            Integer componentId = entry.getKey();
+            Set<ComponentPinState> currentStatesSet = entry.getValue();
+            Set<ComponentPinState> previousStatesSet = previousStates.get(componentId);
+
+            if (previousStatesSet == null) {
+                // If no previous states, all current states are considered changed
+                changedStates.addAll(currentStatesSet);
+            } else {
+                // Check which states have changed
+                for (ComponentPinState currentState : currentStatesSet) {
+                    if (!previousStatesSet.contains(currentState)) {
+                        changedStates.add(currentState);
+                    }
+                }
+            }
+        }
+
+        return changedStates;
+    }
+
+    public Map<Integer, Set<ComponentPinState>> getComponentPinStates(Map<Integer, Component> components) {
+        return components.values().stream()
+                .flatMap(component -> component.getPins().values().stream()
+                        .map(pin -> new ComponentPinState(component.getGlobalId(), pin.getPinNumber(), pin.getState())))
+                .collect(Collectors.groupingBy(
+                        ComponentPinState::componentId,
+                        Collectors.toSet()));
+    }
+
+    private Set<ComponentPinState> getOutputHeader(Map<Integer, Set<ComponentPinState>> tickStates,
+            Set<Integer> outsId) {
+        Set<ComponentPinState> outs = new HashSet<>();
+
+        for (Map.Entry<Integer, Set<ComponentPinState>> entry : tickStates.entrySet()) {
+            Integer componentId = entry.getKey();
+            Set<ComponentPinState> states = entry.getValue();
+
+            if (outsId.contains(componentId)) {
+                outs.addAll(states);
+            }
+        }
+
+        return outs;
     }
 }
