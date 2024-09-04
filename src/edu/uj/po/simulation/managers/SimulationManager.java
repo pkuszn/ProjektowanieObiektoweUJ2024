@@ -37,6 +37,12 @@ public class SimulationManager {
         this.components.clear();
     }
 
+    public void resetAllPins() {
+        for (Component component : this.components.values()) {
+            component.resetPins();
+        }
+    }
+
     public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int numTicks)
             throws UnknownStateException {
         Map<Integer, Set<ComponentPinState>> simulationResult = new HashMap<>();
@@ -48,7 +54,6 @@ public class SimulationManager {
                 .collect(Collectors.toSet());
 
         try {
-
             for (ComponentPinState state : currentStates) {
                 Component component = components.get(state.componentId());
                 ComponentPin pin = component.getPin(state.pinId());
@@ -84,7 +89,7 @@ public class SimulationManager {
                     PinsToJson.saveToJson(component.getGlobalId(), component.getPins(), tick);
                 }
             }
-        } catch (Exception e) {
+        } catch (UnknownPin e) {
         }
         return simulationResult;
     }
@@ -150,16 +155,6 @@ public class SimulationManager {
         }
     }
 
-    private Set<ComponentPinState> getOutputHeader(Set<ComponentPinState> tickStates, Set<Integer> outsId) {
-        Set<ComponentPinState> outs = new HashSet<>();
-        for (ComponentPinState state : tickStates) {
-            if (outsId.contains(state.componentId())) {
-                outs.add(state);
-            }
-        }
-        return outs;
-    }
-
     public Set<ComponentPinState> getChangedStates(Map<Integer, Set<ComponentPinState>> previousStates,
             Map<Integer, Set<ComponentPinState>> currentStates) {
         Set<ComponentPinState> changedStates = new HashSet<>();
@@ -170,10 +165,8 @@ public class SimulationManager {
             Set<ComponentPinState> previousStatesSet = previousStates.get(componentId);
 
             if (previousStatesSet == null) {
-                // If no previous states, all current states are considered changed
                 changedStates.addAll(currentStatesSet);
             } else {
-                // Check which states have changed
                 for (ComponentPinState currentState : currentStatesSet) {
                     if (!previousStatesSet.contains(currentState)) {
                         changedStates.add(currentState);

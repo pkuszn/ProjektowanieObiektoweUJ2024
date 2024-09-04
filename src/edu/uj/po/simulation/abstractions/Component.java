@@ -30,4 +30,7 @@ public interface Component {
     public void applyCommand();
     public void applyCommandTick();
     public void setCommand(ComponentCommand command);
+    public void reactivate();
+    public void deactivate();
+    public void resetPins();
 }

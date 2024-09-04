@@ -26,11 +26,13 @@ public abstract class BaseComponent implements Component {
     protected String type;
     protected int tick;
     protected ComponentCommand command;
+    protected boolean isDeactivated; 
 
     public BaseComponent() {
         super();
         this.globalId = counter.incrementAndGet();
         this.observers = new HashMap<>();
+        this.isDeactivated = false;
     }
 
     @Override
@@ -128,14 +130,14 @@ public abstract class BaseComponent implements Component {
 
     @Override
     public void applyCommand() {
-        if (this.command != null) {
+        if (this.command != null && isDeactivated == false) {
             command.execute(this);
         }
     }
 
     @Override
     public void applyCommandTick() {
-        if (this.command != null) {
+        if (this.command != null && isDeactivated == false) {
             command.executeTick(this);
         }
     }
@@ -151,6 +153,23 @@ public abstract class BaseComponent implements Component {
             if (pin.getState() != PinState.UNKNOWN && pin.getPinType() == PinType.OUT) {
                 pin.notifyObservers();
             }
+        }
+    }
+
+    @Override
+    public void deactivate() {
+        this.isDeactivated = true;
+    }
+
+    @Override
+    public void reactivate() {
+        this.isDeactivated = false;
+    }
+
+    @Override
+    public void resetPins() {
+        for (ComponentPin pin : this.pins.values()) {
+            pin.setStateTick(PinState.UNKNOWN);
         }
     }
 
