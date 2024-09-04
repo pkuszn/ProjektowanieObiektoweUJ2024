@@ -23,7 +23,7 @@ public abstract class BaseComponent implements Component {
     protected String type;
     protected int tick;
     protected ComponentCommand command;
-    
+
     public BaseComponent() {
         super();
         this.globalId = counter.incrementAndGet();
@@ -68,7 +68,6 @@ public abstract class BaseComponent implements Component {
         }
 
         pin.setState(state.state());
-        notifyObserver(state.state());
     }
 
     @Override
@@ -95,12 +94,6 @@ public abstract class BaseComponent implements Component {
         observers.add(observer);
     }
 
-    @Override
-    public void notifyObserver(PinState state) throws UnknownPin {
-        for (ComponentObserver observer : observers) {
-            observer.update(state);
-        }
-    }
 
     @Override
     public Set<ComponentPinState> getStates() {
@@ -122,10 +115,10 @@ public abstract class BaseComponent implements Component {
         return this.pins.get(pinNumber);
     }
 
-    @Override 
+    @Override
     public void applyCommand() {
         if (this.command != null) {
-            command.execute(this);    
+            command.execute(this);
         }
     }
 
@@ -134,8 +127,16 @@ public abstract class BaseComponent implements Component {
         this.command = command;
     }
 
+    @Override
+    public void notifyObservers() {
+        for (ComponentPin pin : pins.values()) {
+            if (pin.getState() != PinState.UNKNOWN && pin.getPinType() == PinType.OUT) {
+                pin.notifyObservers();
+            }
+        }
+    }
+
     public void setType(String type) {
         this.type = type;
     }
-
 }

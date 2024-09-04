@@ -42,6 +42,14 @@ public class ComponentPin {
         }
     }
 
+    public void notifyObservers() {
+        for (ComponentPin connectedPin : connectedPins) {
+            if (connectedPin != null) {
+                connectedPin.setState(this.state); 
+            }
+        }
+    }
+    
     public void connectToPin(ComponentPin pin) {
         if (pin != null && !connectedPins.contains(pin)) {
             connectedPins.add(pin);

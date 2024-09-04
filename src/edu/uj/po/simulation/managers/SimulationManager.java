@@ -1,6 +1,7 @@
 package edu.uj.po.simulation.managers;
 
 import edu.uj.po.simulation.abstractions.Component;
+import edu.uj.po.simulation.abstractions.ComponentObserver;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.PinType;
 import edu.uj.po.simulation.interfaces.ComponentPinState;
@@ -40,46 +41,51 @@ public class SimulationManager {
         Map<Integer, Set<ComponentPinState>> simulationResult = new HashMap<>();
         Set<ComponentPinState> currentStates = new HashSet<>(states0);
 
-        for (int tick = 0; tick <= numTicks; tick++) {
-            System.out.println("STARTING PROCESSING THE TICK NUMBER " + tick);
+        Set<Integer> outIds = this.components.values().stream()
+            .filter(component -> component.getComponentClass() == ComponentClass.OUT)
+            .map(Component::getGlobalId)
+            .collect(Collectors.toSet());
+
+        try {
+
             for (ComponentPinState state : currentStates) {
                 Component component = components.get(state.componentId());
-                if (component != null) {
-                    try {
-                        component.applyCommand();
-
-                        ComponentPin pin = component.getPin(state.pinId());
-                        if (pin == null) {
-                            throw new UnknownStateException(
-                                    new ComponentPinState(component.getGlobalId(), state.pinId(), state.state()));
-                        }
-
-                        if (pin.getState() != state.state()) {
-                            component.setState(state);
-                        }
-
-                    } catch (UnknownPin e) {
-                        throw new UnknownStateException(
-                                new ComponentPinState(component.getGlobalId(), state.pinId(), state.state()));
-                    }
+                ComponentPin pin = component.getPin(state.pinId());
+                if (pin.getState() != state.state()) {
+                    component.setState(state);
                 }
             }
 
             Set<ComponentPinState> tickStates = components.values().stream()
-                    .flatMap(component -> component.getPins().values().stream()
-                            .map(pin -> new ComponentPinState(component.getGlobalId(), pin.getPinNumber(),
-                                    pin.getState())))
-                    .collect(Collectors.toSet());
+            .flatMap(component -> component.getPins().values().stream()
+                    .map(pin -> new ComponentPinState(component.getGlobalId(), pin.getPinNumber(),
+                            pin.getState())))
+            .collect(Collectors.toSet());
 
-            simulationResult.put(tick, tickStates);
-            currentStates = tickStates;
+            simulationResult.put(0, getOutputHeader(tickStates, outIds));
 
 
-            for (Component component : components.values()) {
-                PinsToJson.saveToJson(component.getGlobalId(), component.getPins(), tick);
+            for (int tick = 1; tick <= numTicks; tick++) {
+                System.out.println("STARTING PROCESSING THE TICK NUMBER " + tick);
+
+                this.components.values().forEach(Component::applyCommand);
+
+                notifyAllObservers();
+
+                tickStates = components.values().stream()
+                        .flatMap(component -> component.getPins().values().stream()
+                                .map(pin -> new ComponentPinState(component.getGlobalId(), pin.getPinNumber(),
+                                        pin.getState())))
+                        .collect(Collectors.toSet());
+
+                simulationResult.put(tick, getOutputHeader(tickStates, outIds));
+
+                for (Component component : components.values()) {
+                    PinsToJson.saveToJson(component.getGlobalId(), component.getPins(), tick);
+                }
             }
+        } catch (Exception e) {
         }
-
         return simulationResult;
     }
 
@@ -129,5 +135,23 @@ public class SimulationManager {
                 }
             }
         }
+    }
+
+    private void notifyAllObservers() {
+        for (Component component : components.values()) {
+            for (ComponentObserver observer : component.getObservers()) {
+                observer.update();
+            }
+        }
+    }
+
+    private Set<ComponentPinState> getOutputHeader(Set<ComponentPinState> tickStates, Set<Integer> outsId) {
+        Set<ComponentPinState> outs = new HashSet<>();
+        for (ComponentPinState state : tickStates) {
+            if (outsId.contains(state.componentId())) {
+                outs.add(state);
+            }
+        }
+        return outs;
     }
 }

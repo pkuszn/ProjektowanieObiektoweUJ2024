@@ -99,9 +99,8 @@ public class ComponentManager {
 
     private void addObserver(Component source, int sourcePin, Component target, int targetPin) throws UnknownPin {
         try {
-            source.addObserver(value -> {
-                // ComponentPinState state = new ComponentPinState(target.getGlobalId(), targetPin, value);
-                // ComponentLogger.logPinState(source.getGlobalId(), sourcePin, value);
+            source.addObserver(()-> {
+                target.notifyObservers();
             });
         } catch (UnknownPin e) {
             throw e;
