@@ -52,28 +52,4 @@ public class IC74152Command implements ComponentCommand {
         
         return map;
     }
-
-	@Override
-	public void executeTick(Component component) {
-        HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
-
-        PinState pinA = pins.get(10).getState(); // A
-        PinState pinB = pins.get(9).getState(); // B
-        PinState pinC = pins.get(8).getState(); // C
-
-        int s0 = pinStateToInt(pinA);
-        int s1 = pinStateToInt(pinB);
-        int s2 = pinStateToInt(pinC);
-
-        int selectedInput = (s2 << 2) | (s1 << 1) | s0;
-        for (Map.Entry<Integer, ComponentPin> entry : pins.entrySet()) {
-            if (entry.getKey() == 6) continue;
-            entry.getValue().setStateTick(PinState.LOW);
-        }
-
-        Integer outputPin = INPUT_TO_OUTPUT_MAP.get(selectedInput);
-        if (outputPin != null) {
-            pins.get(outputPin).setStateTick(PinState.HIGH);
-        }
-	}
 }

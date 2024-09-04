@@ -9,10 +9,7 @@ import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.PinState;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.models.ComponentPin;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,16 +18,16 @@ public abstract class BaseComponent implements Component {
     protected final int globalId;
     protected static final AtomicInteger counter = new AtomicInteger();
     protected Map<Integer, ComponentPin> pins;
-    protected HashMap<Integer, List<ComponentObserver>> observers;
+    protected Set<ComponentObserver> observers;
     protected ComponentClass componentClass;
     protected String type;
     protected int tick;
     protected ComponentCommand command;
-
+    
     public BaseComponent() {
         super();
         this.globalId = counter.incrementAndGet();
-        this.observers = new HashMap<>();
+        this.observers = new HashSet<>();
     }
 
     @Override
@@ -71,6 +68,7 @@ public abstract class BaseComponent implements Component {
         }
 
         pin.setState(state.state());
+        notifyObserver(state.state());
     }
 
     @Override
@@ -93,18 +91,16 @@ public abstract class BaseComponent implements Component {
     }
 
     @Override
-    public void addObserver(Integer pinNumber, ComponentObserver observer) {
-        List<ComponentObserver> observerList = observers.get(pinNumber);
-        
-        if (observerList != null) {
-            observerList.add(observer);
-        } else {
-            observerList = new ArrayList<>();
-            observerList.add(observer);
-            observers.put(pinNumber, observerList);
-        }
+    public void addObserver(ComponentObserver observer) {
+        observers.add(observer);
     }
 
+    @Override
+    public void notifyObserver(PinState state) throws UnknownPin {
+        for (ComponentObserver observer : observers) {
+            observer.update(state);
+        }
+    }
 
     @Override
     public Set<ComponentPinState> getStates() {
@@ -117,7 +113,7 @@ public abstract class BaseComponent implements Component {
     }
 
     @Override
-    public HashMap<Integer, List<ComponentObserver>> getObservers() {
+    public Set<ComponentObserver> getObservers() {
         return this.observers;
     }
 
@@ -126,17 +122,10 @@ public abstract class BaseComponent implements Component {
         return this.pins.get(pinNumber);
     }
 
-    @Override
+    @Override 
     public void applyCommand() {
         if (this.command != null) {
-            command.execute(this);
-        }
-    }
-
-    @Override
-    public void applyCommandTick() {
-        if (this.command != null) {
-            command.executeTick(this);
+            command.execute(this);    
         }
     }
 
@@ -145,16 +134,8 @@ public abstract class BaseComponent implements Component {
         this.command = command;
     }
 
-    @Override
-    public void notifyObservers() {
-        for (ComponentPin pin : pins.values()) {
-            if (pin.getState() != PinState.UNKNOWN && pin.getPinType() == PinType.OUT) {
-                pin.notifyObservers();
-            }
-        }
-    }
-
     public void setType(String type) {
         this.type = type;
     }
+
 }

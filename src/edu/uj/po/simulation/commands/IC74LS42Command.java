@@ -68,29 +68,4 @@ public class IC74LS42Command implements ComponentCommand {
 
         return map;
     }
-
-	@Override
-	public void executeTick(Component component) {
-        HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
-
-        PinState pinA = pins.get(15).getState(); 
-        PinState pinB = pins.get(14).getState(); 
-        PinState pinC = pins.get(13).getState(); 
-        PinState pinD = pins.get(12).getState(); 
-
-        int decimalValue = bcdToDecimal(pinA, pinB, pinC, pinD);
-
-        for (Map.Entry<Integer, ComponentPin> entry : pins.entrySet()) {
-            entry.getValue().setStateTick(PinState.LOW);
-        }
-
-        if (decimalValue == 0 && pinD == PinState.HIGH) {
-            return;
-        }
-
-        Integer outputPin = DECIMAL_TO_OUTPUT_MAP.get(decimalValue);
-        if (outputPin != null) {
-            pins.get(outputPin).setStateTick(PinState.HIGH);
-        }
-	}
 }
