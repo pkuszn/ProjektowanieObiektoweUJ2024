@@ -9,7 +9,10 @@ import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.PinState;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.models.ComponentPin;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,7 +21,7 @@ public abstract class BaseComponent implements Component {
     protected final int globalId;
     protected static final AtomicInteger counter = new AtomicInteger();
     protected Map<Integer, ComponentPin> pins;
-    protected Set<ComponentObserver> observers;
+    protected HashMap<Integer, List<ComponentObserver>> observers;
     protected ComponentClass componentClass;
     protected String type;
     protected int tick;
@@ -27,7 +30,7 @@ public abstract class BaseComponent implements Component {
     public BaseComponent() {
         super();
         this.globalId = counter.incrementAndGet();
-        this.observers = new HashSet<>();
+        this.observers = new HashMap<>();
     }
 
     @Override
@@ -90,8 +93,16 @@ public abstract class BaseComponent implements Component {
     }
 
     @Override
-    public void addObserver(ComponentObserver observer) {
-        observers.add(observer);
+    public void addObserver(Integer pinNumber, ComponentObserver observer) {
+        List<ComponentObserver> observerList = observers.get(pinNumber);
+        
+        if (observerList != null) {
+            observerList.add(observer);
+        } else {
+            observerList = new ArrayList<>();
+            observerList.add(observer);
+            observers.put(pinNumber, observerList);
+        }
     }
 
 
@@ -106,7 +117,7 @@ public abstract class BaseComponent implements Component {
     }
 
     @Override
-    public Set<ComponentObserver> getObservers() {
+    public HashMap<Integer, List<ComponentObserver>> getObservers() {
         return this.observers;
     }
 
@@ -119,6 +130,13 @@ public abstract class BaseComponent implements Component {
     public void applyCommand() {
         if (this.command != null) {
             command.execute(this);
+        }
+    }
+
+    @Override
+    public void applyCommandTick() {
+        if (this.command != null) {
+            command.executeTick(this);
         }
     }
 

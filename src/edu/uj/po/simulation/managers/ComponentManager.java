@@ -5,6 +5,7 @@ import edu.uj.po.simulation.abstractions.Director;
 import edu.uj.po.simulation.builders.ComponentDirector;
 import edu.uj.po.simulation.consts.ComponentClass;
 import edu.uj.po.simulation.consts.PinType;
+import edu.uj.po.simulation.interfaces.ComponentPinState;
 import edu.uj.po.simulation.interfaces.ShortCircuitException;
 import edu.uj.po.simulation.interfaces.UnknownChip;
 import edu.uj.po.simulation.interfaces.UnknownComponent;
@@ -24,7 +25,6 @@ public class ComponentManager {
         this.components = new HashMap<>();
         this.director = new ComponentDirector();
     }
-
 
     public void resetComponents() {
         this.components.clear();
@@ -84,9 +84,8 @@ public class ComponentManager {
             throw new ShortCircuitException();
         }
 
-
         componentPin1.connectToPin(componentPin2);
-        addObserver(firstComponent, pin1, secondComponent, pin2);
+        addObserver(firstComponent, componentPin1.getPinNumber(), secondComponent, componentPin2.getPinNumber());
     }
 
     private Component getComponent(int component) throws UnknownComponent {
@@ -97,13 +96,15 @@ public class ComponentManager {
         return circuit;
     }
 
-    private void addObserver(Component source, int sourcePin, Component target, int targetPin) throws UnknownPin {
-        try {
-            source.addObserver(()-> {
-                target.notifyObservers();
-            });
-        } catch (UnknownPin e) {
-            throw e;
-        }
+    private void addObserver(Component source, Integer sourcePin, Component target, Integer targetPin) throws UnknownPin {
+        source.addObserver(sourcePin, (ComponentPinState state) -> {
+            try {
+                ComponentPin pin = target.getPin(targetPin);
+                pin.setStateTick(state.state());
+            } catch (UnknownPin e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
     }
 }
