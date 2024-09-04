@@ -34,9 +34,9 @@
 
 # Tested logic
 
-Stationary states ✅
+Stationary states ❔
 --
-Simulation ✅
+Simulation ❔
 --
 Optimization ❔
 --

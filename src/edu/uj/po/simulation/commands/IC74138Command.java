@@ -34,6 +34,7 @@ public class IC74138Command implements ComponentCommand {
             entry.getValue().setState(PinState.LOW);
         }
 
+        // Set the selected output pin to HIGH
         if (selectedLine != -1) {
             Integer outputPin = DECIMAL_TO_OUTPUT_MAP.get(selectedLine);
             if (outputPin != null) {
@@ -56,35 +57,4 @@ public class IC74138Command implements ComponentCommand {
         
         return map;
     }
-
-	@Override
-	public void executeTick(Component component) {
-        HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
-
-        PinState enable = pins.get(6).getState();
-        PinState g2a = pins.get(4).getState();
-        PinState g2b = pins.get(5).getState();
-        PinState pinA = pins.get(1).getState();
-        PinState pinB = pins.get(2).getState();
-        PinState pinC = pins.get(3).getState();
-
-        int a = pinStateToInt(pinA);
-        int b = pinStateToInt(pinB);
-        int c = pinStateToInt(pinC);
-
-        boolean isEnabled = (enable == PinState.HIGH) && (g2a == PinState.LOW) && (g2b == PinState.LOW);
-
-        int selectedLine = isEnabled ? (c << 2) | (b << 1) | a : -1;
-
-        for (Map.Entry<Integer, ComponentPin> entry : pins.entrySet()) {
-            entry.getValue().setStateTick(PinState.LOW);
-        }
-
-        if (selectedLine != -1) {
-            Integer outputPin = DECIMAL_TO_OUTPUT_MAP.get(selectedLine);
-            if (outputPin != null) {
-                pins.get(outputPin).setStateTick(PinState.HIGH);
-            }
-        }
-	}
 }

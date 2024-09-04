@@ -40,29 +40,5 @@ public class IC74LS32Command implements ComponentCommand {
         }
         return PinState.LOW;
     }
-
-	@Override
-	public void executeTick(Component component) {
-        HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
-        pins.get(3).setStateTick(orFunc(
-            pins.get(1).getState(),
-            pins.get(2).getState()
-        ));
-
-        pins.get(6).setStateTick(orFunc(
-            pins.get(4).getState(),
-            pins.get(5).getState()
-        ));
-
-        pins.get(8).setStateTick(orFunc(
-            pins.get(9).getState(),
-            pins.get(10).getState()
-        ));
-        
-        pins.get(11).setStateTick(orFunc(
-            pins.get(12).getState(),
-            pins.get(13).getState()
-        ));
-	}
     
 }

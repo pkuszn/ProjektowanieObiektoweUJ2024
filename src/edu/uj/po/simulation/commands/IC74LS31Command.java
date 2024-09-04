@@ -32,31 +32,6 @@ public class IC74LS31Command implements ComponentCommand {
         ));
     }
 
-	@Override
-	public void executeTick(Component component) {
-        HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
-        pins.get(2).setStateTick(notFunc(
-            pins.get(1).getState()
-        ));
-
-        pins.get(14).setStateTick(notFunc(
-            pins.get(15).getState()
-        ));
-
-        pins.get(4).setStateTick(pins.get(3).getState());
-        pins.get(12).setStateTick(pins.get(13).getState());
-
-        pins.get(7).setStateTick(nandFunc(
-            pins.get(5).getState(),
-            pins.get(6).getState()
-        ));
-        
-        pins.get(9).setStateTick(nandFunc(
-            pins.get(10).getState(),
-            pins.get(11).getState()
-        ));
-	}
-
     private static PinState nandFunc(PinState pin1, PinState pin2) {
         if (pin1 == PinState.HIGH && pin2 == PinState.HIGH) {
             return PinState.LOW; 
