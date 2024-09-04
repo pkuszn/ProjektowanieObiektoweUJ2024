@@ -42,6 +42,14 @@ public class ComponentPin {
         }
     }
 
+    public void setStateTick(PinState state) {
+        if (this.state == state) {
+            return;
+        }
+    
+        this.state = state;
+    }
+
     public void notifyObservers() {
         for (ComponentPin connectedPin : connectedPins) {
             if (connectedPin != null) {

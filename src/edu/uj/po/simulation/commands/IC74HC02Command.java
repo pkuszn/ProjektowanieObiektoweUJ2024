@@ -32,6 +32,30 @@ public class IC74HC02Command implements ComponentCommand {
         ));
     }
 
+	@Override
+	public void executeTick(Component component) {
+        HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
+        pins.get(1).setStateTick(norFunc(
+            pins.get(2).getState(),
+            pins.get(3).getState()
+        ));
+
+        pins.get(4).setStateTick(norFunc(
+            pins.get(5).getState(),
+            pins.get(6).getState()
+        ));
+
+        pins.get(10).setStateTick(norFunc(
+            pins.get(9).getState(),
+            pins.get(8).getState()
+        ));
+        
+        pins.get(13).setStateTick(norFunc(
+            pins.get(11).getState(),
+            pins.get(12).getState()
+        ));
+	}
+
     private static PinState norFunc(PinState pin1, PinState pin2) {
         PinState orResult = orFunc(pin1, pin2);
     
@@ -51,4 +75,5 @@ public class IC74HC02Command implements ComponentCommand {
         }
         return PinState.UNKNOWN;
     }
+
 }

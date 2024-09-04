@@ -38,4 +38,26 @@ public class IC74HC10Command implements ComponentCommand {
         }
         return PinState.HIGH; 
     }
+
+	@Override
+	public void executeTick(Component component) {
+        HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
+        pins.get(12).setStateTick(nandFunc(
+            pins.get(13).getState(),
+            pins.get(1).getState(),
+            pins.get(2).getState()
+        ));
+
+        pins.get(8).setStateTick(nandFunc(
+            pins.get(9).getState(),
+            pins.get(10).getState(),
+            pins.get(11).getState()
+        ));
+
+        pins.get(6).setStateTick(nandFunc(
+            pins.get(3).getState(),
+            pins.get(4).getState(),
+            pins.get(5).getState()
+        ));
+	}
 }
