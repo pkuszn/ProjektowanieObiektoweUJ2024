@@ -83,6 +83,25 @@ public class Test_Simulation extends TestBase {
                                 .orElseThrow()
                                 .state();
 
+		componentManager.connect(chip7404, 4, chipOut1, 2);
+
+		Set<ComponentPinState> states = new HashSet<>();
+		states.add(new ComponentPinState(chipIn1, 1, PinState.HIGH));
+		states.add(new ComponentPinState(chipIn1, 2, PinState.LOW));
+		states.add(new ComponentPinState(chipIn1, 3, PinState.HIGH));
+
+		simulationManager.stationaryState(states);
+
+		Set<ComponentPinState> states0 = new HashSet<>();
+		states0.add(new ComponentPinState(chipIn1, 1, PinState.HIGH));
+		states0.add(new ComponentPinState(chipIn1, 2, PinState.HIGH));
+		states0.add(new ComponentPinState(chipIn1, 3, PinState.LOW));
+
+		int tick = 3;
+		Map<Integer, Set<ComponentPinState>> result = simulationManager.simulation(states0, tick);
+        printPinStates(result);
+        for (int i = 0; i<=tick; i++) {
+            if (i == 0) {
                 try {
                         assert verifyOutput(state1, PinState.HIGH) == true;
                         System.out.println(okMessage(this.getClass().getSimpleName(), this.getCurrentMethodName()));
