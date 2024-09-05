@@ -135,6 +135,10 @@ public class IC74LS44Command implements ComponentCommand {
         pins.get(10).setStateTick(PinState.HIGH);
         pins.get(11).setStateTick(PinState.HIGH);
 
+        if (grayCodeAlwaysPositive.contains(grayCode.toString())) {
+            return; 
+        }
+
         Integer outputPinNumber = binaryToOutputPinMap.get(decimalValue);
         pins.get(outputPinNumber).setStateTick(PinState.LOW);
     }

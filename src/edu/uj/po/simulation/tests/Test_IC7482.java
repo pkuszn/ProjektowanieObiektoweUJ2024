@@ -496,7 +496,6 @@ public class Test_IC7482 extends TestBase {
         checkPinState(pinsOut, 12, PinState.LOW, getCurrentMethodName()); // E_2 suma2
     }
 
-    //TODO: This test doenst work
     private void test_number_nine_sumator_carry_zero() {
         resetPins(this.component);
         Map<Integer, ComponentPin> pins = this.component.getPins();
