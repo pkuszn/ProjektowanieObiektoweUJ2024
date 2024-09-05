@@ -9,7 +9,6 @@ import edu.uj.po.simulation.interfaces.PinState;
 import edu.uj.po.simulation.interfaces.UnknownPin;
 import edu.uj.po.simulation.interfaces.UnknownStateException;
 import edu.uj.po.simulation.models.ComponentPin;
-import edu.uj.po.simulation.utils.PinsToJson;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,7 +45,6 @@ public class SimulationManager {
     public void setComponents(Map<Integer, Component> newComponents) {
         this.components = newComponents;
     }
-    
 
     public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int numTicks)
             throws UnknownStateException {
@@ -69,14 +67,9 @@ public class SimulationManager {
 
             Map<Integer, Set<ComponentPinState>> tickStates = getComponentPinStates(this.components);
             simulationResult.put(0, getOutputHeader(tickStates, outIds));
-            for (Component component : components.values()) {
-                PinsToJson.saveToJson(component.getGlobalId(), component.getPins(), 0);
-            }
 
             Map<Integer, Set<ComponentPinState>> previousTickStates = new HashMap<>();
-
             for (int tick = 1; tick <= numTicks; tick++) {
-                System.out.println("STARTING PROCESSING THE TICK NUMBER " + tick);
 
                 this.components.values().forEach(Component::applyCommandTick);
 
@@ -89,10 +82,6 @@ public class SimulationManager {
                 tickStates = getComponentPinStates(this.components);
 
                 simulationResult.put(tick, getOutputHeader(tickStates, outIds));
-
-                for (Component component : components.values()) {
-                    PinsToJson.saveToJson(component.getGlobalId(), component.getPins(), tick);
-                }
             }
         } catch (UnknownPin e) {
         }
@@ -113,10 +102,6 @@ public class SimulationManager {
             }
         }
 
-        for (Component component : components.values()) {
-            component.applyCommand();
-            PinsToJson.saveToJson(component.getGlobalId(), component.getPins());
-        }
         int limit = this.components.size() + 1;
         int i = 0;
         boolean isUnknownState = true;
@@ -143,19 +128,6 @@ public class SimulationManager {
                         }
                     }
                 }
-            }
-        }
-    }
-
-    private void notifyAllObservers(Set<ComponentPinState> states) {
-        if (states.isEmpty()) {
-            return;
-        }
-        for (ComponentPinState state : states) {
-            Component component = components.get(state.componentId());
-            List<ComponentObserver> observers = component.getObservers().get(state.pinId());
-            for (ComponentObserver observer : observers) {
-                observer.update(state);
             }
         }
     }
@@ -206,5 +178,18 @@ public class SimulationManager {
         }
 
         return outs;
+    }
+
+    private void notifyAllObservers(Set<ComponentPinState> states) {
+        if (states.isEmpty()) {
+            return;
+        }
+        for (ComponentPinState state : states) {
+            Component component = components.get(state.componentId());
+            List<ComponentObserver> observers = component.getObservers().get(state.pinId());
+            for (ComponentObserver observer : observers) {
+                observer.update(state);
+            }
+        }
     }
 }

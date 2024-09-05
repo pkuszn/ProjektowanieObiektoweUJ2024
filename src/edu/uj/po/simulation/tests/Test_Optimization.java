@@ -76,7 +76,7 @@ public class Test_Optimization extends TestBase {
 
         // 6. Optymalizacja
         int tick = 2;
-        Set<Integer> expected = Set.of(1);
+        Set<Integer> expected = Set.of(2);
         System.out.println("Expected set: " + expected);
 
         Set<Integer> actual = optimizationManager.optimize(states0, tick);

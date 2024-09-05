@@ -92,23 +92,23 @@ public class ComponentPin {
         this.connectedPins = connectedPins;
     }
 
-    public String toJson() {
-        StringBuilder connectedPinsJson = new StringBuilder("[");
-        for (ComponentPin connectedPin : connectedPins) {
-            connectedPinsJson.append(connectedPin.getPinNumber()).append(",");
-        }
-        if (!connectedPins.isEmpty()) {
-            connectedPinsJson.setLength(connectedPinsJson.length() - 1);
-        }
-        connectedPinsJson.append("]");
+    // public String toJson() {
+    //     StringBuilder connectedPinsJson = new StringBuilder("[");
+    //     for (ComponentPin connectedPin : connectedPins) {
+    //         connectedPinsJson.append(connectedPin.getPinNumber()).append(",");
+    //     }
+    //     if (!connectedPins.isEmpty()) {
+    //         connectedPinsJson.setLength(connectedPinsJson.length() - 1);
+    //     }
+    //     connectedPinsJson.append("]");
         
-        return String.format(
-            "{\"pinNumber\":%d, \"pinType\":\"%s\", \"state\":\"%s\", \"componentId\":%d, \"connectedPins\":%s}",
-            pinNumber,
-            pinType.name(), 
-            state.name(),   
-            componentId,
-            connectedPinsJson.toString()
-        );
-    }
+    //     return String.format(
+    //         "{\"pinNumber\":%d, \"pinType\":\"%s\", \"state\":\"%s\", \"componentId\":%d, \"connectedPins\":%s}",
+    //         pinNumber,
+    //         pinType.name(), 
+    //         state.name(),   
+    //         componentId,
+    //         connectedPinsJson.toString()
+    //     );
+    // }
 }
