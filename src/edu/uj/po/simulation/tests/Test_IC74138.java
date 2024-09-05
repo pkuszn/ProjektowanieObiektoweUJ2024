@@ -56,14 +56,14 @@ public class Test_IC74138 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName()); //y7
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName()); //y6
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName()); //y5
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName()); //y4
-        checkPinState(pinsOut, 12, PinState.LOW, getCurrentMethodName()); //y3
-        checkPinState(pinsOut, 13, PinState.LOW, getCurrentMethodName()); //y2
-        checkPinState(pinsOut, 14, PinState.LOW, getCurrentMethodName()); //y1
-        checkPinState(pinsOut, 15, PinState.LOW, getCurrentMethodName()); //y0
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName()); //y7
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName()); //y6
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName()); //y5
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName()); //y4
+        checkPinState(pinsOut, 12, PinState.HIGH, getCurrentMethodName()); //y3
+        checkPinState(pinsOut, 13, PinState.HIGH, getCurrentMethodName()); //y2
+        checkPinState(pinsOut, 14, PinState.HIGH, getCurrentMethodName()); //y1
+        checkPinState(pinsOut, 15, PinState.HIGH, getCurrentMethodName()); //y0
     }
 
     
@@ -90,14 +90,14 @@ public class Test_IC74138 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName()); //y7
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName()); //y6
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName()); //y5
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName()); //y4
-        checkPinState(pinsOut, 12, PinState.LOW, getCurrentMethodName()); //y3
-        checkPinState(pinsOut, 13, PinState.LOW, getCurrentMethodName()); //y2
-        checkPinState(pinsOut, 14, PinState.LOW, getCurrentMethodName()); //y1
-        checkPinState(pinsOut, 15, PinState.LOW, getCurrentMethodName()); //y0
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName()); //y7
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName()); //y6
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName()); //y5
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName()); //y4
+        checkPinState(pinsOut, 12, PinState.HIGH, getCurrentMethodName()); //y3
+        checkPinState(pinsOut, 13, PinState.HIGH, getCurrentMethodName()); //y2
+        checkPinState(pinsOut, 14, PinState.HIGH, getCurrentMethodName()); //y1
+        checkPinState(pinsOut, 15, PinState.HIGH, getCurrentMethodName()); //y0
     }
 
     private void test_number_three_demultiplexer() {
@@ -123,14 +123,14 @@ public class Test_IC74138 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName()); //y7
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName()); //y6
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName()); //y5
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName()); //y4
-        checkPinState(pinsOut, 12, PinState.LOW, getCurrentMethodName()); //y3
-        checkPinState(pinsOut, 13, PinState.LOW, getCurrentMethodName()); //y2
-        checkPinState(pinsOut, 14, PinState.LOW, getCurrentMethodName()); //y1
-        checkPinState(pinsOut, 15, PinState.HIGH, getCurrentMethodName()); //y0
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName()); //y7
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName()); //y6
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName()); //y5
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName()); //y4
+        checkPinState(pinsOut, 12, PinState.HIGH, getCurrentMethodName()); //y3
+        checkPinState(pinsOut, 13, PinState.HIGH, getCurrentMethodName()); //y2
+        checkPinState(pinsOut, 14, PinState.HIGH, getCurrentMethodName()); //y1
+        checkPinState(pinsOut, 15, PinState.LOW, getCurrentMethodName()); //y0
     }
 
     private void test_number_four_demultiplexer() {
@@ -156,14 +156,14 @@ public class Test_IC74138 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName()); //y7
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName()); //y6
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName()); //y5
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName()); //y4
-        checkPinState(pinsOut, 12, PinState.LOW, getCurrentMethodName()); //y3
-        checkPinState(pinsOut, 13, PinState.LOW, getCurrentMethodName()); //y2
-        checkPinState(pinsOut, 14, PinState.HIGH, getCurrentMethodName()); //y1
-        checkPinState(pinsOut, 15, PinState.LOW, getCurrentMethodName()); //y0
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName()); //y7
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName()); //y6
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName()); //y5
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName()); //y4
+        checkPinState(pinsOut, 12, PinState.HIGH, getCurrentMethodName()); //y3
+        checkPinState(pinsOut, 13, PinState.HIGH, getCurrentMethodName()); //y2
+        checkPinState(pinsOut, 14, PinState.LOW, getCurrentMethodName()); //y1
+        checkPinState(pinsOut, 15, PinState.HIGH, getCurrentMethodName()); //y0
     }
 
     private void test_number_five_demultiplexer() {
@@ -189,14 +189,14 @@ public class Test_IC74138 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName()); //y7
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName()); //y6
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName()); //y5
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName()); //y4
-        checkPinState(pinsOut, 12, PinState.LOW, getCurrentMethodName()); //y3
-        checkPinState(pinsOut, 13, PinState.HIGH, getCurrentMethodName()); //y2
-        checkPinState(pinsOut, 14, PinState.LOW, getCurrentMethodName()); //y1
-        checkPinState(pinsOut, 15, PinState.LOW, getCurrentMethodName()); //y0
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName()); //y7
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName()); //y6
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName()); //y5
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName()); //y4
+        checkPinState(pinsOut, 12, PinState.HIGH, getCurrentMethodName()); //y3
+        checkPinState(pinsOut, 13, PinState.LOW, getCurrentMethodName()); //y2
+        checkPinState(pinsOut, 14, PinState.HIGH, getCurrentMethodName()); //y1
+        checkPinState(pinsOut, 15, PinState.HIGH, getCurrentMethodName()); //y0
     }
 
     private void test_number_six_demultiplexer() {
@@ -222,14 +222,14 @@ public class Test_IC74138 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName()); //y7
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName()); //y6
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName()); //y5
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName()); //y4
-        checkPinState(pinsOut, 12, PinState.HIGH, getCurrentMethodName()); //y3
-        checkPinState(pinsOut, 13, PinState.LOW, getCurrentMethodName()); //y2
-        checkPinState(pinsOut, 14, PinState.LOW, getCurrentMethodName()); //y1
-        checkPinState(pinsOut, 15, PinState.LOW, getCurrentMethodName()); //y0
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName()); //y7
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName()); //y6
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName()); //y5
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName()); //y4
+        checkPinState(pinsOut, 12, PinState.LOW, getCurrentMethodName()); //y3
+        checkPinState(pinsOut, 13, PinState.HIGH, getCurrentMethodName()); //y2
+        checkPinState(pinsOut, 14, PinState.HIGH, getCurrentMethodName()); //y1
+        checkPinState(pinsOut, 15, PinState.HIGH, getCurrentMethodName()); //y0
     }
 
     private void test_number_seven_demultiplexer() {
@@ -255,14 +255,14 @@ public class Test_IC74138 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName()); //y7
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName()); //y6
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName()); //y5
-        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName()); //y4
-        checkPinState(pinsOut, 12, PinState.LOW, getCurrentMethodName()); //y3
-        checkPinState(pinsOut, 13, PinState.LOW, getCurrentMethodName()); //y2
-        checkPinState(pinsOut, 14, PinState.LOW, getCurrentMethodName()); //y1
-        checkPinState(pinsOut, 15, PinState.LOW, getCurrentMethodName()); //y0
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName()); //y7
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName()); //y6
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName()); //y5
+        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName()); //y4
+        checkPinState(pinsOut, 12, PinState.HIGH, getCurrentMethodName()); //y3
+        checkPinState(pinsOut, 13, PinState.HIGH, getCurrentMethodName()); //y2
+        checkPinState(pinsOut, 14, PinState.HIGH, getCurrentMethodName()); //y1
+        checkPinState(pinsOut, 15, PinState.HIGH, getCurrentMethodName()); //y0
     }
 
     private void test_number_eight_demultiplexer() {
@@ -288,14 +288,14 @@ public class Test_IC74138 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName()); //y7
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName()); //y6
-        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName()); //y5
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName()); //y4
-        checkPinState(pinsOut, 12, PinState.LOW, getCurrentMethodName()); //y3
-        checkPinState(pinsOut, 13, PinState.LOW, getCurrentMethodName()); //y2
-        checkPinState(pinsOut, 14, PinState.LOW, getCurrentMethodName()); //y1
-        checkPinState(pinsOut, 15, PinState.LOW, getCurrentMethodName()); //y0
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName()); //y7
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName()); //y6
+        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName()); //y5
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName()); //y4
+        checkPinState(pinsOut, 12, PinState.HIGH, getCurrentMethodName()); //y3
+        checkPinState(pinsOut, 13, PinState.HIGH, getCurrentMethodName()); //y2
+        checkPinState(pinsOut, 14, PinState.HIGH, getCurrentMethodName()); //y1
+        checkPinState(pinsOut, 15, PinState.HIGH, getCurrentMethodName()); //y0
     }
 
     private void test_number_nine_demultiplexer() {
@@ -321,14 +321,14 @@ public class Test_IC74138 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName()); //y7
-        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName()); //y6
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName()); //y5
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName()); //y4
-        checkPinState(pinsOut, 12, PinState.LOW, getCurrentMethodName()); //y3
-        checkPinState(pinsOut, 13, PinState.LOW, getCurrentMethodName()); //y2
-        checkPinState(pinsOut, 14, PinState.LOW, getCurrentMethodName()); //y1
-        checkPinState(pinsOut, 15, PinState.LOW, getCurrentMethodName()); //y0
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName()); //y7
+        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName()); //y6
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName()); //y5
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName()); //y4
+        checkPinState(pinsOut, 12, PinState.HIGH, getCurrentMethodName()); //y3
+        checkPinState(pinsOut, 13, PinState.HIGH, getCurrentMethodName()); //y2
+        checkPinState(pinsOut, 14, PinState.HIGH, getCurrentMethodName()); //y1
+        checkPinState(pinsOut, 15, PinState.HIGH, getCurrentMethodName()); //y0
     }
 
     private void test_number_ten_demultiplexer() {
@@ -354,13 +354,13 @@ public class Test_IC74138 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName()); //y7
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName()); //y6
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName()); //y5
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName()); //y4
-        checkPinState(pinsOut, 12, PinState.LOW, getCurrentMethodName()); //y3
-        checkPinState(pinsOut, 13, PinState.LOW, getCurrentMethodName()); //y2
-        checkPinState(pinsOut, 14, PinState.LOW, getCurrentMethodName()); //y1
-        checkPinState(pinsOut, 15, PinState.LOW, getCurrentMethodName()); //y0
+        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName()); //y7
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName()); //y6
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName()); //y5
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName()); //y4
+        checkPinState(pinsOut, 12, PinState.HIGH, getCurrentMethodName()); //y3
+        checkPinState(pinsOut, 13, PinState.HIGH, getCurrentMethodName()); //y2
+        checkPinState(pinsOut, 14, PinState.HIGH, getCurrentMethodName()); //y1
+        checkPinState(pinsOut, 15, PinState.HIGH, getCurrentMethodName()); //y0
     }
 }

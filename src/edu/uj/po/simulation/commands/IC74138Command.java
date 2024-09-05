@@ -31,13 +31,13 @@ public class IC74138Command implements ComponentCommand {
         int selectedLine = isEnabled ? (c << 2) | (b << 1) | a : -1;
 
         for (Map.Entry<Integer, ComponentPin> entry : pins.entrySet()) {
-            entry.getValue().setState(PinState.LOW);
+            entry.getValue().setState(PinState.HIGH);
         }
 
         if (selectedLine != -1) {
             Integer outputPin = DECIMAL_TO_OUTPUT_MAP.get(selectedLine);
             if (outputPin != null) {
-                pins.get(outputPin).setState(PinState.HIGH);
+                pins.get(outputPin).setState(PinState.LOW);
             }
         }
     }
@@ -77,13 +77,13 @@ public class IC74138Command implements ComponentCommand {
         int selectedLine = isEnabled ? (c << 2) | (b << 1) | a : -1;
 
         for (Map.Entry<Integer, ComponentPin> entry : pins.entrySet()) {
-            entry.getValue().setStateTick(PinState.LOW);
+            entry.getValue().setStateTick(PinState.HIGH);
         }
 
         if (selectedLine != -1) {
             Integer outputPin = DECIMAL_TO_OUTPUT_MAP.get(selectedLine);
             if (outputPin != null) {
-                pins.get(outputPin).setStateTick(PinState.HIGH);
+                pins.get(outputPin).setStateTick(PinState.LOW);
             }
         }
 	}
