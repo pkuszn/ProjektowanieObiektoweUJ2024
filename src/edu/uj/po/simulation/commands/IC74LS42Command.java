@@ -4,7 +4,6 @@ import edu.uj.po.simulation.abstractions.Component;
 import edu.uj.po.simulation.abstractions.ComponentCommand;
 import edu.uj.po.simulation.interfaces.PinState;
 import edu.uj.po.simulation.models.ComponentPin;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +23,10 @@ public class IC74LS42Command implements ComponentCommand {
         int decimalValue = bcdToDecimal(pinA, pinB, pinC, pinD);
 
         for (Map.Entry<Integer, ComponentPin> entry : pins.entrySet()) {
-            entry.getValue().setState(PinState.LOW);
+            int pinNumber = entry.getKey();
+            if (pinNumber != 15 && pinNumber != 14 && pinNumber != 13 && pinNumber != 12) {
+                entry.getValue().setState(PinState.HIGH);
+            }
         }
 
         if (decimalValue == 0 && pinD == PinState.HIGH) {
@@ -33,7 +35,7 @@ public class IC74LS42Command implements ComponentCommand {
 
         Integer outputPin = DECIMAL_TO_OUTPUT_MAP.get(decimalValue);
         if (outputPin != null) {
-            pins.get(outputPin).setState(PinState.HIGH);
+            pins.get(outputPin).setState(PinState.LOW);
         }
     }
 

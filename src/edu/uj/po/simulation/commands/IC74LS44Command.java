@@ -9,7 +9,18 @@ import java.util.Map;
 
 public class IC74LS44Command implements ComponentCommand {
     private static final Map<Integer, Integer> binaryToOutputPinMap = new HashMap<>();
-    //TOOD: Nie dziala poprawnie wszystko!!!
+    private static final Map<String, Integer> greyCodeMap = Map.of(
+            "0010", 0,
+            "0110", 1,
+            "0111", 2,
+            "0101", 3,
+            "0100", 4,
+            "1100", 5,
+            "1101", 6,
+            "1111", 7,
+            "1110", 8,
+            "1010", 9);
+
     static {
         binaryToOutputPinMap.put(0, 1);
         binaryToOutputPinMap.put(1, 2);
@@ -22,71 +33,88 @@ public class IC74LS44Command implements ComponentCommand {
         binaryToOutputPinMap.put(8, 10);
         binaryToOutputPinMap.put(9, 11);
     }
+
     @Override
     public void execute(Component component) {
         HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
 
-        PinState pinA = pins.get(15).getState();
-        PinState pinB = pins.get(14).getState();
-        PinState pinC = pins.get(13).getState();
-        PinState pinD = pins.get(12).getState();
-
-        int grayValue = 0;
-        if (pinA == PinState.HIGH) grayValue |= 1;
-        if (pinB == PinState.HIGH) grayValue |= 2;
-        if (pinC == PinState.HIGH) grayValue |= 4;
-        if (pinD == PinState.HIGH) grayValue |= 8;
-        int binaryValue = grayToBinary(grayValue);
-
-
-        for (ComponentPin pin : pins.values()) {
-            pin.setState(PinState.LOW);
+        for (int i = 12; i <= 15; i++) {
+            if (pins.get(i).getState() == PinState.UNKNOWN) {
+                setAllOutputsToUnknown(pins);
+                return;
+            }
         }
 
-        Integer outputPinNumber = binaryToOutputPinMap.get(binaryValue);
-        if (outputPinNumber != null) {
-            ComponentPin outputPin = pins.get(outputPinNumber);
-            if (outputPin != null) {
-                outputPin.setState(PinState.HIGH);
+        StringBuilder grayCode = new StringBuilder();
+        grayCode.append(pins.get(15).getState() == PinState.HIGH ? "1" : "0"); // A
+        grayCode.append(pins.get(14).getState() == PinState.HIGH ? "1" : "0"); // B
+        grayCode.append(pins.get(13).getState() == PinState.HIGH ? "1" : "0"); // C
+        grayCode.append(pins.get(12).getState() == PinState.HIGH ? "1" : "0"); // D
+
+        Integer decimalValue = greyCodeMap.get(grayCode.toString());
+
+        pins.get(1).setState(PinState.HIGH);
+        pins.get(2).setState(PinState.HIGH);
+        pins.get(4).setState(PinState.HIGH);
+        pins.get(3).setState(PinState.HIGH);
+        pins.get(5).setState(PinState.HIGH);
+        pins.get(6).setState(PinState.HIGH);
+        pins.get(7).setState(PinState.HIGH);
+        pins.get(9).setState(PinState.HIGH);
+        pins.get(10).setState(PinState.HIGH);
+        pins.get(11).setState(PinState.HIGH);
+
+        Integer outputPinNumber = binaryToOutputPinMap.get(decimalValue);
+        pins.get(outputPinNumber).setState(PinState.LOW);
+    }
+
+    private void setAllOutputsToUnknown(Map<Integer, ComponentPin> pins) {
+        for (int i = 1; i <= 11; i++) {
+            if (i != 8) { // Pin 8 is not used
+                pins.get(i).setState(PinState.UNKNOWN);
             }
         }
     }
 
-    private int grayToBinary(int gray) {
-        int binary = gray;
-        while ((gray >>= 1) != 0) {
-            binary ^= gray;
+    private void setAllOutputsToUnknownTwo(Map<Integer, ComponentPin> pins) {
+        for (int i = 1; i <= 11; i++) {
+            if (i != 8) { // Pin 8 is not used
+                pins.get(i).setStateTick(PinState.UNKNOWN);
+            }
         }
-        return binary;
     }
 
-	@Override
-	public void executeTick(Component component) {
+    @Override
+    public void executeTick(Component component) {
         HashMap<Integer, ComponentPin> pins = (HashMap<Integer, ComponentPin>) component.getPins();
 
-        PinState pinA = pins.get(15).getState();
-        PinState pinB = pins.get(14).getState();
-        PinState pinC = pins.get(13).getState();
-        PinState pinD = pins.get(12).getState();
-
-        int grayValue = 0;
-        if (pinA == PinState.HIGH) grayValue |= 1;
-        if (pinB == PinState.HIGH) grayValue |= 2;
-        if (pinC == PinState.HIGH) grayValue |= 4;
-        if (pinD == PinState.HIGH) grayValue |= 8;
-        int binaryValue = grayToBinary(grayValue);
-
-
-        for (ComponentPin pin : pins.values()) {
-            pin.setStateTick(PinState.LOW);
-        }
-
-        Integer outputPinNumber = binaryToOutputPinMap.get(binaryValue);
-        if (outputPinNumber != null) {
-            ComponentPin outputPin = pins.get(outputPinNumber);
-            if (outputPin != null) {
-                outputPin.setStateTick(PinState.HIGH);
+        for (int i = 12; i <= 15; i++) {
+            if (pins.get(i).getState() == PinState.UNKNOWN) {
+                setAllOutputsToUnknownTwo(pins);
+                return;
             }
         }
-	}
+
+        StringBuilder grayCode = new StringBuilder();
+        grayCode.append(pins.get(15).getState() == PinState.HIGH ? "1" : "0"); // A
+        grayCode.append(pins.get(14).getState() == PinState.HIGH ? "1" : "0"); // B
+        grayCode.append(pins.get(13).getState() == PinState.HIGH ? "1" : "0"); // C
+        grayCode.append(pins.get(12).getState() == PinState.HIGH ? "1" : "0"); // D
+
+        Integer decimalValue = greyCodeMap.get(grayCode.toString());
+
+        pins.get(1).setStateTick(PinState.HIGH);
+        pins.get(2).setStateTick(PinState.HIGH);
+        pins.get(4).setStateTick(PinState.HIGH);
+        pins.get(3).setStateTick(PinState.HIGH);
+        pins.get(5).setStateTick(PinState.HIGH);
+        pins.get(6).setStateTick(PinState.HIGH);
+        pins.get(7).setStateTick(PinState.HIGH);
+        pins.get(9).setStateTick(PinState.HIGH);
+        pins.get(10).setStateTick(PinState.HIGH);
+        pins.get(11).setStateTick(PinState.HIGH);
+
+        Integer outputPinNumber = binaryToOutputPinMap.get(decimalValue);
+        pins.get(outputPinNumber).setStateTick(PinState.LOW);
+    }
 }

@@ -5,7 +5,6 @@ import edu.uj.po.simulation.interfaces.PinState;
 import edu.uj.po.simulation.interfaces.UnknownChip;
 import edu.uj.po.simulation.models.ComponentPin;
 import edu.uj.po.simulation.models.components.IC74LS42;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,16 +60,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
     /**
@@ -99,16 +98,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
     /**
@@ -137,16 +136,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
 
@@ -176,16 +175,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
     
@@ -215,16 +214,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
      /**
@@ -253,16 +252,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
     /**
@@ -291,16 +290,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
     /**
@@ -329,16 +328,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
     /**
@@ -367,16 +366,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
     /**
@@ -405,16 +404,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
     }
 
     /**
@@ -443,16 +442,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
     /**
@@ -481,16 +480,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
     /**
@@ -519,16 +518,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
     /**
@@ -557,16 +556,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
     /**
@@ -595,16 +594,16 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 
     
@@ -634,15 +633,15 @@ public class Test_IC74LS42 extends TestBase {
             }
         }
 
-        checkPinState(pinsOut, 1, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 2, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut,3, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 4, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 5, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 6, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 7, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 9, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 10, PinState.LOW, getCurrentMethodName());
-        checkPinState(pinsOut, 11, PinState.LOW, getCurrentMethodName());
+        checkPinState(pinsOut, 1, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 2, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut,3, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 4, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 5, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 6, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 7, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 9, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName());
+        checkPinState(pinsOut, 11, PinState.HIGH, getCurrentMethodName());
     }
 }

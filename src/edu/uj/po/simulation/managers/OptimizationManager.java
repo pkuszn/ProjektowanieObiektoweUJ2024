@@ -43,15 +43,7 @@ public class OptimizationManager {
         component.deactivate();
     }
 
-    public void reactivateComponent(Component component) {
+    private void reactivateComponent(Component component) {
         component.reactivate();
-    }
-
-    public void removeComponent(int componentId) {
-        simulationManager.getComponents().remove(componentId);
-    }
-
-    public void addComponent(Component component) {
-        simulationManager.getComponents().put(component.getGlobalId(), component);
     }
 }
