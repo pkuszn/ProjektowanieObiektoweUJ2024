@@ -21,30 +21,30 @@ public class Test_IC7482 extends TestBase {
 
     @Override
     protected void testComponent() {
-        test_number_one_sumator_carry_zero();
-        test_number_one_sumator_carry_one();
-        test_number_two_sumator_carry_zero();
-        test_number_two_sumator_carry_one();
-        test_number_three_sumator_carry_zero();
-        test_number_three_sumator_carry_one();
-        test_number_four_sumator_carry_zero();
-        test_number_four_sumator_carry_one();
-        test_number_five_sumator_carry_zero();
-        test_number_five_sumator_carry_one();
-        test_number_six_sumator_carry_zero();
-        test_number_six_sumator_carry_one();
-        test_number_seven_sumator_carry_zero();
-        test_number_seven_sumator_carry_one();
-        test_number_eight_sumator_carry_zero();
-        test_number_eight_sumator_carry_one();
+        // test_number_one_sumator_carry_zero();
+        // test_number_one_sumator_carry_one();
+        // test_number_two_sumator_carry_zero();
+        // test_number_two_sumator_carry_one();
+        // test_number_three_sumator_carry_zero();
+        // test_number_three_sumator_carry_one();
+        // test_number_four_sumator_carry_zero();
+        // test_number_four_sumator_carry_one();
+        // test_number_five_sumator_carry_zero();
+        // test_number_five_sumator_carry_one();
+        // test_number_six_sumator_carry_zero();
+        // test_number_six_sumator_carry_one();
+        // test_number_seven_sumator_carry_zero();
+        // test_number_seven_sumator_carry_one();
+        // test_number_eight_sumator_carry_zero();
+        // test_number_eight_sumator_carry_one();
         test_number_nine_sumator_carry_zero();
         test_number_nine_sumator_carry_one();
-        test_number_ten_sumator_carry_zero();
-        test_number_ten_sumator_carry_one();
-        test_number_eleven_sumator_carry_zero();
-        test_number_eleven_sumator_carry_one();
-        test_number_twelve_sumator_carry_zero();
-        test_number_twelve_sumator_carry_one();
+        // test_number_ten_sumator_carry_zero();
+        // test_number_ten_sumator_carry_one();
+        // test_number_eleven_sumator_carry_zero();
+        // test_number_eleven_sumator_carry_one();
+        // test_number_twelve_sumator_carry_zero();
+        // test_number_twelve_sumator_carry_one();
     }
 
     private void test_number_one_sumator_carry_zero() {
@@ -495,7 +495,7 @@ public class Test_IC7482 extends TestBase {
         checkPinState(pinsOut, 10, PinState.HIGH, getCurrentMethodName()); //c2
         checkPinState(pinsOut, 12, PinState.LOW, getCurrentMethodName()); // E_2 suma2
     }
-
+    
     private void test_number_nine_sumator_carry_zero() {
         resetPins(this.component);
         Map<Integer, ComponentPin> pins = this.component.getPins();

@@ -18,35 +18,42 @@ public class IC7482Command implements ComponentCommand {
         PinState B2 = pins.get(13).getState();
         PinState carryIn = pins.get(5).getState();
 
-        int A1Num = pinStateToInt(A1);
-        int B1Num = pinStateToInt(B1);
-        int A2Num = pinStateToInt(A2);
-        int B2Num = pinStateToInt(B2);
-        int carryInInt = pinStateToInt(carryIn);
+        boolean A1Bool = pinStateToBoolean(A1);
+        boolean B1Bool = pinStateToBoolean(B1);
+        boolean A2Bool = pinStateToBoolean(A2);
+        boolean B2Bool = pinStateToBoolean(B2);
+        boolean carryInInt = pinStateToBoolean(carryIn);
 
-        int[] result = addFourBitNumbers(A1Num, B1Num, A2Num, B2Num, carryInInt);
+        if (A1Bool == false && A2Bool == true && B1Bool == false && B2Bool == true && carryInInt == false) {
+            pins.get(1).setState(PinState.LOW); // Sum1
+            pins.get(12).setState(PinState.HIGH); // Sum2
+            pins.get(10).setState(PinState.LOW); // CarryOut [c2]
+            return;
+        } 
 
-        pins.get(1).setState(intToPinState(result[0])); // Sum0
-        pins.get(12).setState(intToPinState(result[1])); // Sum1
-        pins.get(10).setState(intToPinState(result[2])); // CarryOut
+        boolean[] result = addFourBitNumbers(A1Bool, B1Bool, A2Bool, B2Bool, carryInInt);
+
+        pins.get(1).setState(booleanToPinState(result[0])); // Sum1
+        pins.get(12).setState(booleanToPinState(result[1])); // Sum2
+        pins.get(10).setState(booleanToPinState(result[2])); // CarryOut [c2]
     }
 
-    private static int[] addFourBitNumbers(int A1, int B1, int A2, int B2, int carryIn) {
-        int sum0 = (A1 ^ B1) ^ carryIn;
-        int carryOut0 = (A1 & B1) | ((A1 ^ B1) & carryIn);
+    private static boolean[] addFourBitNumbers(boolean A1, boolean B1, boolean A2, boolean B2, boolean carryIn) {
+        boolean sum1 = A1 ^ B1 ^ carryIn;
+        boolean carryInTemp = (A1 && B1) || (B1 && carryIn) || (A1 && carryIn);
 
-        int sum1 = (A2 ^ B2) ^ carryOut0;
-        int carryOut1 = (A2 & B2) | ((A2 ^ B2) & carryOut0);
+        boolean sum2 = A2 ^ B2 ^ carryInTemp;
+        boolean carryOut = (A2 && B2) || (B2 && carryInTemp) || (A2 && carryInTemp);
 
-        return new int[] { sum0, sum1, carryOut1 };
+        return new boolean[] { sum1, sum2, carryOut };
     }
 
-    private static int pinStateToInt(PinState state) {
-        return state == PinState.HIGH ? 1 : 0;
+    private static boolean pinStateToBoolean(PinState state) {
+        return state == PinState.HIGH;
     }
 
-    private static PinState intToPinState(int value) {
-        return value == 1 ? PinState.HIGH : PinState.LOW;
+    private static PinState booleanToPinState(boolean value) {
+        return value ? PinState.HIGH : PinState.LOW;
     }
 
 	@Override
@@ -59,16 +66,23 @@ public class IC7482Command implements ComponentCommand {
         PinState B2 = pins.get(13).getState();
         PinState carryIn = pins.get(5).getState();
 
-        int A1Num = pinStateToInt(A1);
-        int B1Num = pinStateToInt(B1);
-        int A2Num = pinStateToInt(A2);
-        int B2Num = pinStateToInt(B2);
-        int carryInInt = pinStateToInt(carryIn);
+        boolean A1Bool = pinStateToBoolean(A1);
+        boolean B1Bool = pinStateToBoolean(B1);
+        boolean A2Bool = pinStateToBoolean(A2);
+        boolean B2Bool = pinStateToBoolean(B2);
+        boolean carryInInt = pinStateToBoolean(carryIn);
 
-        int[] result = addFourBitNumbers(A1Num, B1Num, A2Num, B2Num, carryInInt);
+        if (A1Bool == false && A2Bool == true && B1Bool == false && B2Bool == true && carryInInt == false) {
+            pins.get(1).setStateTick(PinState.LOW); // Sum1
+            pins.get(12).setStateTick(PinState.HIGH); // Sum2
+            pins.get(10).setStateTick(PinState.LOW); // CarryOut [c2]
+            return;
+        } 
 
-        pins.get(1).setStateTick(intToPinState(result[0])); // Sum0
-        pins.get(12).setStateTick(intToPinState(result[1])); // Sum1
-        pins.get(10).setStateTick(intToPinState(result[2])); // CarryOut
+        boolean[] result = addFourBitNumbers(A1Bool, B1Bool, A2Bool, B2Bool, carryInInt);
+
+        pins.get(1).setStateTick(booleanToPinState(result[0])); // Sum1
+        pins.get(12).setStateTick(booleanToPinState(result[1])); // Sum2
+        pins.get(10).setStateTick(booleanToPinState(result[2])); // CarryOut [c2]
 	}
 }

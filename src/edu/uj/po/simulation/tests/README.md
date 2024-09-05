@@ -23,7 +23,7 @@
 --
 74LS42 ✅
 --
-74LS44 ❔ TODO nie wszystko dziala
+74LS44 ✅
 -- 
 7482 ❔ TODO nie wszystko dziala
 --

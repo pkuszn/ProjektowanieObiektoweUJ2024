@@ -5,16 +5,14 @@ import edu.uj.po.simulation.abstractions.ComponentCommand;
 import edu.uj.po.simulation.interfaces.PinState;
 import edu.uj.po.simulation.models.ComponentPin;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class IC74LS44Command implements ComponentCommand {
     private static final Map<Integer, Integer> binaryToOutputPinMap = new HashMap<>();
-    private static final Map<String, Integer> greyCodeMap = Map.of(
+    private static final Map<String, Integer> greyCodeToOutputDemultiplexer = Map.of(
             "0010", 0,
             "0110", 1,
             "0111", 2,
@@ -68,7 +66,7 @@ public class IC74LS44Command implements ComponentCommand {
         grayCode.append(pins.get(14).getState() == PinState.HIGH ? "1" : "0"); // B
         grayCode.append(pins.get(13).getState() == PinState.HIGH ? "1" : "0"); // C
         grayCode.append(pins.get(12).getState() == PinState.HIGH ? "1" : "0"); // D
-        Integer decimalValue = greyCodeMap.get(grayCode.toString());
+        Integer decimalValue = greyCodeToOutputDemultiplexer.get(grayCode.toString());
 
         pins.get(1).setState(PinState.HIGH);
         pins.get(2).setState(PinState.HIGH);
@@ -122,7 +120,7 @@ public class IC74LS44Command implements ComponentCommand {
         grayCode.append(pins.get(13).getState() == PinState.HIGH ? "1" : "0"); // C
         grayCode.append(pins.get(12).getState() == PinState.HIGH ? "1" : "0"); // D
 
-        Integer decimalValue = greyCodeMap.get(grayCode.toString());
+        Integer decimalValue = greyCodeToOutputDemultiplexer.get(grayCode.toString());
 
         pins.get(1).setStateTick(PinState.HIGH);
         pins.get(2).setStateTick(PinState.HIGH);
