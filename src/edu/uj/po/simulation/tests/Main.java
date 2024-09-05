@@ -15,11 +15,11 @@ public class Main {
         // new Test_IC74LS42().testComponent();
         // new Test_IC74LS44().testComponent();
         // new Test_IC7482().testComponent();
-        new Test_IC74138().testComponent();
+        // new Test_IC74138().testComponent();
         // new Test_IC74152().testComponent();
         // new Test_BuildingComponents().testComponents();
         // new Test_StationaryState().testComponents();
         // new Test_Simulation().testComponents();
-        // new Test_Optimization().testComponents();
+        new Test_Optimization().testComponents();
     }
 }

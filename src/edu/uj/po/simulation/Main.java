@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        UserInterface ui = new UserInterfaceImpl();
+        UserInterface ui = new Simulation();
         Set<ComponentPinState> stationaryState = new HashSet<>();
         Set<ComponentPinState> states0 = new HashSet<>();
 

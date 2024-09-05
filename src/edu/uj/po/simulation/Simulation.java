@@ -13,12 +13,12 @@ import edu.uj.po.simulation.managers.SimulationManager;
 import java.util.Map;
 import java.util.Set;
 
-public class UserInterfaceImpl implements UserInterface {
+public class Simulation implements UserInterface {
     private final SimulationManager simulationManager;
     private final OptimizationManager optimizationManager;
     private final ComponentManager componentManager;
 
-    public UserInterfaceImpl() {
+    public Simulation() {
         super();
         this.simulationManager = new SimulationManager();
         this.optimizationManager = new OptimizationManager(simulationManager);

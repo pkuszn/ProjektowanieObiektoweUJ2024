@@ -130,7 +130,7 @@ public abstract class BaseComponent implements Component {
 
     @Override
     public void applyCommand() {
-        if (this.command != null && isDeactivated == false) {
+        if (this.command != null) {
             command.execute(this);
         }
     }

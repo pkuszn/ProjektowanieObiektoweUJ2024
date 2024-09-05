@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SimulationManager {
-    private final Map<Integer, Component> components; // integer as global identifier
+    private Map<Integer, Component> components; // integer as global identifier
 
     public SimulationManager() {
         super();
@@ -42,6 +42,11 @@ public class SimulationManager {
             component.resetPins();
         }
     }
+
+    public void setComponents(Map<Integer, Component> newComponents) {
+        this.components = newComponents;
+    }
+    
 
     public Map<Integer, Set<ComponentPinState>> simulation(Set<ComponentPinState> states0, int numTicks)
             throws UnknownStateException {
